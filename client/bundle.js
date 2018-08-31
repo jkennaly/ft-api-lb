@@ -23323,8 +23323,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var AUTH0 = {
   DOMAIN: 'festivaltime.auth0.com',
-  CLIENTID: 'gukcWEhFPhHXKlQ38T72hHtlwZSZGPaV',
-  CALLBACKURL: 'http://localhost:8080/#!/conferences',
+  CLIENTID: '7xs1kzmCdc9HYc1Cp0buQbATGUb3j9Al',
+  CALLBACKURL: 'https://immense-ridge-26505.herokuapp.com/#!/conferences',
   AUDIENCE: 'https://festivaltime.auth0.com/userinfo',
   RESPONSETYPE: 'token id_token',
   SCOPE: 'openid'
