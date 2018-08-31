@@ -6,7 +6,7 @@
   "DragonAgeFestivalMaster": {
     "host": "192.168.1.104",
     "port": 3306,
-    "url": "${MYSQL_CONNECTION_STRING}",
+    "url": "${process.env.JAWSDB_URL}",
     "database": "festival_master",
     "password": "Kt95#8oO!4rzovllpf94",
     "name": "DragonAgeFestivalMaster",
