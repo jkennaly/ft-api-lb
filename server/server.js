@@ -5,8 +5,8 @@ var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
 
-var MYSQL_CONNECTION_STRING = process.env.NODE_ENV === 'production' ? process.env.JAWSDB_URL : ''
-
+//var MYSQL_CONNECTION_STRING = process.env.NODE_ENV === 'production' ? process.env.JAWSDB_URL : ''
+console.log(process.env.JAWSDB_URL)
 app.start = function() {
   // start the web server
    var port = process.env.PORT || 8080;
