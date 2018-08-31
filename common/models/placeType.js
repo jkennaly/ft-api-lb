@@ -1,0 +1,14 @@
+// placeType.js
+
+module.exports = function(PlaceType){
+
+    PlaceType.greet = function(msg, cb) {
+      cb(null, 'Greetings... ' + msg);
+    }
+
+    PlaceType.remoteMethod('greet', {
+          accepts: {arg: 'msg', type: 'string'},
+          returns: {arg: 'greeting', type: 'string'}
+    });
+};
+
