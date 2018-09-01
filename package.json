@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "eslint": "^3.17.1",
-    "eslint-config-loopback": "^8.0.0"
+    "eslint-config-loopback": "^8.0.0",
+    "replace-in-file": "^3.4.2"
   },
   "repository": {
     "type": "",
