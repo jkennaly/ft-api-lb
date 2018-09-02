@@ -16,7 +16,7 @@ var authCheck = jwt({
         jwksRequestsPerMinute: 5,
         jwksUri: "https://festivaltime.auth0.com/.well-known/jwks.json"
     }),
-    audience: 'https://immense-ridge-26505.herokuapp.com/api/',
+    //audience: 'https://festivaltime.auth0.com/userinfo',
     issuer: 'https://festivaltime.auth0.com/',
     algorithms: ['RS256']
 })
