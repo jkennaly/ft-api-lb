@@ -3,7 +3,48 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
+
 var app = module.exports = loopback();
+
+
+var authCheck = jwt({
+  secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: "https://festivaltime.auth0.com/.well-known/jwks.json"
+    }),
+    audience: 'https://immense-ridge-26505.herokuapp.com/api/',
+    issuer: 'https://festivaltime.auth0.com/',
+    algorithms: ['RS256']
+})
+  .unless({path: ['', '/', '/bundle.js']});
+
+
+app.use(authCheck);
+
+/*
+// apply to a path
+app.use('/api/Festivals', function(req, res, next) {
+    res.json("It has valid token", req.user);
+});
+*/
+// catch error
+app.use(function (err, req, res, next) {
+    if (err && err.name === 'UnauthorizedError') {
+        console.log('Invalid token, or no token supplied!')
+        console.log(req.get('Authorization'))
+        console.log(err)
+        res.status(401).send('Invalid token, or no token supplied!');
+    } else if(err) {
+        console.log(err)
+        res.status(401).send(err);
+    }
+});
+
+
 
 //var MYSQL_CONNECTION_STRING = process.env.NODE_ENV === 'production' ? process.env.JAWSDB_URL : ''
 //console.log(process.env.JAWSDB_URL)
