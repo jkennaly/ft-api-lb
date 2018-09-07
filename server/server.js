@@ -45,11 +45,12 @@ app.use('/api/Festivals', function(req, res, next) {
 });
 */
 
-
+/*
 app.use('/api/*', function (req, res, next) {
   console.log(req.user)
   next()
 });
+*/
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
