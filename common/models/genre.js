@@ -1,12 +1,16 @@
 // lineup.js
 
-module.exports = function(Lineup){
+module.exports = function(Genre){
 
-    Lineup.greet = function(msg, cb) {
+
+    Genre.deleteById = function(id, cb) {
+      Genre.findById(id).update(deleted, 1, cb);
+    }
+    Genre.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }
 
-    Lineup.remoteMethod('greet', {
+    Genre.remoteMethod('greet', {
           accepts: {arg: 'msg', type: 'string'},
           returns: {arg: 'greeting', type: 'string'}
     });

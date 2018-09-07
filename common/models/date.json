@@ -6,16 +6,27 @@
       "schema": "festival_master",
       "table": "dates"
     },
-    "relations": {}
+    "relations": {
+      "festival": {
+        "type": "belongsTo",
+        "model": "Festival",
+        "foreignKey": "festival"
+      },
+      "days": {
+        "type": "hasMany",
+        "model": "Day",
+        "foreignKey": "date"
+      }
+    }
   },
   "properties": {
     "id": {
       "type": "Number",
-      "required": true,
+      "id": 1,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
-      "id": 1,
       "mysql": {
         "columnName": "id",
         "dataType": "int",
@@ -40,14 +51,14 @@
         "nullable": "N"
       }
     },
-    "festivalSeries": {
+    "user": {
       "type": "Number",
       "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "festival_series",
+        "columnName": "user",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -100,24 +111,9 @@
         "nullable": "N"
       }
     },
-    "mode": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "mode",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      }
-    },
     "deleted": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -132,7 +128,7 @@
     },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,
@@ -145,5 +141,9 @@
         "nullable": "N"
       }
     }
-  }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
 }

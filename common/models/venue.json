@@ -11,11 +11,11 @@
   "properties": {
     "id": {
       "type": "Number",
-      "required": true,
+      "id": 1,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
-      "id": 1,
       "mysql": {
         "columnName": "id",
         "dataType": "int",
@@ -102,7 +102,7 @@
     },
     "state": {
       "type": "String",
-      "required": true,
+      "required": false,
       "length": 50,
       "precision": null,
       "scale": null,
@@ -132,7 +132,7 @@
     },
     "streetAddress": {
       "type": "String",
-      "required": true,
+      "required": false,
       "length": 65535,
       "precision": null,
       "scale": null,
@@ -147,7 +147,7 @@
     },
     "deleted": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -162,7 +162,7 @@
     },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,
@@ -175,5 +175,9 @@
         "nullable": "N"
       }
     }
-  }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
 }

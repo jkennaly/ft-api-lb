@@ -10,6 +10,7 @@
     "password": "Kt95#8oO!4rzovllpf94",
     "name": "DragonAgeFestivalMaster",
     "user": "root",
-    "connector": "mysql"
+    "connector": "mysql",
+    "connectionLimit": 8
   }
 }

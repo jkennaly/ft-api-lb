@@ -5,17 +5,33 @@
     "mysql": {
       "schema": "festival_master",
       "table": "bands"
-    },
-    "relations": {}
+    },  
+    "relations": {
+    "festivals": {
+        "type": "hasMany",
+        "model": "Festival",
+        "foreignKey": "band",
+        "options": {
+          "nestRemoting": true
+        },
+        "through": "Lineup",
+        "keyThrough": "festival"
+      },
+      "lineups": {
+        "type": "hasMany",
+        "model": "Lineup",
+        "foreignKey": "band"
+      }
+    }
   },
   "properties": {
     "id": {
       "type": "Number",
-      "required": true,
+      "id": 1,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
-      "id": 1,
       "mysql": {
         "columnName": "id",
         "dataType": "int",
@@ -40,24 +56,9 @@
         "nullable": "N"
       }
     },
-    "festivals": {
-      "type": "String",
-      "required": true,
-      "length": 8096,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "festivals",
-        "dataType": "varchar",
-        "dataLength": 8096,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,
@@ -72,7 +73,7 @@
     },
     "deleted": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -85,5 +86,9 @@
         "nullable": "N"
       }
     }
-  }
+  },
+  "validations": [],
+  "acls": [],
+  "relations": {},
+  "methods": {}
 }

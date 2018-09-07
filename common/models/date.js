@@ -1,14 +1,47 @@
 // date.js
+const week = [
+'Sunday',
+'Monday',
+'Tuesday',
+'Wednesday',
+'Thursday',
+'Friday',
+'Saturday'
+]
 
-module.exports = function(Date){
+module.exports = function(DateModel){
 
-    Date.greet = function(msg, cb) {
-      cb(null, 'Greetings... ' + msg);
+
+    DateModel.deleteById = function(id, cb) {
+      DateModel.findById(id).update(deleted, 1, cb);
     }
 
-    Date.remoteMethod('greet', {
-          accepts: {arg: 'msg', type: 'string'},
-          returns: {arg: 'greeting', type: 'string'}
+    DateModel.createWithDays = function(data, cb) {
+      console.log('DateModel.createWithDays ')
+      console.log(data.basedate)
+    	//create the DateModel
+      DateModel.create(data, function(err, date) {
+        const basedate = new Date(data.basedate)
+      console.log(basedate)
+        for(var i=0;i<data.dayCount;i++){
+          var iDate = new Date(data.basedate)
+          iDate.setDate(iDate.getDate() + i)
+      console.log(iDate)
+          date.days.create({
+            date: date.id,
+            name: week[iDate.getUTCDay()],
+            daysOffset: i,
+            user: data.user
+          })
+
+        }
+      cb(err, date);
+      })
+    }
+
+    DateModel.remoteMethod('createWithDays', {
+          accepts: { arg: 'data', type: 'object', http: { source: 'body' } }
+
     });
 };
 

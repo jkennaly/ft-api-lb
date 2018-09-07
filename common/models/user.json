@@ -11,28 +11,13 @@
   "properties": {
     "id": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
       "id": 1,
       "mysql": {
         "columnName": "id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      }
-    },
-    "credentialsVersion": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "credentials_version",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -57,7 +42,7 @@
     },
     "email": {
       "type": "String",
-      "required": false,
+      "required": true,
       "length": 100,
       "precision": null,
       "scale": null,
@@ -70,194 +55,14 @@
         "nullable": "Y"
       }
     },
-    "salt": {
-      "type": "String",
-      "required": false,
-      "length": 120,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "salt",
-        "dataType": "varchar",
-        "dataLength": 120,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "hashedpw": {
-      "type": "String",
-      "required": false,
-      "length": 120,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "hashedpw",
-        "dataType": "varchar",
-        "dataLength": 120,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "level": {
-      "type": "String",
-      "required": false,
-      "length": 30,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "level",
-        "dataType": "varchar",
-        "dataLength": 30,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "count": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "count",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      }
-    },
-    "group": {
-      "type": "String",
-      "required": true,
-      "length": 4096,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "group",
-        "dataType": "varchar",
-        "dataLength": 4096,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "usedKey": {
-      "type": "String",
-      "required": true,
-      "length": 10,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "used_key",
-        "dataType": "varchar",
-        "dataLength": 10,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "publicKey": {
-      "type": "String",
-      "required": true,
-      "length": 10,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "public_key",
-        "dataType": "varchar",
-        "dataLength": 10,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "privateKey": {
-      "type": "String",
-      "required": true,
-      "length": 10,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "private_key",
-        "dataType": "varchar",
-        "dataLength": 10,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "credited": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "credited",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      }
-    },
-    "allKeys": {
-      "type": "String",
-      "required": true,
-      "length": 14000,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "all_keys",
-        "dataType": "varchar",
-        "dataLength": 14000,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "mobileAuthKey": {
-      "type": "String",
-      "required": true,
-      "length": 120,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "mobile_auth_key",
-        "dataType": "varchar",
-        "dataLength": 120,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "follows": {
+    "picture": {
       "type": "String",
       "required": true,
       "length": 65535,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "follows",
-        "dataType": "text",
-        "dataLength": 65535,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "blocks": {
-      "type": "String",
-      "required": true,
-      "length": 65535,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "blocks",
+        "columnName": "picture",
         "dataType": "text",
         "dataLength": 65535,
         "dataPrecision": null,
@@ -267,7 +72,7 @@
     },
     "credits": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -280,39 +85,9 @@
         "nullable": "N"
       }
     },
-    "access": {
-      "type": "String",
-      "required": true,
-      "length": 65535,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "access",
-        "dataType": "text",
-        "dataLength": 65535,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "interested": {
-      "type": "String",
-      "required": true,
-      "length": 65535,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "interested",
-        "dataType": "text",
-        "dataLength": 65535,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "N"
-      }
-    },
     "deleted": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -327,7 +102,7 @@
     },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,

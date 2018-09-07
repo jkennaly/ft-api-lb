@@ -2,6 +2,10 @@
 
 module.exports = function(Day){
 
+
+    Day.deleteById = function(id, cb) {
+      Day.findById(id).update(deleted, 1, cb);
+    }
     Day.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }

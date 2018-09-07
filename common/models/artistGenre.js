@@ -2,6 +2,7 @@
 
 module.exports = function(ArtistGenre){
 
+
     ArtistGenre.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }

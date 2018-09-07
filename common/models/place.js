@@ -2,6 +2,10 @@
 
 module.exports = function(Place){
 
+
+    Place.deleteById = function(id, cb) {
+      Place.findById(id).update(deleted, 1, cb);
+    }
     Place.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }

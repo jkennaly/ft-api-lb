@@ -2,6 +2,10 @@
 
 module.exports = function(Venue){
 
+
+    Venue.deleteById = function(id, cb) {
+      Venue.findById(id).updateAttribute(deleted, 1, cb);
+    }
     Venue.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }
