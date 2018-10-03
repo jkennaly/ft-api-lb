@@ -22,11 +22,11 @@ module.exports = function(DateModel){
     	//create the DateModel
       DateModel.create(data, function(err, date) {
         const basedate = new Date(data.basedate)
-      console.log(basedate)
+      //console.log(basedate)
         for(var i=0;i<data.dayCount;i++){
           var iDate = new Date(data.basedate)
           iDate.setDate(iDate.getDate() + i)
-      console.log(iDate)
+      //console.log(iDate)
           date.days.create({
             date: date.id,
             name: week[iDate.getUTCDay()],

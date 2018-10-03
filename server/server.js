@@ -33,9 +33,11 @@ var guard = require('express-jwt-permissions')({
 
 app.use(authCheck);
 app.post(/^((?!Messages).)*$/g, guard.check('create:festivals'))
+app.put(/^((?!Messages).)*$/g, guard.check('create:festivals'))
 app.use(/verify/g, guard.check('verify:festivals'))
 
 app.post(/Messages/g, guard.check('create:messages'))
+app.put(/Messages/g, guard.check('create:messages'))
 app.use(/admin/g, guard.check('admin'))
 
 /*

@@ -21,6 +21,11 @@
         "type": "hasMany",
         "model": "Lineup",
         "foreignKey": "band"
+      },
+      "aliases": {
+        "type": "hasMany",
+        "model": "ArtistAlias",
+        "foreignKey": "band"
       }
     }
   },

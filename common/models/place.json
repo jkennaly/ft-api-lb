@@ -12,7 +12,7 @@
     "id": {
       "type": "Number",
       "id": 1,
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -27,7 +27,7 @@
     },
     "festival": {
       "type": "Number",
-      "required": false,
+      "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -42,7 +42,7 @@
     },
     "festivalSeries": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -100,9 +100,24 @@
         "nullable": "N"
       }
     },
-    "deleted": {
+    "user": {
       "type": "Number",
       "required": true,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "user",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "N"
+      }
+    },
+    "deleted": {
+      "type": "Number",
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -132,7 +147,7 @@
     },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,

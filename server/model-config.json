@@ -107,5 +107,9 @@
   "ArtistGenre": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
+  },
+  "ArtistAlias": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
   }
 }
