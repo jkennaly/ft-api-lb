@@ -12,7 +12,7 @@
     "id": {
       "type": "Number",
       "id": 1,
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -42,7 +42,7 @@
     },
     "touser": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -117,7 +117,7 @@
     },
     "deleted": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -132,7 +132,7 @@
     },
     "timestamp": {
       "type": "Date",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": null,
       "scale": null,

@@ -3,6 +3,9 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 
+const mysql = require('mysql2');
+const _ = require('lodash');
+
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
 var bodyParser = require('body-parser');
@@ -25,20 +28,57 @@ var authCheck = jwt({
     issuer: 'https://festivaltime.auth0.com/',
     algorithms: ['RS256']
 })
-  .unless({path: ['', '/', '/bundle.js']});
+  .unless({path: [/^((?!api).)*$/g]});
 
 var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
 })
 
+var aliasTable = {}
+
 app.use(authCheck);
 app.post(/^((?!Messages).)*$/g, guard.check('create:festivals'))
 app.put(/^((?!Messages).)*$/g, guard.check('create:festivals'))
+app.delete(/^((?!Messages).)*$/g, guard.check('create:festivals'))
 app.use(/verify/g, guard.check('verify:festivals'))
 
 app.post(/Messages/g, guard.check('create:messages'))
 app.put(/Messages/g, guard.check('create:messages'))
+app.delete(/Messages/g, guard.check('admin'))
 app.use(/admin/g, guard.check('admin'))
+
+//user request has passed security, now get ftUserId
+app.use('/api/*', function (req, res, next) {
+  const authId = req.user.sub
+  var foundAlias = aliasTable[authId]
+  if(!foundAlias) {
+    //get highest id in alias Table
+    const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
+    //load all aliases with ids higher
+    
+    const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=2&debug=false');
+    connection.execute(
+      'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
+      highId,
+      (err, results, fields) => {
+        if(err) return next(err)
+          const resultPairs = results.map(r => [r.alias, r.user])
+          _.assign(aliasTable, _.fromPairs(resultPairs))
+          req.user.ftUserId = aliasTable[authId]
+          //console.log('using loaded alias')
+          //console.log(req.user)
+          next()
+      }
+    )
+    connection.end()
+  } else {
+    req.user.ftUserId = foundAlias
+    //console.log('using cached alias')  
+    //console.log(req.user)
+    next()
+  }
+
+});
 
 /*
 // apply to a path

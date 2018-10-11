@@ -14,8 +14,8 @@
     ]
   },
   "User": {
-    "dataSource": "DragonAgeFestivalMaster",
-    "public": true
+    "dataSource": "db",
+    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -37,6 +37,10 @@
     "public": false
   },
   "Message": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
+  },
+  "Image": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
   },
@@ -109,6 +113,10 @@
     "public": true
   },
   "ArtistAlias": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
+  },
+  "Profile": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
   }
