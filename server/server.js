@@ -11,10 +11,16 @@ var jwks = require('jwks-rsa');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 
+var sslRedirect = require('heroku-ssl-redirect')
+
 var app = module.exports = loopback();
+
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
+} else {
+app.use(sslRedirect())
+  
 }
 
 var authCheck = jwt({
