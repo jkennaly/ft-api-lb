@@ -149,5 +149,6 @@
   "validations": [],
   "relations": {},
   "acls": [],
-  "methods": {}
+  "methods": {},
+  "replaceOnPUT": false
 }
