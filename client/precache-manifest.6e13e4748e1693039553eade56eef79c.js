@@ -1,6 +1,6 @@
 self.__precacheManifest = [
   {
-    "revision": "28d5a1a8d751004174e0",
+    "revision": "a3cf4183810c78be138e",
     "url": "main.css"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "favicon.ico"
   },
   {
-    "revision": "28d5a1a8d751004174e0",
+    "revision": "a3cf4183810c78be138e",
     "url": "bundle.js"
   }
 ];
