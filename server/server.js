@@ -54,7 +54,7 @@ app.delete(/Messages/g, guard.check('admin'))
 app.use(/admin/g, guard.check('admin'))
 
 //user request has passed security, now get ftUserId
-app.use('/api/*', function (req, res, next) {
+app.use('/api/Profiles/getUserId*', function (req, res, next) {
   const authId = req.user.sub
   var foundAlias = aliasTable[authId]
   if(!foundAlias) {
@@ -62,21 +62,37 @@ app.use('/api/*', function (req, res, next) {
     const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
     //load all aliases with ids higher
     
-    const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=2&debug=false');
+    const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
+    connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+
+  //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
+})
     connection.execute(
       'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
-      highId,
+      [highId],
       (err, results, fields) => {
         if(err) return next(err)
           const resultPairs = results.map(r => [r.alias, r.user])
           _.assign(aliasTable, _.fromPairs(resultPairs))
-          req.user.ftUserId = aliasTable[authId]
+          if(aliasTable[authId]) {req.user.ftUserId = aliasTable[authId]}
+            /*
+            else {
+              //user not found
+              //create new user and add to 
+              req.app.Profile
+            }
+            */
           //console.log('using loaded alias')
           //console.log(req.user)
           next()
       }
     )
     connection.end()
+    //console.log('connected ended ' + req.originalUrl)
   } else {
     req.user.ftUserId = foundAlias
     //console.log('using cached alias')  

@@ -4,7 +4,13 @@ var jwt = require('jsonwebtoken');
 
 module.exports = function(Profile){
 
+    Profile.observe('before save', function filterProperties(ctx, next) {
+        let oInstance = ctx.instance;
 
+        if (oInstance) oInstance.password = oInstance.password || 'placeholder';
+
+        next();
+    });
     Profile.deleteById = function(id, cb) {
       	Profile.findById(id).update(deleted, 1, cb);
     }
@@ -28,12 +34,18 @@ module.exports = function(Profile){
     	const sql_stmt = 'SELECT user FROM `user_aliases` WHERE alias=?'
     	const params = [user.sub]
     	const createUser = function (err, result) {
+            console.log('createUser called')
     		Profile.create({
     			email: decoded.email,
     			username: decoded.username || decoded.nickname || decoded.email,
     			picture: decoded.picture,
     			credits: 1
     		}, function (err, result) {
+                if(err) {
+                    console.log('Profile creation failed')
+                    console.log(err)
+                    return
+                }
 		    	const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
 		    	const params = [decoded.email]
     			Profile.dataSource.connector.execute(sql_stmt, params, function (err, result) {
@@ -49,7 +61,8 @@ module.exports = function(Profile){
 
     	}
     	const emailCheckCallback = function (err, result) {
-    		if (err) {
+    		console.log('ecc called')
+            if (err) {
     			console.log(err)
 	    		cb(err, 0)
 	    		return
@@ -63,10 +76,11 @@ module.exports = function(Profile){
     			Profile.dataSource.connector.execute(sql_stmt, params, err => err ? console.log(err) : undefined);
 	    		cb(err, result[0].id)
 	    		return
-	    	}
+	    	} else createUser(err)
     	}
     	const callback = function (err, result) {
-    		if (err) console.log(err);
+    		console.log('callback called')
+            if (err) console.log(err);
     		//console.log(result)
     		//if there is an error or a valid alias
 	    	if(err || result.length) {
@@ -74,12 +88,12 @@ module.exports = function(Profile){
 	    		return
 	    	}
 	    	const emailVerified = decoded.email_verified
-	    	if(emailVerified) {
+	    	//if(emailVerified) {
 		    	const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
 		    	const params = [decoded.email]
     			Profile.dataSource.connector.execute(sql_stmt, params, emailCheckCallback);
 
-	    	}
+	    	//}
 
 	    }
     	Profile.dataSource.connector.execute(sql_stmt, params, callback);
