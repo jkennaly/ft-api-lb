@@ -40,8 +40,6 @@ var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
 })
 
-var aliasTable = {}
-
 app.use(authCheck);
 app.post(/^((?!Messages).)*$/g, guard.check('create:festivals'))
 app.put(/^((?!Messages).)*$/g, guard.check('create:festivals'))
@@ -56,7 +54,9 @@ app.use(/admin/g, guard.check('admin'))
 //user request has passed security, now get ftUserId
 app.use('/api/Profiles/getUserId*', function (req, res, next) {
   const authId = req.user.sub
+  const aliasTable = app.get('aliasTable')
   var foundAlias = aliasTable[authId]
+  console.log('foundAlias ' + foundAlias)
   if(!foundAlias) {
     //get highest id in alias Table
     const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
@@ -78,7 +78,12 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
         if(err) return next(err)
           const resultPairs = results.map(r => [r.alias, r.user])
           _.assign(aliasTable, _.fromPairs(resultPairs))
-          if(aliasTable[authId]) {req.user.ftUserId = aliasTable[authId]}
+          if(aliasTable[authId]) {
+            req.user.ftUserId = aliasTable[authId]
+            app.set('ftUserId', req.user.ftUserId)
+            //console.log('userId Set A ' + req.user.ftUserId)
+
+          }
             /*
             else {
               //user not found
@@ -95,12 +100,28 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
     //console.log('connected ended ' + req.originalUrl)
   } else {
     req.user.ftUserId = foundAlias
+    app.set('ftUserId', req.user.ftUserId)
+    //console.log('userId Set B ' + req.user.ftUserId)
     //console.log('using cached alias')  
     //console.log(req.user)
     next()
   }
 
 });
+
+app.use('/api/*', function(req, res, next) {
+  const aliasTable = app.get('aliasTable')
+  //console.log('server.js 114 aliasTable ')
+  //console.log(aliasTable)
+  if(req.user && !req.user.ftUserId) {
+    const authId = req.user.sub
+    const aliasTable = app.get('aliasTable')
+    var foundAlias = aliasTable[authId]
+    req.user.ftUserId = foundAlias
+    app.set('ftUserId', req.user.ftUserId)
+  }
+  next()
+})
 
 /*
 // apply to a path

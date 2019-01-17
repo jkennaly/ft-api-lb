@@ -40,6 +40,10 @@
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
   },
+  "MessagesMonitor": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
+  },
   "Image": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true

@@ -34,7 +34,7 @@ module.exports = function(Profile){
     	const sql_stmt = 'SELECT user FROM `user_aliases` WHERE alias=?'
     	const params = [user.sub]
     	const createUser = function (err, result) {
-            console.log('createUser called')
+            //console.log('createUser called')
     		Profile.create({
     			email: decoded.email,
     			username: decoded.username || decoded.nickname || decoded.email,
@@ -61,7 +61,7 @@ module.exports = function(Profile){
 
     	}
     	const emailCheckCallback = function (err, result) {
-    		console.log('ecc called')
+    		//console.log('ecc called')
             if (err) {
     			console.log(err)
 	    		cb(err, 0)
@@ -79,7 +79,7 @@ module.exports = function(Profile){
 	    	} else createUser(err)
     	}
     	const callback = function (err, result) {
-    		console.log('callback called')
+    		//console.log('callback called')
             if (err) console.log(err);
     		//console.log(result)
     		//if there is an error or a valid alias
