@@ -1,30 +1,128 @@
-/**
- * Welcome to your Workbox-powered service worker!
- *
- * You'll need to register this file in your web app and you should
- * disable HTTP caching for this file too.
- * See https://goo.gl/nhQhGp
- *
- * The rest of the code is auto-generated. Please don't update this file
- * directly; instead, make changes to your Workbox build configuration
- * and re-run your build process.
- * See https://goo.gl/2aRDsh
- */
+/*
+Copyright 2018 Google Inc.
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-importScripts(
-  "precache-manifest.0d3c3d4cc7a8981ecdc7c5e94d23cb52.js"
-);
+    http://www.apache.org/licenses/LICENSE-2.0
 
-workbox.skipWaiting();
-workbox.clientsClaim();
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js');
+
+if (workbox) {
+  	console.log(`Yay! Workbox is loaded 🎉`);
+
+  	workbox.skipWaiting()
+  	//workbox.clientsClaim()
+
+	const bgSyncPlugin = new workbox.backgroundSync.Plugin('myQueueName', {
+	  maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
+	})
+
+	  workbox.precaching.precacheAndRoute([
+  {
+    "url": "index.html",
+    "revision": "71f2b8122f2a9d58315e79c1cc453cbe"
+  },
+  {
+    "url": "bundle.js",
+    "revision": "8b493e9f26e15ef05d752b920285614a"
+  },
+  {
+    "url": "precache-manifest.a0b0bc77be8f8dbc845c3315f837c3af.js",
+    "revision": "a0b0bc77be8f8dbc845c3315f837c3af"
+  },
+  {
+    "url": "img/Crowdshot.jpg",
+    "revision": "73951d8fb7b813f09d4fd1bd7f3401b0"
+  },
+  {
+    "url": "favicon.ico",
+    "revision": "8ceda9cc1988836b1d45f13aa3371e1d"
+  }
+]);
+
+	  workbox.routing.registerRoute(
+		  /\/api\/Messages\/*/,
+		  workbox.strategies.networkOnly({
+		    plugins: [bgSyncPlugin]
+		  }),
+		  'POST'
+	);
+/*
+	workbox.routing.registerRoute(
+  		new RegExp("cloudinary.com/(.*)"),
+  		workbox.strategies.cacheFirst({
+      		cacheName: 'cloud-images',
+		    plugins: [
+		        new workbox.expiration.Plugin({
+		          maxAgeSeconds: 30 * 24 * 60 * 60,
+		          maxEntries: 300,
+		        }),
+		        new workbox.cacheableResponse.Plugin({
+		          statuses: [0, 200],
+		        }),
+		    ],
+  		}),
+	);
+*/
+	workbox.routing.registerRoute(
+  		new RegExp("fontawesome.com/(.*)"),
+  		workbox.strategies.cacheFirst({
+      		cacheName: 'fonts',
+		    plugins: [
+		        new workbox.expiration.Plugin({
+		          maxAgeSeconds: 30 * 24 * 60 * 60,
+		          maxEntries: 300,
+		        }),
+		        new workbox.cacheableResponse.Plugin({
+		          statuses: [0, 200],
+		        }),
+		    ],
+  		}),
+	);
+
+	workbox.routing.registerRoute(
+  		new RegExp("googleapis.com/(.*)"),
+  		workbox.strategies.cacheFirst({
+      		cacheName: 'fonts',
+		    plugins: [
+		        new workbox.expiration.Plugin({
+		          maxAgeSeconds: 30 * 24 * 60 * 60,
+		          maxEntries: 300,
+		        }),
+		        new workbox.cacheableResponse.Plugin({
+		          statuses: [0, 200],
+		        }),
+		    ],
+  		}),
+	);
+
+	workbox.routing.registerRoute(
+  		new RegExp("gstatic.com/(.*)"),
+  		workbox.strategies.cacheFirst({
+      		cacheName: 'fonts',
+		    plugins: [
+		        new workbox.expiration.Plugin({
+		          maxAgeSeconds: 30 * 24 * 60 * 60,
+		          maxEntries: 300,
+		        }),
+		        new workbox.cacheableResponse.Plugin({
+		          statuses: [0, 200],
+		        }),
+		    ],
+  		}),
+	);
+
+
+} else {
+  console.log(`Boo! Workbox didn't load 😬`);
+}

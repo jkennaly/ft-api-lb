@@ -114,6 +114,21 @@
         "dataScale": 0,
         "nullable": "N"
       }
+    },
+    "timestamp": {
+      "type": "Date",
+      "required": false,
+      "length": null,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "timestamp",
+        "dataType": "timestamp",
+        "dataLength": null,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "N"
+      }
     }
   },
   "validations": [],
