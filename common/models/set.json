@@ -6,7 +6,12 @@
       "schema": "festival_master",
       "table": "sets"
     },
-    "relations": {}
+    "relations": {
+      "days": {
+        "type": "belongsTo",
+        "model": "day",
+        "foreignKey": "day"
+      }}
   },
   "properties": {
     "id": {

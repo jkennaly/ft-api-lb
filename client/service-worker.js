@@ -30,15 +30,11 @@ if (workbox) {
 	  workbox.precaching.precacheAndRoute([
   {
     "url": "index.html",
-    "revision": "71f2b8122f2a9d58315e79c1cc453cbe"
+    "revision": "5cb8f1b3447f8f22ae9461d28e26a3e4"
   },
   {
     "url": "bundle.js",
-    "revision": "327313963756c04f2ace3a20f04773c5"
-  },
-  {
-    "url": "precache-manifest.894a05b516e2d4bf89704313057c8d7f.js",
-    "revision": "894a05b516e2d4bf89704313057c8d7f"
+    "revision": "d982fa759ba509c19b6909e2da26ba98"
   },
   {
     "url": "img/Crowdshot.jpg",
@@ -57,9 +53,9 @@ if (workbox) {
 		  }),
 		  'POST'
 	);
-/*
+
 	workbox.routing.registerRoute(
-  		new RegExp("cloudinary.com/(.*)"),
+  		new RegExp("(.*)widget.cloudinary.com/(.*)"),
   		workbox.strategies.cacheFirst({
       		cacheName: 'cloud-images',
 		    plugins: [
@@ -73,9 +69,9 @@ if (workbox) {
 		    ],
   		}),
 	);
-*/
+
 	workbox.routing.registerRoute(
-  		new RegExp("fontawesome.com/(.*)"),
+  		new RegExp("(.*)fontawesome.com/(.*)"),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [
@@ -91,7 +87,7 @@ if (workbox) {
 	);
 
 	workbox.routing.registerRoute(
-  		new RegExp("googleapis.com/(.*)"),
+  		new RegExp("(.*)googleapis.com/(.*)"),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [
@@ -107,7 +103,7 @@ if (workbox) {
 	);
 
 	workbox.routing.registerRoute(
-  		new RegExp("gstatic.com/(.*)"),
+  		new RegExp("(.*)gstatic.com/(.*)"),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [

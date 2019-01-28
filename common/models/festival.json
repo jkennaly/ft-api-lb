@@ -16,6 +16,23 @@
         },
         "through": "Lineup",
         "keyThrough": "band"
+      },
+      "dates": {
+        "type": "hasMany",
+        "model": "Date",
+        "foreignKey": "festival"
+
+      },
+      "series": {
+        "type": "belongsTo",
+        "model": "Series",
+        "foreignKey": "series"
+      },
+      "lineup": {
+        "type": "hasMany",
+        "model": "Lineup",
+        "foreignKey": "festival"
+
       }
     }
   },

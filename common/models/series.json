@@ -6,7 +6,14 @@
       "schema": "festival_master",
       "table": "festival_series"
     },
-    "relations": {}
+    "relations": {
+      "festivals": {
+        "type": "hasMany",
+        "model": "Festival",
+        "foreignKey": "series"
+
+      }
+    }
   },
   "properties": {
     "id": {

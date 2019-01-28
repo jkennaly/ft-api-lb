@@ -6,7 +6,18 @@
       "schema": "festival_master",
       "table": "days"
     },
-    "relations": {}
+    "relations": {
+      "sets": {
+        "type": "hasMany",
+        "model": "Set",
+        "foreignKey": "day"
+
+      },
+      "dates": {
+        "type": "belongsTo",
+        "model": "Date",
+        "foreignKey": "date"
+      }}
   },
   "properties": {
     "id": {
