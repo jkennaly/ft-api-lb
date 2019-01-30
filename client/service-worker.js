@@ -18,7 +18,7 @@ limitations under the License.
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js');
 
 if (workbox) {
-  	console.log(`Yay! Workbox is loaded 🎉`);
+  	//console.log(`Yay! Workbox is loaded 🎉`);
 
   	workbox.skipWaiting()
   	//workbox.clientsClaim()
@@ -34,7 +34,7 @@ if (workbox) {
   },
   {
     "url": "bundle.js",
-    "revision": "d982fa759ba509c19b6909e2da26ba98"
+    "revision": "75753593e1444e8f27be94b5aa15a6ea"
   },
   {
     "url": "img/Crowdshot.jpg",

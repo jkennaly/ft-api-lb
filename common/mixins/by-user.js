@@ -15,7 +15,7 @@ module.exports = function byUser(Model, options) {
 
     //console.log('by-user mixin user ' + authorId)
     //console.log('by-user mixin query ')
-    console.log(ctx.query)
+    //console.log(ctx.query)
 
     const newFilter = {user: authorId}
 
