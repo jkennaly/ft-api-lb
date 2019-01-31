@@ -11,18 +11,7 @@ module.exports = function(Message){
     Message.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }
-    Message.festivalConnected = function(id, cb) {
-      /*
-      const logTime = (() => {
-        const startTime = new Date()
-        return description => result => {
-          console.log(description)
-          console.log('elapsed ms since Message.festivalConnected ' + ((new Date()) - startTime))
-          return result
-        }
-      })()
-      */
-
+    Message.forFestival = function(festivalId, cb) {
       //console.log('Message.festivalConnected  ')
       //get all messages with the festival as a subject
       //get all messages with the series/dates/days/sets/ /*places/venues*/ as a subject
@@ -31,16 +20,13 @@ module.exports = function(Message){
       const directSubjectPromise = Message.find({
         where: {
           subjectType: 7,
-          subject: id
+          subject: festivalId
         }
       })
-        //.then(logTime('directSubjectPromise'))
 
 
-      //console.log('Message.festivalConnected  directSubjectPromise')
-      const relatedEventsPromise = Message.app.models.Festival.relatedEvents(id, cb)
+      const relatedEventsPromise = Message.app.models.Festival.relatedEvents(festivalId, cb)
         //relatedEventsObj has seriesIds, dateIds, dayIds and setIds that need to be checked
-        //.then(logTime('relatedEventsPromise'))
         .then(relatedEventsObj => {      
           const eventMessagePromise = Message.find({
             where: {
@@ -65,44 +51,13 @@ module.exports = function(Message){
               ]
             }
           })
-            //.then(logTime('relatedEvents Promise.all'))
-          /*
-          const seriesPromise = Message.find({
-            where: {
-              subjectType: 6,
-              subject: { inq: relatedEventsObj.seriesIds}
-            }
-          })
-          const datePromise = Message.find({
-            where: {
-              subjectType: 8,
-              subject: { inq: relatedEventsObj.dateIds}
-            }
-          })
-          const dayPromise = Message.find({
-            where: {
-              subjectType: 9,
-              subject: { inq: relatedEventsObj.dayIds}
-            }
-          })
-          const setPromise = Message.find({
-            where: {
-              subjectType: 3,
-              subject: { inq: relatedEventsObj.setIds}
-            }
-          })
-          return Promise.all([seriesPromise, datePromise, dayPromise, setPromise])
-            .then((messageArrayArray) => _.flatten(messageArrayArray))
-            //.then(logTime('relatedEvents Promise.all'))
-          */
           return eventMessagePromise
         })
         .catch(cb)
 
-      //console.log('Message.festivalConnected  relatedEventsPromise')
       const artistsPromise = Message.app.models.Lineup.find({
         where: {
-          festival: id
+          festival: festivalId
         }
       })
         .then(lineups => {
@@ -116,10 +71,8 @@ module.exports = function(Message){
         })
         .catch(cb)
 
-      //console.log('Message.festivalConnected  artistsPromise')
       Promise.all([directSubjectPromise, relatedEventsPromise, artistsPromise])
         .then((messageArrayArray) => _.flatten(messageArrayArray))
-        //.then(messageArray => messageArray.filter(m => excludeArray.indexOf(m.id) < 0))
         //Now all the messages with the festival as a subject have been collected
         //Grab their descendants
 
@@ -133,27 +86,34 @@ module.exports = function(Message){
               //.filter(m => excludeArray.indexOf(m.id) < 0)
               .concat(baseMessages))
         })
-        //.then(logTime('allMessages found'))
+        .then(allMessages => cb(null, allMessages))
+        .catch(cb)
+
+    }
+    Message.forArtist = function(artistId, cb) {
+      //get all messages with the artist as a subject
+      //get all messages with the above messages as a baseMessage
+      const directSubjectPromise = Message.find({
+        where: {
+          subjectType: 2,
+          subject: artistId
+        }
+      })
+      Promise.all([directSubjectPromise])
+        .then((messageArrayArray) => _.flatten(messageArrayArray))
+        .then(baseMessages => {
+          const baseIds = baseMessages.map(x => x.id)
+          return Message.find({where: {
+            baseMessage: {inq: baseIds}
+          }})
+            .then(discussionMessages => discussionMessages
+              //.filter(m => excludeArray.indexOf(m.id) < 0)
+              .concat(baseMessages))
+        })
         .then(allMessages => cb(null, allMessages))
         .catch(cb)
 
       //console.log('Message.festivalConnected  Promise all')
-    }
-
-
-    Message.forFestival = function(festivalId, cb) {
-
-      ////console.log('Message.forDay')
-      ////console.log(dayId)
-      ////console.log(data)
-
-      //data.messages is the excludeArray, the messages already on the client
-      Message.festivalConnected(festivalId, cb)
-
-      
-    // the files are available as req.files.
-    // the body fields are available in req.body
-    //cb(null, 'OK');
     }
 
 
@@ -166,6 +126,12 @@ module.exports = function(Message){
       accepts: {arg: 'festivalId', type: 'number', required: true},
       returns: { arg: 'data', type: 'array'},
       http: {path: '/forFestival/:festivalId'}
+    });
+
+    Message.remoteMethod('forArtist', {
+      accepts: {arg: 'artistId', type: 'number', required: true},
+      returns: { arg: 'data', type: 'array'},
+      http: {path: '/forArtist/:artistId'}
     });
 };
 

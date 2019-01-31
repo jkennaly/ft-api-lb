@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js')
 
 if (workbox) {
   	//console.log(`Yay! Workbox is loaded 🎉`);
@@ -30,11 +30,11 @@ if (workbox) {
 	  workbox.precaching.precacheAndRoute([
   {
     "url": "index.html",
-    "revision": "5cb8f1b3447f8f22ae9461d28e26a3e4"
+    "revision": "09f35d7daf5af990acf275b0c9a955c1"
   },
   {
     "url": "bundle.js",
-    "revision": "75753593e1444e8f27be94b5aa15a6ea"
+    "revision": "723bfc95ffe7a0cfba8909ee144fce61"
   },
   {
     "url": "img/Crowdshot.jpg",
@@ -44,7 +44,7 @@ if (workbox) {
     "url": "favicon.ico",
     "revision": "8ceda9cc1988836b1d45f13aa3371e1d"
   }
-]);
+])
 
 	  workbox.routing.registerRoute(
 		  /\/api\/Messages\/*/,
@@ -52,10 +52,10 @@ if (workbox) {
 		    plugins: [bgSyncPlugin]
 		  }),
 		  'POST'
-	);
+	)
 
 	workbox.routing.registerRoute(
-  		new RegExp("(.*)widget.cloudinary.com/(.*)"),
+  		new RegExp('(.*)widget.cloudinary.com/(.*)'),
   		workbox.strategies.cacheFirst({
       		cacheName: 'cloud-images',
 		    plugins: [
@@ -68,10 +68,10 @@ if (workbox) {
 		        }),
 		    ],
   		}),
-	);
+	)
 
 	workbox.routing.registerRoute(
-  		new RegExp("(.*)fontawesome.com/(.*)"),
+  		new RegExp('(.*)fontawesome.com/(.*)'),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [
@@ -84,10 +84,10 @@ if (workbox) {
 		        }),
 		    ],
   		}),
-	);
+	)
 
 	workbox.routing.registerRoute(
-  		new RegExp("(.*)googleapis.com/(.*)"),
+  		new RegExp('(.*)googleapis.com/(.*)'),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [
@@ -100,10 +100,10 @@ if (workbox) {
 		        }),
 		    ],
   		}),
-	);
+	)
 
 	workbox.routing.registerRoute(
-  		new RegExp("(.*)gstatic.com/(.*)"),
+  		new RegExp('(.*)gstatic.com/(.*)'),
   		workbox.strategies.cacheFirst({
       		cacheName: 'fonts',
 		    plugins: [
@@ -116,9 +116,9 @@ if (workbox) {
 		        }),
 		    ],
   		}),
-	);
+	)
 
 
 } else {
-  console.log(`Boo! Workbox didn't load 😬`);
+	console.log('Boo! Workbox didn\'t load 😬')
 }
