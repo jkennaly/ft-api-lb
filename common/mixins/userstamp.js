@@ -13,14 +13,13 @@ module.exports = function userstamp(Model, options) {
     // get current user ID
     const authorId = Model.app.get('ftUserId');
 
-    //console.log('by-user mixin user ' + authorId)
-    //console.log('by-user mixin query ')
+    console.log('userstamp mixin user ' + authorId)
     if (ctx.instance) {
-        ctx.instance.user =
-          ctx.instance.user || authorId;
-      } else {
-        ctx.data.user =
-          ctx.data.user || authorId;
+    console.log('userstamp mixin ctx.instance ')
+        ctx.instance.user = authorId;
+      } else if(ctx.data) {
+    console.log('userstamp mixin ctx.data ')
+        ctx.data.user = authorId;
       }
 
 

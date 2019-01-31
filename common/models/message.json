@@ -8,6 +8,9 @@
     },
     "relations": {}
   },
+  "mixins": {
+    "Fromuserstamp": true
+  },
   "properties": {
     "id": {
       "type": "Number",
