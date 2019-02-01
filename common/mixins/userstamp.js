@@ -13,12 +13,12 @@ module.exports = function userstamp(Model, options) {
     // get current user ID
     const authorId = Model.app.get('ftUserId');
 
-    console.log('userstamp mixin user ' + authorId)
+    //console.log('userstamp mixin user ' + authorId)
     if (ctx.instance) {
-    console.log('userstamp mixin ctx.instance ')
+    //console.log('userstamp mixin ctx.instance ')
         ctx.instance.user = authorId;
       } else if(ctx.data) {
-    console.log('userstamp mixin ctx.data ')
+    //console.log('userstamp mixin ctx.data ')
         ctx.data.user = authorId;
       }
 
