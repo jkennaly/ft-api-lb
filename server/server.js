@@ -56,7 +56,7 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
   const authId = req.user.sub
   const aliasTable = app.get('aliasTable')
   var foundAlias = aliasTable[authId]
-  console.log('foundAlias ' + foundAlias)
+  //console.log('foundAlias ' + foundAlias)
   if(!foundAlias) {
     //get highest id in alias Table
     const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
