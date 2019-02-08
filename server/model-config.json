@@ -123,5 +123,13 @@
   "Profile": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
+  },
+  "MessageType": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
+  },
+  "SubjectType": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
   }
 }
