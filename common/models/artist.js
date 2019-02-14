@@ -47,6 +47,7 @@ module.exports = function(Artist){
     Artist.festivalLineup = function(req, festivalId, cb) {
       const str = req.files[0].buffer.toString()
       const artistNameAr = str.split('\n').map(s => toTitleCase(s).trim())
+        .filter(s => s)
       //console.log(artistNameAr);
 
       //find or create each artist

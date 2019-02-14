@@ -39,16 +39,25 @@ module.exports = function(Lineup){
 
     Lineup.batchUpdate = function(data, cb) {
 
-      //console.log('Lineup.batchCreate')
-      //console.log(data)
+      console.log('Lineup.batchCreate')
+      console.log(data)
 
       //find or create each artist
-      data.map(dataEl => Lineup.upsertWithWhere({id: dataEl.id}, dataEl,
+      data
+      .map(dataEl => {
+        console.log('Lineup.batchUpdate data map')
+        console.log(dataEl)
+        return dataEl
+      })
+      .map(dataEl => Lineup.updateAll({id: dataEl.id}, dataEl,
         (err, instance) => {
           if(err) {
             //console.log('err')
             console.log(err)
           }
+        console.log('Lineup.batchUpdate updateAll')
+        console.log(instance)
+        //return instance
         }
       ))
       

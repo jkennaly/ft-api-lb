@@ -19,6 +19,9 @@
         "foreignKey": "date"
       }}
   },
+  "mixins": {
+    "Userstamp": true
+  },
   "properties": {
     "id": {
       "type": "Number",

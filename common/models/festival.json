@@ -36,6 +36,9 @@
       }
     }
   },
+  "mixins": {
+    "Creatorstamp": true
+  },
   "properties": {
     "id": {
       "type": "Number",

@@ -17,8 +17,8 @@ module.exports = function(DateModel){
     }
 
     DateModel.createWithDays = function(data, cb) {
-      console.log('DateModel.createWithDays ')
-      console.log(data.basedate)
+      //console.log('DateModel.createWithDays ')
+      //console.log(data.basedate)
     	//create the DateModel
       DateModel.create(data, function(err, date) {
         const basedate = new Date(data.basedate)
@@ -40,7 +40,8 @@ module.exports = function(DateModel){
     }
 
     DateModel.remoteMethod('createWithDays', {
-          accepts: { arg: 'data', type: 'object', http: { source: 'body' } }
+          accepts: { arg: 'data', type: 'object', http: { source: 'body' } },
+        returns: {arg: 'data', type: 'object'}
 
     });
 };
