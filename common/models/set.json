@@ -10,8 +10,12 @@
       "days": {
         "type": "belongsTo",
         "model": "day",
-        "foreignKey": "day"
+        "foreignKey": "day",
+        "as": "days"
       }}
+  },
+  "mixins": {
+    "Userstamp": true
   },
   "properties": {
     "id": {

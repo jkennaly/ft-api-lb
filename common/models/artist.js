@@ -20,22 +20,23 @@ module.exports = function(Artist){
       .then(whereObject => Artist.findOrCreate(whereObject,
         {name: artistName},
         (err, artist, created) => {
-          if(err) {
+          if(err || !artist) {
             //console.log('err')
-            console.log(err)
+            console.error(err)
+          } else {
+            artist.lineups.create({
+              festival: festivalId,
+              band: artist.id
+            }, 
+            (err, lineup) => {
+            if(err) {
+              //console.log('err')
+              console.error(err)
+            }
+              cb(null, {lineup: lineup, artist: artist})
+            })
+
           }
-          //console.log('festivalId ' + festivalId)
-          artist.lineups.create({
-            festival: festivalId,
-            band: artist.id
-          }, 
-          (err, lineup) => {
-          if(err) {
-            //console.log('err')
-            console.log(err)
-          }
-            cb(null, {lineup: lineup, artist: artist})
-          })
           
         }
   ))}

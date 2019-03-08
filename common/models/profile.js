@@ -83,8 +83,8 @@ module.exports = function(Profile){
             if (err) console.log(err);
     		//console.log(result)
     		//if there is an error or a valid alias
-	    	if(err || result.length) {
-	    		cb(err, result.length ? result[0].user : 0)
+	    	if(err || result && result.length) {
+	    		cb(err, result && result.length ? result[0].user : 0)
 	    		return
 	    	}
 	    	const emailVerified = decoded.email_verified

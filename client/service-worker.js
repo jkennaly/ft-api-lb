@@ -34,7 +34,7 @@ if (workbox) {
   },
   {
     "url": "bundle.js",
-    "revision": "56f53cdfa21e779b85d1c835dde7bf5c"
+    "revision": "c47659a08137805ba92bb7ccd78edf07"
   },
   {
     "url": "img/Crowdshot.jpg",
@@ -46,7 +46,7 @@ if (workbox) {
   },
   {
     "url": "main.css",
-    "revision": "eb6665c462432fbadbc998249aa53ad3"
+    "revision": "590a53a8514278561b98ac5904d629d5"
   }
 ])
 

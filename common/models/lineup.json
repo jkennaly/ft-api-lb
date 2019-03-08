@@ -76,6 +76,21 @@
         "nullable": "N"
       }
     },
+    "unscheduled": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "unscheduled",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "N"
+      }
+    },
     "deleted": {
       "type": "Number",
       "required": false,

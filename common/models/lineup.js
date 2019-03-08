@@ -19,19 +19,22 @@ module.exports = function(Lineup){
       //console.log('Lineup.batchDelete')
       //console.log(data)
 
-      //find or create each artist
-      data.ids.map(id => Lineup.deleteById(id,
+      Promise.all(data.ids.map( id => Lineup.findById(id)))
+      //first remove sets
+        .then(lineups => Promise.all(lineups.map(lineup => Lineup.app.models.Set.lineupRemove(lineup))))
+        //then remove lineups
+        .then(() => data.ids.forEach(id => Lineup.deleteById(id,
         (err, instance) => {
           if(err) {
             //console.log('err')
-            console.log(err)
+            console.error(err)
           }
         }
-      ))
-      
-      //add each artist to the forDay
+      )))
 
       
+      
+
     // the files are available as req.files.
     // the body fields are available in req.body
     cb(null, 'OK');
@@ -39,24 +42,17 @@ module.exports = function(Lineup){
 
     Lineup.batchUpdate = function(data, cb) {
 
-      console.log('Lineup.batchCreate')
-      console.log(data)
+      //console.log('Lineup.batchCreate')
+      //console.log(data)
 
-      //find or create each artist
-      data
-      .map(dataEl => {
-        console.log('Lineup.batchUpdate data map')
-        console.log(dataEl)
-        return dataEl
-      })
-      .map(dataEl => Lineup.updateAll({id: dataEl.id}, dataEl,
+      data.forEach(dataEl => Lineup.updateAll({id: dataEl.id}, dataEl,
         (err, instance) => {
           if(err) {
             //console.log('err')
-            console.log(err)
+            console.error(err)
           }
-        console.log('Lineup.batchUpdate updateAll')
-        console.log(instance)
+        //console.log('Lineup.batchUpdate updateAll')
+        //console.log(instance)
         //return instance
         }
       ))
