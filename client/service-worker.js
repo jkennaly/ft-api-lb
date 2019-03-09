@@ -46,7 +46,7 @@ if (workbox) {
   },
   {
     "url": "main.css",
-    "revision": "590a53a8514278561b98ac5904d629d5"
+    "revision": "f085808fe1f1e8391a5066caa98f8f80"
   }
 ])
 
