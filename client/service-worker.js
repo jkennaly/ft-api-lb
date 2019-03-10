@@ -27,28 +27,7 @@ if (workbox) {
 	  maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
 	})
 
-	  workbox.precaching.precacheAndRoute([
-  {
-    "url": "index.html",
-    "revision": "09f35d7daf5af990acf275b0c9a955c1"
-  },
-  {
-    "url": "bundle.js",
-    "revision": "c47659a08137805ba92bb7ccd78edf07"
-  },
-  {
-    "url": "img/Crowdshot.jpg",
-    "revision": "73951d8fb7b813f09d4fd1bd7f3401b0"
-  },
-  {
-    "url": "favicon.ico",
-    "revision": "8ceda9cc1988836b1d45f13aa3371e1d"
-  },
-  {
-    "url": "main.css",
-    "revision": "f085808fe1f1e8391a5066caa98f8f80"
-  }
-])
+	  workbox.precaching.precacheAndRoute([])
 
 	  workbox.routing.registerRoute(
 		  /\/api\/Messages\/*/,
