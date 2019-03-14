@@ -1,6 +1,7 @@
 {
   "name": "Profile",
   "base": "User",
+"excludeBaseProperties": ["email", "realm", "emailVerified"],
   "options": {
     "idInjection": false,
     "mysql": {

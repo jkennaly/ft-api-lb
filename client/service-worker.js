@@ -24,10 +24,31 @@ if (workbox) {
   	//workbox.clientsClaim()
 
 	const bgSyncPlugin = new workbox.backgroundSync.Plugin('myQueueName', {
-	  maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
+	  maxRetentionTime: 24 * 60 * 7 // Retry for max of 1 week
 	})
 
-	  workbox.precaching.precacheAndRoute([])
+	  workbox.precaching.precacheAndRoute([
+  {
+    "url": "index.html",
+    "revision": "09f35d7daf5af990acf275b0c9a955c1"
+  },
+  {
+    "url": "bundle.js",
+    "revision": "4b4a1afd1cdce458af8f10c07b29b8ae"
+  },
+  {
+    "url": "img/Crowdshot.jpg",
+    "revision": "73951d8fb7b813f09d4fd1bd7f3401b0"
+  },
+  {
+    "url": "favicon.ico",
+    "revision": "8ceda9cc1988836b1d45f13aa3371e1d"
+  },
+  {
+    "url": "main.css",
+    "revision": "ca921d58299626aec56f673549ccf48c"
+  }
+])
 
 	  workbox.routing.registerRoute(
 		  /\/api\/Messages\/*/,
@@ -36,9 +57,25 @@ if (workbox) {
 		  }),
 		  'POST'
 	)
+	  workbox.routing.registerRoute(
+		  /\/api\/*/,
+		  workbox.strategies.networkFirst({
+      		cacheName: 'api-get',
+		    plugins: [
+		        new workbox.expiration.Plugin({
+		          maxAgeSeconds: 30 * 24 * 60 * 60,
+		          maxEntries: 30,
+		        }),
+		        new workbox.cacheableResponse.Plugin({
+		          statuses: [0, 200],
+		        }),
+		    ],
+  		}),
+		  'GET'
+	)
 
 	workbox.routing.registerRoute(
-  		new RegExp('(.*)widget.cloudinary.com/(.*)'),
+  		/(.*)widget.cloudinary.com\/(.*)/,
   		workbox.strategies.cacheFirst({
       		cacheName: 'cloud-images',
 		    plugins: [
