@@ -40,6 +40,7 @@ var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
 })
 
+
 app.use(authCheck);
 app.post(/^((?!Messages).)*$/g, guard.check('create:festivals'))
 app.put(/^((?!Messages).)*$/g, guard.check('create:festivals'))
@@ -125,12 +126,14 @@ app.use('/api/*', function(req, res, next) {
 
 /*
 // apply to a path
+app.use('/*', function(req, res, next) {
+  console.log('server.js 128 req ')
+  //console.log(aliasTable)
+  next()
+})
 app.use('/api/Festivals', function(req, res, next) {
     res.json("It has valid token", req.user);
 });
-*/
-
-/*
 app.use('/api/*', function (req, res, next) {
   console.log(req.user)
   next()

@@ -71,6 +71,7 @@ module.exports = function(Festival){
         dayIds: [],
         setIds: []
       }))
+      .then(evObj => _.mapValues(evObj, ids => _.uniq(ids)))
       //.then(logTime('eventsPromise'))
       .catch(cb)
 
