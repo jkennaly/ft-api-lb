@@ -34,7 +34,7 @@ var authCheck = jwt({
     issuer: 'https://festivaltime.auth0.com/',
     algorithms: ['RS256']
 })
-  .unless({path: [/^((?!api).)*$/g]});
+  .unless({path: [/^((?!api).)*$/g, /Core/]});
 
 var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'

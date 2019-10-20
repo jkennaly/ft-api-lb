@@ -6,4 +6,9 @@ if(process.env.JAWSDB_URL) devObject.DragonAgeFestivalMaster = {
     "connectionLimit": process.env.CONN_LIMIT
 }
 
+devObject.mem = {
+	name: 'mem',
+	connector: "memory"
+}
+
 module.exports = devObject

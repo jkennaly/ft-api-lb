@@ -116,6 +116,11 @@ module.exports = function(Message){
       //console.log('Message.festivalConnected  Promise all')
     }
 
+    Message.remoteMethod('forArtist', {
+      accepts: {arg: 'artistId', type: 'number', required: true},
+      returns: { arg: 'data', type: 'array'},
+      http: {path: '/forArtist/:artistId'}
+    });
 
     Message.remoteMethod('greet', {
           accepts: {arg: 'msg', type: 'string'},
@@ -128,10 +133,5 @@ module.exports = function(Message){
       http: {path: '/forFestival/:festivalId'}
     });
 
-    Message.remoteMethod('forArtist', {
-      accepts: {arg: 'artistId', type: 'number', required: true},
-      returns: { arg: 'data', type: 'array'},
-      http: {path: '/forArtist/:artistId'}
-    });
 };
 
