@@ -2,10 +2,6 @@
 
 module.exports = function(Intention){
 
-
-    Intention.deleteById = function(id, cb) {
-      Intention.findById(id).update(deleted, 1, cb);
-    }
     
     Intention.batchCreate = function(data, cb) {
 

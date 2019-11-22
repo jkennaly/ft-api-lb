@@ -8,6 +8,9 @@
     },
     "relations": {}
   },
+  "mixins": {
+    "DeleteOverride": true
+  },
   "properties": {
     "id": {
       "type": "Number",

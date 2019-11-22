@@ -16,7 +16,8 @@
     }
   },
   "mixins": {
-    "Userstamp": true
+    "Userstamp": true,
+    "DeleteOverride": true
   },
   "properties": {
     "id": {

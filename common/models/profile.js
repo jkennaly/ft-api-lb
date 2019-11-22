@@ -11,24 +11,23 @@ module.exports = function(Profile){
 
         next();
     });
-    Profile.deleteById = function(id, cb) {
-      	Profile.findById(id).update(deleted, 1, cb);
-    }
-    Profile.getUserId = function(req, cb) {
-    	const idToken = req.param('idToken')
+
+    Profile.getUserId = function(userData, req, cb) {
     	const user = req.user
-    	//decode the id_token
-    	var decoded = jwt.decode(idToken);
-    	//console.log('getUserId idToken decoded')
-    	//console.log(req.user)
-    	//console.log(idToken)
-    	//console.log(decoded)
+      const ftUser = user.ftUserId
+
+      //const authHeader = req.header('Authorization')
+    //console.log('authHeader', authHeader)
+      if(ftUser) return cb(null, ftUser)
+
+
+      //use the access token to get userinfo
+
+    	console.log('getUserId idToken userData')
+    	console.log(userData)
     	//compare the idToken user_id field and the user sub field to make sure they match
     	//console.log(user.sub)
-    	if(decoded.sub !== user.sub) {
-    		cb(null, 0)
-    		return
-    	}
+
     	//call database function to get username from user sub
     		//check if sub has an aliased id and return if present
     	const sql_stmt = 'SELECT user FROM `user_aliases` WHERE alias=?'
@@ -36,9 +35,9 @@ module.exports = function(Profile){
     	const createUser = function (err, result) {
             //console.log('createUser called')
     		Profile.create({
-    			email: decoded.email,
-    			username: decoded.username || decoded.nickname || decoded.email,
-    			picture: decoded.picture,
+    			email: userData.email,
+    			username: userData.username || userData.nickname || userData.email,
+    			picture: userData.picture,
     			credits: 1
     		}, function (err, result) {
                 if(err) {
@@ -47,7 +46,7 @@ module.exports = function(Profile){
                     return
                 }
 		    	const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
-		    	const params = [decoded.email]
+		    	const params = [userData.email]
     			Profile.dataSource.connector.execute(sql_stmt, params, function (err, result) {
 			    	const sql_stmt = 'INSERT INTO `user_aliases`(user, alias) VALUES (?, ?)'
 			    	const params = [result[0].id, user.sub]
@@ -87,10 +86,10 @@ module.exports = function(Profile){
 	    		cb(err, result && result.length ? result[0].user : 0)
 	    		return
 	    	}
-	    	const emailVerified = decoded.email_verified
+	    	const emailVerified = userData.email_verified
 	    	//if(emailVerified) {
 		    	const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
-		    	const params = [decoded.email]
+		    	const params = [userData.email]
     			Profile.dataSource.connector.execute(sql_stmt, params, emailCheckCallback);
 
 	    	//}
@@ -132,12 +131,14 @@ module.exports = function(Profile){
 */
     Profile.remoteMethod('getUserId', {
       	accepts: [
+      { arg: 'userData', type: 'Object', http: { source: 'body' } },
 			{arg: 'req', type: 'object', 'http': {source: 'req'}}
 		],
         returns: {arg: 'id', type: 'number'},
         documented: false,
         http: {
-        	verb: 'get'
+          path: '/getUserId', 
+        	verb: 'post'
         }
     });
 /*

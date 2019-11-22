@@ -1,15 +1,32 @@
 // set.js
 
 module.exports = function(Set){
-
+  /*
+  Set.on('dataSourceAttached', function(obj){
+      console.log('Set.deleteById attachment')
+    var del = function(id, cb) {
+      console.log('Set.deleteById', id)
+      Set.update({id: id}, {deleted: true}, cb);
+    }
+    Set.deleteById = function(id, cb) {
+      return del.apply(this, arguments)
+    };
+  })
+*/
   Set.prototype.getFestivalId = function() {
-    return this.days.dates.festivals.id
+    //console.log('Set.getFestivalId', this.days.get())
+    return Set.app.models.Day.findById(this.day)
+      .then(day => Set.app.models.Date.findById(day.date))
+      .then(date => Set.app.models.Festival.findById(date.festival))
   }
-
-
-  Set.deleteById = function(id, cb) {
-    Set.findById(id).update(deleted, 1, cb);
+/*
+  Set.prototype.getFestivalId = function() {
+    return this.day.get()
+      .then(day => day.dates.get())
+      .then(date => date.festival)
   }
+*/
+
   
 
   Set.forDay = function(data, dayId, cb) {
@@ -46,7 +63,7 @@ module.exports = function(Set){
       (err, set) => {
         if(err) {
           //console.log('err')
-          console.log(err)
+          console.error(err)
         }
       }
     ))
@@ -61,8 +78,9 @@ module.exports = function(Set){
 
   Set.lineupRemove = function(lineup) {
 
-    //console.log('Set.batchDelete')
-    //console.log(data)
+    //console.log('Set.lineupRemove', lineup)
+
+    if(!lineup) return
 
     //first get the sets for the band
     Set.find({
@@ -70,9 +88,11 @@ module.exports = function(Set){
         band: lineup.band
       }
     })
+      //.then(sets => console.log(`sets to remove`, sets) || sets)
       //narrow to only sets for the lineup festival
-      .then(sets => sets.filter(s => s.getFestivalId() === lineup.festival))
-      .then(setsToRemove => Set.batchDelete({setIds: setsToRemove.map(s => s.id)}, x => {}))
+      .then(sets => Promise.all(sets.map(s => Promise.all([s.id, s.getFestivalId()]))))
+      .then(setFests => setFests.filter(s => s[1] === lineup.festival))
+      .then(setsToRemove => setsToRemove.length && Set.batchDelete({setIds: setsToRemove.map(s => s[0])}, x => {}))
       .catch(err => console.error(err))
 
   }

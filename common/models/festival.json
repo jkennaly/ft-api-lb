@@ -37,7 +37,8 @@
     }
   },
   "mixins": {
-    "Creatorstamp": true
+    "Creatorstamp": true,
+    "DeleteOverride": true
   },
   "properties": {
     "id": {

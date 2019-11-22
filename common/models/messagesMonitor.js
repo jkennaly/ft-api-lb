@@ -3,9 +3,6 @@
 module.exports = function(MessagesMonitor){
 
 
-    MessagesMonitor.deleteById = function(id, cb) {
-      MessagesMonitor.findById(id).update(deleted, 1, cb);
-    }
     
     MessagesMonitor.batchCreate = function(data, cb) {
 

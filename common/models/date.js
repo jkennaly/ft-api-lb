@@ -12,9 +12,6 @@ const week = [
 module.exports = function(DateModel){
 
 
-    DateModel.deleteById = function(id, cb) {
-      DateModel.findById(id).update(deleted, 1, cb);
-    }
 
     DateModel.createWithDays = function(data, cb) {
       //console.log('DateModel.createWithDays ')

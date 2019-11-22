@@ -1,5 +1,6 @@
 // artist.js
 
+const _ =  require('lodash')
 
 var toTitleCase = function (str) {
   str = str.toLowerCase().split(' ');
@@ -41,14 +42,11 @@ module.exports = function(Artist){
         }
   ))}
 
-    Artist.deleteById = function(id, cb) {
-      Artist.findById(id).update(deleted, 1, cb);
-    }
 
     Artist.festivalLineup = function(req, festivalId, cb) {
       const str = req.files[0].buffer.toString()
-      const artistNameAr = str.split('\n').map(s => toTitleCase(s).trim())
-        .filter(s => s)
+      const artistNameAr = _.uniq(str.split('\n').map(s => toTitleCase(s).trim())
+        .filter(s => s))
       //console.log(artistNameAr);
 
       //find or create each artist
@@ -60,6 +58,19 @@ module.exports = function(Artist){
     // the files are available as req.files.
     // the body fields are available in req.body
     cb(null, 'OK');
+    }
+
+    Artist.discovery = function(req, cb) {
+      Artist.app.models.Series.find()
+      cb(null, []);
+    }
+
+    Artist.searchName = function(pattern, cb) {
+      Artist.find({
+        where: {name: {regexp: pattern}},
+        limit: 5,
+        fields: {id:true, name: true}
+      }, cb)
     }
 
     Artist.addToLineup = function(data, festivalId, cb) {
@@ -160,6 +171,18 @@ module.exports = function(Artist){
         {arg: 'artistId_2', type: 'number', required: true}],
       http: {path: '/admin/merge/:artistId_1/:artistId_2'},
       returns: {arg: 'id', type: 'Object'}
+    });
+
+    Artist.remoteMethod('discovery', {
+      accepts: [{arg: 'req', type: 'object', http: ctx => ctx.req}],
+      http: {path: '/discovery', verb: 'get'},
+      returns: {arg: 'data', type: 'array'}
+    });
+
+    Artist.remoteMethod('searchName', {
+      accepts: [{arg: 'pattern', type: 'String', required: true}],
+      http: {path: '/search/:pattern', verb: 'get'},
+      returns: {arg: 'data', type: 'array'}
     });
 };
 

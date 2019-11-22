@@ -10,11 +10,9 @@ var toTitleCase = function (str) {
 module.exports = function(Lineup){
 
 
-  Lineup.deleteById = function(id, cb) {
-    Lineup.findById(id).update(deleted, 1, cb);
-  }
 
     Lineup.batchDelete = function(data, cb) {
+      if(!data.ids || !data.ids.length) return cb(null, 'OK')
 
       //console.log('Lineup.batchDelete')
       //console.log(data)
@@ -31,21 +29,22 @@ module.exports = function(Lineup){
           }
         }
       )))
+        .catch(console.error)
 
       
       
 
-    // the files are available as req.files.
-    // the body fields are available in req.body
-    cb(null, 'OK');
-    }
+      // the files are available as req.files.
+      // the body fields are available in req.body
+      cb(null, 'OK');
+      }
 
     Lineup.batchUpdate = function(data, cb) {
 
       //console.log('Lineup.batchCreate')
       //console.log(data)
 
-      data.forEach(dataEl => Lineup.updateAll({id: dataEl.id}, dataEl,
+      data.forEach(dataEl => dataEl.id && Lineup.updateAll({id: dataEl.id}, dataEl,
         (err, instance) => {
           if(err) {
             //console.log('err')

@@ -3,9 +3,6 @@
 module.exports = function(ArtistAlias){
 
 
-    ArtistAlias.deleteById = function(id, cb) {
-      ArtistAlias.findById(id).update(deleted, 1, cb);
-    }
     
     ArtistAlias.batchCreate = function(data, cb) {
 

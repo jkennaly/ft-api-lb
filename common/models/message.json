@@ -9,7 +9,8 @@
     "relations": {}
   },
   "mixins": {
-    "Fromuserstamp": true
+    "Fromuserstamp": true,
+    "DeleteOverride": true
   },
   "properties": {
     "id": {

@@ -13,6 +13,10 @@
         "foreignKey": "festival"
       }
     }
+
+  },
+  "mixins": {
+    "DeleteOverride" : true
   },
   "properties": {
     "id": {

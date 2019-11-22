@@ -1,4 +1,5 @@
-// common/mixins/by-user.js
+// common/mixins/futureArtists.js
+
 
 
 'use strict';
@@ -25,9 +26,8 @@ module.exports = function byUser(Model, options) {
     if(!currentKeys) {
     	ctx.query.where = newFilter
     } else {
-        const currentAnd = currentKeys.includes('and') && _.isArray(ctx.query.where.and)
-        if(currentAnd) ctx.query.where.and.push(newFilter)
-        else ctx.query.where = {and:[newFilter, ctx.query.where]}
+    	if()
+    	ctx.query.where = {and:[newFilter, ctx.query.where]}
     }
 
 

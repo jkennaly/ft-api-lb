@@ -5,9 +5,7 @@ const _ = require('lodash');
 module.exports = function(Message){
 
 
-    Message.deleteById = function(id, cb) {
-      Message.findById(id).update(deleted, 1, cb);
-    }
+
     Message.greet = function(msg, cb) {
       cb(null, 'Greetings... ' + msg);
     }
@@ -119,7 +117,7 @@ module.exports = function(Message){
     Message.remoteMethod('forArtist', {
       accepts: {arg: 'artistId', type: 'number', required: true},
       returns: { arg: 'data', type: 'array'},
-      http: {path: '/forArtist/:artistId'}
+      http: {path: '/forArtist/:artistId', verb: 'get'}
     });
 
     Message.remoteMethod('greet', {
@@ -130,7 +128,7 @@ module.exports = function(Message){
     Message.remoteMethod('forFestival', {
       accepts: {arg: 'festivalId', type: 'number', required: true},
       returns: { arg: 'data', type: 'array'},
-      http: {path: '/forFestival/:festivalId'}
+      http: {path: '/forFestival/:festivalId', verb: 'get'}
     });
 
 };

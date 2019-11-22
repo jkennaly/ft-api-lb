@@ -8,8 +8,11 @@ const _ = require('lodash');
 
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
+
 var bodyParser = require('body-parser');
 var multer = require('multer');
+
+
 
 var sslRedirect = require('heroku-ssl-redirect')
 
@@ -32,25 +35,61 @@ var authCheck = jwt({
     }),
     //audience: 'https://immense-ridge-26505.herokuapp.com/api/',
     issuer: 'https://festivaltime.auth0.com/',
-    algorithms: ['RS256']
+    algorithms: ['RS256'],
+    credentialsRequired: false
 })
-  .unless({path: [/^((?!api).)*$/g, /Core/]});
+
+app.use(authCheck)
 
 var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
 })
 
+const createFestivals = [
+  /Artists/,
+  /ArtistAliases/,
+  /Dates/,
+  /Days/,
+  /Festivals/,
+  /Lineups/,
+  /Organizers/,
+  /ParentGenres/,
+  /Series/,
+  /Sets/,
+  /StageLayouts/,
+  /StagePriorities/,
+  /Venues/
+]
 
-app.use(authCheck);
-app.post(/^((?!Messages).)*$/g, guard.check('create:festivals'))
-app.put(/^((?!Messages).)*$/g, guard.check('create:festivals'))
-app.delete(/^((?!Messages).)*$/g, guard.check('create:festivals'))
-app.use(/verify/g, guard.check('verify:festivals'))
+const createMessages = [
+  /ArtistGenres/,
+  /ArtistPriorities/,
+  /Genres/,
+  /Images/,
+  /Intentions/,
+  /Messages/,
+  /Places/,
+  /Profiles/
+]
 
-app.post(/Messages/g, guard.check('create:messages'))
-app.put(/Messages/g, guard.check('create:messages'))
-app.delete(/Messages/g, guard.check('admin'))
-app.use(/admin/g, guard.check('admin'))
+const admin = [
+  /MessageTypes/,
+  /PlaceTypes/,
+  /SubjectTypes/
+]
+
+
+app.post(createFestivals, guard.check('create:festivals'))
+app.put(createFestivals, guard.check('create:festivals'))
+app.delete(createFestivals, guard.check('create:festivals'))
+//app.use(/verify/g, guard.check('verify:festivals'))
+
+app.post(createMessages, guard.check('create:messages'))
+app.put(createMessages, guard.check('admin'))
+app.delete(createMessages, guard.check('admin'))
+app.post(admin, guard.check('admin'))
+app.put(admin, guard.check('admin'))
+app.delete(admin, guard.check('admin'))
 
 //user request has passed security, now get ftUserId
 app.use('/api/Profiles/getUserId*', function (req, res, next) {
@@ -140,9 +179,11 @@ app.use('/api/*', function (req, res, next) {
 });
 */
 
+
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer().any()); // for parsing multipart/form-data
+
 
 // catch error
 app.use(function (err, req, res, next) {
@@ -150,8 +191,8 @@ app.use(function (err, req, res, next) {
       //authCheck
       if(!/jwt expired/.test(err.message)) {
         console.log('Invalid token, or no token supplied!')
-        //console.log(req.get('Authorization'))
-        //console.log(req.user)
+        console.log(req.get('Authorization'))
+        console.log(req.user)
         console.log(err)
       }
         res.status(401).send('Invalid token, or no token supplied!');
@@ -176,7 +217,7 @@ app.start = function() {
     var baseUrl = app.get('url').replace(/\/$/, '');
     console.log('Web server listening at: %s', baseUrl);
     
-    if (app.get('loopback-component-explorer')) {
+    if (process.env.NODE_ENV === 'test' && app.get('loopback-component-explorer')) {
       var explorerPath = app.get('loopback-component-explorer').mountPath;
       console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
     }

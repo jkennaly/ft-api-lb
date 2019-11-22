@@ -10,6 +10,10 @@
     },
     "relations": {}
   },
+  "mixins": {
+    "DeleteOverride": true,
+    "RestrictFromOthers": true
+  },
   "properties": {
     "id": {
       "type": "Number",
@@ -55,6 +59,15 @@
         "dataPrecision": null,
         "dataScale": null,
         "nullable": "N"
+      }
+    },
+    "settings": {
+      "type": "Object",
+      "required": false,
+      "mysql": {
+        "columnName": "settings",
+        "dataType": "JSON",
+        "nullable": "Y"
       }
     },
     "credits": {
