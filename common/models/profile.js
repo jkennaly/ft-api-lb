@@ -23,8 +23,8 @@ module.exports = function(Profile){
 
       //use the access token to get userinfo
 
-    	console.log('getUserId idToken userData')
-    	console.log(userData)
+    	if(process.env.NODE_ENV === 'test') console.log('getUserId idToken userData', userData)
+    	
     	//compare the idToken user_id field and the user sub field to make sure they match
     	//console.log(user.sub)
 
@@ -43,7 +43,7 @@ module.exports = function(Profile){
                 if(err) {
                     console.log('Profile creation failed')
                     console.log(err)
-                    return
+                    return cb(err)
                 }
 		    	const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
 		    	const params = [userData.email]
