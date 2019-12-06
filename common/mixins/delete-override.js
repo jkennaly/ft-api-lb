@@ -6,6 +6,7 @@ module.exports = function(Model) {
       if (typeof options === 'function') {
         // destroyById(id, cb)
         cb = options;
+        options = undefined
       }
     }
     cb = cb || createPromiseCallback();
