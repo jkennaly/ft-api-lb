@@ -21,29 +21,25 @@ module.exports = function(Lineup){
       //first remove sets
         .then(lineups => Promise.all(lineups.map(lineup => Lineup.app.models.Set.lineupRemove(lineup))))
         //then remove lineups
-        .then(() => data.ids.forEach(id => Lineup.deleteById(id,
-        (err, instance) => {
-          if(err) {
-            //console.log('err')
-            console.error(err)
-          }
-        }
-      )))
-        .catch(console.error)
-
-      
-      
-
-      // the files are available as req.files.
-      // the body fields are available in req.body
-      cb(null, 'OK');
-      }
+        .then(() => Promise.all(data.ids.map(id => Lineup.deleteById(id))))
+      .then(() => Lineup.find({where: {id: {inq: data.map(x => x.id)}}}, cb))
+      .catch(cb)
+    
+    }
 
     Lineup.batchUpdate = function(data, cb) {
 
       //console.log('Lineup.batchCreate')
       //console.log(data)
 
+      Promise.all(
+        data
+          .filter(d => d.id)
+          .map(dataEl => Lineup.updateAll({id: dataEl.id}, dataEl))
+      )
+      .then(() => Lineup.find({where: {id: {inq: data.map(x => x.id)}}}, cb))
+      .catch(cb)
+/*
       data.forEach(dataEl => dataEl.id && Lineup.updateAll({id: dataEl.id}, dataEl,
         (err, instance) => {
           if(err) {
@@ -56,21 +52,19 @@ module.exports = function(Lineup){
         }
       ))
       
-      //add each artist to the forDay
-
-      
-    // the files are available as req.files.
-    // the body fields are available in req.body
     cb(null, 'OK');
+    */
     }
 
     Lineup.remoteMethod('batchUpdate', {
           accepts: [{ arg: 'data', type: 'array', http: { source: 'body' } }],
+        returns: {arg: 'data', type: 'object'},
         http: {path: '/batchUpdate'}
     });
 
     Lineup.remoteMethod('batchDelete', {
           accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
+        returns: {arg: 'data', type: 'object'},
         http: {path: '/batchDelete'}
     });
 

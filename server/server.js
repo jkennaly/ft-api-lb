@@ -87,6 +87,7 @@ app.delete(createFestivals, guard.check('create:festivals'))
 app.post(createMessages, guard.check('create:messages'))
 app.put(createMessages, guard.check('admin'))
 app.delete(createMessages, guard.check('admin'))
+
 app.post(admin, guard.check('admin'))
 app.put(admin, guard.check('admin'))
 app.delete(admin, guard.check('admin'))
@@ -104,13 +105,13 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
     
     const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
     connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
+    if (err) {
+      console.error('error connecting: ' + err.stack);
+      return;
+    }
 
-  //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
-})
+    //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
+    })
     connection.execute(
       'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
       [highId],
@@ -121,6 +122,7 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
           if(aliasTable[authId]) {
             req.user.ftUserId = aliasTable[authId]
             app.set('ftUserId', req.user.ftUserId)
+            app.set('scope', req.user.scope)
             //console.log('userId Set A ' + req.user.ftUserId)
 
           }
@@ -141,6 +143,7 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
   } else {
     req.user.ftUserId = foundAlias
     app.set('ftUserId', req.user.ftUserId)
+    app.set('scope', req.user.scope)
     //console.log('userId Set B ' + req.user.ftUserId)
     //console.log('using cached alias')  
     //console.log(req.user)
@@ -159,6 +162,7 @@ app.use('/api/*', function(req, res, next) {
     var foundAlias = aliasTable[authId]
     req.user.ftUserId = foundAlias
     app.set('ftUserId', req.user.ftUserId)
+    app.set('scope', req.user.scope)
   }
   next()
 })

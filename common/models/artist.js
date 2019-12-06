@@ -11,9 +11,9 @@ var toTitleCase = function (str) {
 };
 
 module.exports = function(Artist){
-  const addArtistToLineup = (festivalId, cb = () => 0) => artistName => {
+  const addArtistToLineup = (festivalId) => artistName => {
     //See if the name is used as an alias
-    Artist.app.models.ArtistAlias.findOne({where: {alias: artistName}})
+    return Artist.app.models.ArtistAlias.findOne({where: {alias: artistName}})
       .then(alias => alias ?
           {where: {id: alias.band}} :
           {where: {name: artistName}}
@@ -21,20 +21,16 @@ module.exports = function(Artist){
       .then(whereObject => Artist.findOrCreate(whereObject,
         {name: artistName},
         (err, artist, created) => {
-          if(err || !artist) {
+          if(err) {
             //console.log('err')
-            console.error(err)
-          } else {
-            artist.lineups.create({
+            throw new Error(err)
+          } else if(!artist) {
+            throw new Error('No artist found')
+          }
+           else {
+            return artist.lineups.create({
               festival: festivalId,
               band: artist.id
-            }, 
-            (err, lineup) => {
-            if(err) {
-              //console.log('err')
-              console.error(err)
-            }
-              cb(null, {lineup: lineup, artist: artist})
             })
 
           }
@@ -44,20 +40,22 @@ module.exports = function(Artist){
 
 
     Artist.festivalLineup = function(req, festivalId, cb) {
+      if(!req.files[0]) console.log('Artists festivalLineup', req)
       const str = req.files[0].buffer.toString()
       const artistNameAr = _.uniq(str.split('\n').map(s => toTitleCase(s).trim())
         .filter(s => s))
       //console.log(artistNameAr);
 
       //find or create each artist
-      artistNameAr.map(addArtistToLineup(parseInt(festivalId, 10)))
+      Promise.all(artistNameAr.map(addArtistToLineup(parseInt(festivalId, 10))))
+        .then(() => Artist.find({where: {name: {inq: artistNameAr}}}, cb))
+        .catch(cb)
       
       //add each artist to the festivalLineup
 
       
     // the files are available as req.files.
     // the body fields are available in req.body
-    cb(null, 'OK');
     }
 
     Artist.discovery = function(req, cb) {
@@ -74,7 +72,9 @@ module.exports = function(Artist){
     }
 
     Artist.addToLineup = function(data, festivalId, cb) {
-      addArtistToLineup(parseInt(festivalId, 10), cb)(toTitleCase(data.name).trim())
+      addArtistToLineup(parseInt(festivalId, 10))(toTitleCase(data.name).trim())
+        .then(() => Artist.find({where: {name: toTitleCase(data.name).trim()}}, cb))
+        .catch(cb)
       
       //add each artist to the festivalLineup
 
@@ -155,7 +155,8 @@ module.exports = function(Artist){
         }
         },
         {arg: 'festivalId', type: 'number', required: true}],
-        http: {path: '/festivalLineup/:festivalId'}
+        http: {path: '/festivalLineup/:festivalId'},
+      returns: {arg: 'data', type: 'array'}
     });
 
     Artist.remoteMethod('addToLineup', {

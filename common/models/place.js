@@ -10,24 +10,19 @@ module.exports = function(Place){
       //console.log(data)
 
 
-      data.map(elData => Place.upsertWithWhere({
-          festival: elData.festival, 
-          name: elData.name
-        }, 
-        elData,
-        (err, el) => {
-          if(err) {
-            //console.log('err')
-            console.log(err)
-          }
-        }
-      ))
-      
 
-      
-    // the files are available as req.files.
-    // the body fields are available in req.body
-    cb(null, 'OK');
+      Promise.all(
+        data
+          //.filter(d => d.id)
+          .map(dataEl => Place.upsertWithWhere({
+              festival: dataEl.festival, 
+              name: dataEl.name
+            }, dataEl))
+          )
+      .then(() => Place.find({where: {festival: {inq: (data.map(x => x.id)).reduce((pv, cv) => [...pv, pv.includes(cv.festival) ? undefined : cv.festival], [])}}}, cb))
+      .catch(cb)
+
+
     }
     
     Place.batchDelete = function(data, cb) {
@@ -35,29 +30,24 @@ module.exports = function(Place){
       //console.log('Place.batchDelete')
       //console.log(data)
 
-      data.map(elData => Place.deleteById(elData.id,
-        (err, el) => {
-          if(err) {
-            //console.log('err')
-            console.log(err)
-          }
-        }
-      ))
-      
+      Promise.all(
+        data.setIds
+          .map(dataEl => Place.deleteById(dataEl.id))
+      )
+      .then(() => Place.find({where: {id: {inq: data.map(x => x.id)}}}, cb))
+      .catch(cb)
 
-      
-    // the files are available as req.files.
-    // the body fields are available in req.body
-    cb(null, 'OK');
     }
 
     Place.remoteMethod('batchCreate', {
           accepts: [{ arg: 'data', type: 'array', http: { source: 'body' } }],
-        http: {path: '/batchCreate'}
+        http: {path: '/batchCreate'},
+        returns: {arg: 'data', type: 'object'}
     });
     Place.remoteMethod('batchDelete', {
           accepts: [{ arg: 'data', type: 'array', http: { source: 'body' } }],
-        http: {path: '/batchDelete'}
+        http: {path: '/batchDelete'},
+        returns: {arg: 'data', type: 'object'}
     });
 };
 
