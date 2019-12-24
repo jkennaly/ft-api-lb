@@ -1,10 +1,10 @@
 {
-  "name": "MessageType",
+  "name": "InteractionType",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "festival_master",
-      "table": "message_types"
+      "table": "interaction_types"
     },
     "relations": {}
   },
@@ -52,21 +52,6 @@
         "dataLength": 65535,
         "dataPrecision": null,
         "dataScale": null,
-        "nullable": "N"
-      }
-    },
-    "center": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "center",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
         "nullable": "Y"
       }
     },

@@ -143,5 +143,9 @@
   "Flag": {
     "dataSource": "DragonAgeFestivalMaster",
     "public": true
+  },
+  "Interaction": {
+    "dataSource": "DragonAgeFestivalMaster",
+    "public": true
   }
 }

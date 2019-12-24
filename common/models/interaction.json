@@ -1,10 +1,10 @@
 {
-  "name": "Intention",
+  "name": "Interaction",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "festival_master",
-      "table": "intentions"
+      "table": "interactions"
     },
     "relations": {}
   },
@@ -30,14 +30,29 @@
         "nullable": "N"
       }
     },
-    "subject": {
+    "user": {
       "type": "Number",
       "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "subject",
+        "columnName": "user",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "N"
+      }
+    },
+    "type": {
+      "type": "Number",
+      "required": true,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "type",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -60,14 +75,14 @@
         "nullable": "N"
       }
     },
-    "user": {
+    "subject": {
       "type": "Number",
       "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "user",
+        "columnName": "subject",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
