@@ -78,8 +78,15 @@ const createMessages = [
   /Images/,
   /Intentions/,
   /Messages/,
+  /MessagesMonitors/,
   /Places/,
   /Profiles/
+]
+
+const loggedOnly = [
+  /Intentions/,
+  /MessagesMonitors/
+
 ]
 
 const admin = [
@@ -93,7 +100,12 @@ app.post(createFestivals, guard.check('create:festivals'))
 app.put(createFestivals, guard.check('create:festivals'))
 app.delete(createFestivals, guard.check('create:festivals'))
 //app.use(/verify/g, guard.check('verify:festivals'))
-
+app.get(loggedOnly, function (err, req, res, next) {
+    if (err) return next(err)
+    if(req.user) return next()
+    res.status(401).send('Logged only for this endpoint')
+})
+app.get(loggedOnly, guard.check('create:messages'))
 app.post(createMessages, guard.check('create:messages'))
 app.put(createMessages, guard.check('admin'))
 app.delete(createMessages, guard.check('admin'))
