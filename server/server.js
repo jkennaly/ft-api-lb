@@ -23,12 +23,18 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 } else {
 app.use(sslRedirect())
-  if(!req.headers.host.test(/0441\.design$/)) {
+ app.use(function(req, res, next) {
+ if(!req.headers.host.test(/0441\.design$/)) {
 
     newURL = ['https://festigram.0441.design', req.url].join('');
     return res.redirect(newURL);
   }
+  next()
+}) 
 }
+
+
+
 
 var authCheck = jwt({
   secret: jwks.expressJwtSecret({
