@@ -26,7 +26,7 @@ app.use(sslRedirect())
  app.use(function(req, res, next) {
  if(!/0441\.design$/.test(req.headers.host)) {
 
-    newURL = ['https://festigram.0441.design', req.url].join('');
+    const newURL = ['https://festigram.0441.design', req.url].join('');
     return res.redirect(newURL);
   }
   next()
