@@ -23,7 +23,11 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 } else {
 app.use(sslRedirect())
-  
+  if(!req.headers.host.test(/0441\.design$/)) {
+
+    newURL = ['https://festigram.0441.design', req.url].join('');
+    return res.redirect(newURL);
+  }
 }
 
 var authCheck = jwt({
@@ -129,8 +133,6 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
             /*
             else {
               //user not found
-              //create new user and add to 
-              req.app.Profile
             }
             */
           //console.log('using loaded alias')
@@ -154,15 +156,55 @@ app.use('/api/Profiles/getUserId*', function (req, res, next) {
 
 app.use('/api/*', function(req, res, next) {
   const aliasTable = app.get('aliasTable')
-  //console.log('server.js 114 aliasTable ')
-  //console.log(aliasTable)
+  //console.log('server.js 114 aliasTable', aliasTable, req.user)
+
   if(req.user && !req.user.ftUserId) {
     const authId = req.user.sub
     const aliasTable = app.get('aliasTable')
     var foundAlias = aliasTable[authId]
     req.user.ftUserId = foundAlias
-    app.set('ftUserId', req.user.ftUserId)
-    app.set('scope', req.user.scope)
+    if(foundAlias) {
+      app.set('ftUserId', req.user.ftUserId)
+      app.set('scope', req.user.scope)
+    } else {
+        //get highest id in alias Table
+      const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
+      //load all aliases with ids higher
+      
+      const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
+      connection.connect(function(err) {
+      if (err) {
+        console.error('error connecting: ' + err.stack);
+        return;
+      }
+
+      //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
+      })
+      connection.execute(
+        'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
+        [highId],
+        (err, results, fields) => {
+          if(err) return next(err)
+            const resultPairs = results.map(r => [r.alias, r.user])
+            _.assign(aliasTable, _.fromPairs(resultPairs))
+            if(aliasTable[authId]) {
+              req.user.ftUserId = aliasTable[authId]
+              app.set('ftUserId', req.user.ftUserId)
+              app.set('scope', req.user.scope)
+              //console.log('userId Set A ' + req.user.ftUserId)
+
+            }
+              
+              else {
+                //user not found
+              }
+              
+            //console.log('using loaded alias')
+            //console.log(req.user)
+        }
+      )
+      connection.end()
+    }
   }
   next()
 })

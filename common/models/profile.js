@@ -24,7 +24,8 @@ module.exports = function(Profile){
       //use the access token to get userinfo
 
     	if(process.env.NODE_ENV === 'test') console.log('getUserId idToken userData', userData)
-    	
+      if(process.env.NODE_ENV === 'test') console.log('getUserId idToken user', user)
+      
     	//compare the idToken user_id field and the user sub field to make sure they match
     	//console.log(user.sub)
 
@@ -33,7 +34,7 @@ module.exports = function(Profile){
     	const sql_stmt = 'SELECT user FROM `user_aliases` WHERE alias=?'
     	const params = [user.sub]
     	const createUser = function (err, result) {
-            //console.log('createUser called')
+            console.log('createUser called', err, result)
     		Profile.create({
     			email: userData.email,
     			username: userData.username || userData.nickname || userData.email,
@@ -60,13 +61,13 @@ module.exports = function(Profile){
 
     	}
     	const emailCheckCallback = function (err, result) {
-    		//console.log('ecc called')
+    		console.log('ecc called', err, result)
             if (err) {
     			console.log(err)
 	    		cb(err, 0)
 	    		return
     		}
-    		//console.log('emailCheckCallback')
+    		console.log('emailCheckCallback', err, result)
     		//console.log(result)
 	    	if(result.length) {
 	    		//create an alias to the user with the matching email
@@ -78,7 +79,7 @@ module.exports = function(Profile){
 	    	} else createUser(err)
     	}
     	const callback = function (err, result) {
-    		//console.log('callback called')
+    		console.log('callback called err result', err, result)
             if (err) console.log(err);
     		//console.log(result)
     		//if there is an error or a valid alias
