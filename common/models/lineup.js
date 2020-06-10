@@ -22,7 +22,7 @@ module.exports = function(Lineup){
         .then(lineups => Promise.all(lineups.map(lineup => Lineup.app.models.Set.lineupRemove(lineup))))
         //then remove lineups
         .then(() => Promise.all(data.ids.map(id => Lineup.deleteById(id))))
-      .then(() => Lineup.find({where: {id: {inq: data.map(x => x.id)}}}, cb))
+      .then(() => Lineup.find({where: {id: {inq: data.ids}}}, cb))
       .catch(cb)
     
     }

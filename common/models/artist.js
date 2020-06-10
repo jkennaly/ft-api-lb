@@ -36,15 +36,20 @@ module.exports = function(Artist){
           }
           
         }
-  ))}
+  ))
+      .catch(err => console.error(err))
+    }
 
 
     Artist.festivalLineup = function(req, festivalId, cb) {
       if(!req.files[0]) console.log('Artists festivalLineup', req)
-      const str = req.files[0].buffer.toString()
+        /*
+      const str = Artist.fileHandler(req)
       const artistNameAr = _.uniq(str.split('\n').map(s => toTitleCase(s).trim())
         .filter(s => s))
-      //console.log(artistNameAr);
+        */
+      const artistNameAr = Artist.artistsUploaded(req)
+      console.log('artistNameAr', artistNameAr);
 
       //find or create each artist
       Promise.all(artistNameAr.map(addArtistToLineup(parseInt(festivalId, 10))))

@@ -30,7 +30,8 @@
     }
   },
   "mixins": {
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "FileSpreadsheetArtist": true
   },
   "properties": {
     "id": {
