@@ -16,6 +16,7 @@ var multer = require('multer');
 
 var sslRedirect = require('heroku-ssl-redirect')
 
+
 var app = module.exports = loopback();
 
 
@@ -34,9 +35,7 @@ app.use(sslRedirect())
 }
 
 
-
-
-var authCheck = jwt({
+const auth0Provider = () => jwt({
   secret: jwks.expressJwtSecret({
         cache: true,
         rateLimit: true,
@@ -48,6 +47,17 @@ var authCheck = jwt({
     algorithms: ['RS256'],
     credentialsRequired: false
 })
+
+const localProvider = () => jwt({
+  secret: process.env.LOCAL_SECRET,
+    //audience: 'https://immense-ridge-26505.herokuapp.com/api/',
+    issuer: 'http://localhost',
+    algorithms: ['RS256'],
+    credentialsRequired: false
+})
+
+
+var authCheck = process.env.LOCAL_SECRET ? localProvider() : auth0Provider()
 
 app.use(authCheck)
 
@@ -93,6 +103,10 @@ const admin = [
   /MessageTypes/,
   /PlaceTypes/,
   /SubjectTypes/
+]
+
+const authorize = [
+  /authorize/
 ]
 
 
