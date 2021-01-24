@@ -19,7 +19,7 @@ module.exports = function(DateModel){
     	//create the DateModel
       DateModel.create(data, function(err, date) {
         const basedate = new Date(data.basedate)
-      //console.log(basedate)
+      //console.log(date)
         for(var i=0;i<data.dayCount;i++){
           var iDate = new Date(data.basedate)
           iDate.setDate(iDate.getDate() + i)

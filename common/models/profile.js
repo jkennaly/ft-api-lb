@@ -1,7 +1,5 @@
 // profile.js
 
-var jwt = require('jsonwebtoken');
-
 module.exports = function(Profile){
 
     Profile.observe('before save', function filterProperties(ctx, next) {

@@ -50,9 +50,9 @@ const auth0Provider = () => jwt({
 
 const localProvider = () => jwt({
   secret: process.env.LOCAL_SECRET,
-    //audience: 'https://immense-ridge-26505.herokuapp.com/api/',
-    issuer: 'http://localhost',
-    algorithms: ['RS256'],
+    audience: 'http://festigram/api/',
+    issuer: 'http://festigram',
+    algorithms: ['HS256'],
     credentialsRequired: false
 })
 

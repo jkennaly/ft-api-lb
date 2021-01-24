@@ -20,7 +20,7 @@ const FormInput = {
 		view: ({attrs}) => m('div', {}, m(
             `input[type=${attrs.type ? attrs.type : "text"
             }][placeholder=${attrs.placeholder ? attrs.placeholder : ''
-            }][name=${attrs.placeholder ? attrs.placeholder : ''
+            }][name=${attrs.name ? attrs.name : attrs.placeholder ? attrs.placeholder : ''
             }][required=${attrs.required
             }][class=c44-login-form-text${attrs.classes ? ' ' + attrs.classes : ''}`
         ))

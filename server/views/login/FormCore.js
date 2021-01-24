@@ -25,6 +25,7 @@ const FormCore = {
 	//onupdate: () => console.log('FormCore update'),
 	view: ({attrs}) => m('form', {
         action: '',
+        method: 'POST',
         onsubmit: attrs.submit ? attrs.submit : e => {
             e.preventDefault()
             console.log('Form submitted!')

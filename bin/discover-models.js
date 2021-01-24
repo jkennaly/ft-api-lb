@@ -1,4 +1,4 @@
-// discover-models.js
+// bin/discover-models.js
 
 'use strict';
 

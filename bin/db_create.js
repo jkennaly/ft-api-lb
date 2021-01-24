@@ -1,8 +1,11 @@
+// bin/db_create.js
+
 console.log("Application starts ...")
 var mysql = require('mysql2')
 const fs = require('fs')
 const rl = require('readline')
 const addUser = require('./add_user')
+const createEnv = require('./env_create')
 const readline = rl.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -27,8 +30,11 @@ qp(`Username to access the database [festigram]`)
 		  user: username,
 		  password: password,
 		  database: dbname,
-		  multipleStatements: true
+		  multipleStatements: true,
+		  connectionLimit: 2,
+		  port: 3306
 		}
+		createEnv(dbconfig)
 
 		fs.readFile(__dirname + '/init/fest.sql', 'utf-8', (err, data) => {
     if (err) {

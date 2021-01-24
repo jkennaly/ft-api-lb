@@ -25,7 +25,7 @@ const Login = {
             m('section.c44-login-content',
                 attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
                 m(FormCore, {
-                    submit: attrs.submit ? attrs.submit : e => {
+                    submit: e => {
                         e.preventDefault()
                         console.log('Login.jsx Form submitted!')
                     },
@@ -35,12 +35,14 @@ const Login = {
                         type: "text",
                         placeholder: "Email Address",
                         required: true,
-                        classes: "c44-login-username"
+                        classes: "c44-login-username",
+                        name: 'email'
                     }, {
                         type: "password",
                         placeholder: "Password",
                         required: true,
-                        classes: "c44-login-password"
+                        classes: "c44-login-password",
+                        name: 'password'
 
                     }],
                     peerLinks: attrs.peerLinks ? attrs.peerLinks : [

@@ -1,3 +1,5 @@
+// bin/verify_user.js
+
 console.log("Application starts ...");
 var crypto = require('crypto')
 
