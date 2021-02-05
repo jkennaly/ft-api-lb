@@ -70,7 +70,7 @@ module.exports = function(Artist){
 
     Artist.searchName = function(pattern, cb) {
       Artist.find({
-        where: {name: {like: pattern}},
+        where: {name: {like: `%${pattern}%`}},
         limit: 5,
         fields: {id:true, name: true}
       }, cb)
