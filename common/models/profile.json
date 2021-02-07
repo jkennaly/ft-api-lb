@@ -12,7 +12,8 @@
   },
   "mixins": {
     "DeleteOverride": true,
-    "RestrictFromOthers": true
+    "RestrictFromOthers": true,
+    "Bucks": true
   },
   "properties": {
     "id": {
