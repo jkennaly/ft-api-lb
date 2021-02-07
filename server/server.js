@@ -2,6 +2,7 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
+//var unless = require('express-unless')
 
 const mysql = require('mysql2');
 const _ = require('lodash');
@@ -64,6 +65,7 @@ app.use(authCheck)
 var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
 })
+//guard.unless = unless
 
 const createFestivals = [
   /Artists/,
@@ -120,7 +122,8 @@ app.get(loggedOnly, function (err, req, res, next) {
     res.status(401).send('Logged only for this endpoint')
 })
 app.get(loggedOnly, guard.check('create:messages'))
-app.post(createMessages, guard.check('create:messages'))
+app.post(createMessages, guard.check('create:messages').unless({ path: '/api/Profiles/bucks/fulfill' }))
+
 app.put(createMessages, guard.check('admin'))
 app.delete(createMessages, guard.check('admin'))
 
@@ -258,9 +261,34 @@ app.use('/api/*', function (req, res, next) {
 */
 
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(multer().any()); // for parsing multipart/form-data
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/Profiles/bucks/fulfill') {
+    //console.log('fulfilling', req.originalUrl)
+    bodyParser.raw({type: '*/*'})(req, res, next)
+    //next();
+  } else {
+    //console.log('not fulfilling', req.originalUrl)
+    bodyParser.json()(req, res, next);
+  }
+}); // for parsing application/json
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/Profiles/bucks/fulfill') {
+    //console.log('fulfilling', req.originalUrl)
+    next();
+  } else {
+    //console.log('not fulfilling', req.originalUrl)
+    bodyParser.urlencoded({ extended: true })(req, res, next)
+  }
+}); // for parsing application/x-www-form-urlencoded
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/Profiles/bucks/fulfill') {
+    //console.log('fulfilling', req.originalUrl)
+    next();
+  } else {
+    //console.log('not fulfilling', req.originalUrl)
+    multer().any()(req, res, next)
+  }
+}); // for parsing multipart/form-data
 
 
 // catch error
@@ -269,6 +297,7 @@ app.use(function (err, req, res, next) {
       //authCheck
       if(!/jwt expired/.test(err.message)) {
         console.log('Invalid token, or no token supplied!')
+        console.log(req.route)
         console.log(req.get('Authorization'))
         console.log(req.user)
         console.log(err)
