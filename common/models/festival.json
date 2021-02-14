@@ -38,7 +38,10 @@
   },
   "mixins": {
     "Creatorstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "CostFest": true,
+    "Access": true,
+    "Buy": true
   },
   "properties": {
     "id": {

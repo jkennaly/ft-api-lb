@@ -21,7 +21,10 @@
   },
   "mixins": {
     "Userstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "CostDate": true,
+    "Access": true,
+    "Buy": true
   },
   "properties": {
     "id": {

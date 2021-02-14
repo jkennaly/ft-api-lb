@@ -66,7 +66,7 @@ module.exports = function(Model) {
       Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
         if(err) {
           console.log('fulfillBucks load error', err)
-          cb(err)
+          return cb(err)
         }
 
         const sql_stmt = 'INSERT INTO ledger (user, category, bucks, description) VALUES (?, ?, ?, CAST(? AS JSON)) ;'
@@ -74,7 +74,7 @@ module.exports = function(Model) {
         Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
           if(err) {
             console.log('fulfillBucks save error', err)
-            cb(err)
+            return cb(err)
           }
           
           cb()

@@ -13,7 +13,10 @@
   "mixins": {
     "DeleteOverride": true,
     "RestrictFromOthers": true,
-    "Bucks": true
+    "Bucks": true,
+    "CostFull": true,
+    "Access": true,
+    "BuyFull": true
   },
   "properties": {
     "id": {
