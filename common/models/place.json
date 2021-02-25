@@ -2,6 +2,7 @@
   "name": "Place",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "places"
@@ -10,7 +11,8 @@
   },
   "mixins": {
     "Userstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

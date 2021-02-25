@@ -53,6 +53,8 @@
     "loopback#urlNotFound": {}
   },
   "final:after": {
+    "./middleware/stripe-errors": {},
+    "./middleware/handle-errors": {},
     "strong-error-handler": {}
   }
 }

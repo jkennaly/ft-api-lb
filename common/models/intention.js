@@ -1,18 +1,22 @@
 // intention.js
+const _ = require('lodash')
 
 module.exports = function(Intention){
 
     
-    Intention.batchCreate = function(data, cb) {
+    Intention.batchCreate = function(req, data, cb) {
 
       //console.log('Intention.batchCreate')
       //console.log(data)
 
+    const userId = req && req.user && req.user.ftUserId
 
-      data.map(elData => Intention.upsertWithWhere({
+      data
+        .filter(elData => elData && elData.subject && elData.subjectType)
+        .map(elData => Intention.upsertWithWhere({
           subject: elData.subject, 
           subject_type: elData.subjectType, 
-          user: elData.user
+          user: userId
         }, 
         elData,
         (err, el) => {
@@ -24,18 +28,20 @@ module.exports = function(Intention){
       ))
       
 
+    cb(null, 'OK');
       
     // the files are available as req.files.
     // the body fields are available in req.body
-    cb(null, 'OK');
     }
     
-    Intention.batchDelete = function(data, cb) {
+    Intention.batchDelete = function(req, data, cb) {
 
       //console.log('Intention.batchDelete')
       //console.log(data)
 
-      data.map(elData => Intention.deleteById(elData,
+      data
+        .filter(_.isNumber)
+        .map(elData => Intention.deleteById(elData,
         (err, el) => {
           if(err) {
             //console.log('err')
@@ -52,11 +58,15 @@ module.exports = function(Intention){
     }
 
     Intention.remoteMethod('batchCreate', {
-          accepts: [{ arg: 'data', type: 'array', http: { source: 'body' } }],
+          accepts: [
+            {arg: 'req', type: 'object', 'http': {source: 'req'}},
+            { arg: 'data', type: 'array', http: { source: 'body' } }],
         http: {path: '/batchCreate'}
     });
     Intention.remoteMethod('batchDelete', {
-          accepts: [{ arg: 'data', type: 'array', http: { source: 'body' } }],
+          accepts: [
+            {arg: 'req', type: 'object', 'http': {source: 'req'}},
+            { arg: 'data', type: 'array', http: { source: 'body' } }],
         http: {path: '/batchDelete'}
     });
 };

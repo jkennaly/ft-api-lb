@@ -2,6 +2,7 @@
   "name": "Artist",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "bands"
@@ -31,7 +32,8 @@
   },
   "mixins": {
     "DeleteOverride": true,
-    "FileSpreadsheetArtist": true
+    "FileSpreadsheetArtist": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

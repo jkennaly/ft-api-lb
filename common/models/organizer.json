@@ -2,6 +2,7 @@
   "name": "Organizer",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "organizers"
@@ -9,7 +10,8 @@
     "relations": {}
   },
   "mixins": {
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

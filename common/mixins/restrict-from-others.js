@@ -11,7 +11,7 @@ module.exports = function byUser(Model, options) {
   Model.observe('loaded', function event(ctx, next) {
 
     // get current user ID
-    const viewerId = Model.app.get('ftUserId');
+    const viewerId = ctx.options.req && ctx.options.req.user && ctx.options.req.user.ftUserId;
 
 
 

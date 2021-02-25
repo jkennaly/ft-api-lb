@@ -4,6 +4,7 @@
 "excludeBaseProperties": ["realm", "emailVerified"],
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "Users"
@@ -16,7 +17,8 @@
     "Bucks": true,
     "CostFull": true,
     "Access": true,
-    "BuyFull": true
+    "BuyFull": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

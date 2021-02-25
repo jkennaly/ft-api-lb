@@ -6,9 +6,6 @@ module.exports = function(Message){
 
 
 
-    Message.greet = function(msg, cb) {
-      cb(null, 'Greetings... ' + msg);
-    }
     Message.forFestival = function(festivalId, cb) {
       //console.log('Message.festivalConnected  ')
       //get all messages with the festival as a subject
@@ -120,10 +117,6 @@ module.exports = function(Message){
       http: {path: '/forArtist/:artistId', verb: 'get'}
     });
 
-    Message.remoteMethod('greet', {
-          accepts: {arg: 'msg', type: 'string'},
-          returns: {arg: 'greeting', type: 'string'}
-    });
 
     Message.remoteMethod('forFestival', {
       accepts: {arg: 'festivalId', type: 'number', required: true},

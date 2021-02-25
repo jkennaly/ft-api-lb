@@ -1,4 +1,4 @@
-// common/mixins/cost-fest.js
+// common/mixins/access/cost-fest.js
 const _ = require('lodash')
 
 const DATE_CAP = process.env.DATE_CAP || 3
@@ -6,18 +6,23 @@ const FEST_CAP = process.env.FEST_CAP || 5
 const FULL_CAP = process.env.FULL_CAP || 10
 
 module.exports = function(Fest) {
-	Fest.cost = function(id, cb) {
+	Fest.cost = function(req, id, cb) {
 		//if the user has access, the cost is 0
 		//count bucks towards this fest
 		//get full access cost
 		
-		const userId = Fest.app.get('ftUserId')
+		const userId = req && req.user && req.user.ftUserId
 		//console.log('Fest.cost id', id, userId)
-		//console.log('festAccess')
-		Fest.festAccess(id, (err, hasAccess) => {
+		if(!userId) return cb(undefined, {
+			festivalId: id,
+			festival: 5,
+			full: 10
+		})
+		//console.log('costFest festAccess')
+		Fest.festAccess(req, id, (err, hasAccess) => {
 
 	      if(err) {
-	        //console.log('fulfillBucks save error', err)
+	        console.trace('costFest festAccess error', err)
 	        return cb(err)
 	      }
 	      //user has access
@@ -27,10 +32,10 @@ module.exports = function(Fest) {
 			}
 			if(hasAccess) return cb(undefined, costObject)
 		//console.log('bucksTowardsFest')
-			Fest.bucksTowardsFest(id, (err, bucks) => {
+			Fest.bucksTowardsFest(userId, id, (err, bucks) => {
 
 		    	if(err) {
-		    	  //console.log('fulfillBucks save error', err)
+	        console.trace('costFest festAccess bucksTowardsFest error', err)
 		    	  return cb(err)
 		    	}
 		      
@@ -38,7 +43,7 @@ module.exports = function(Fest) {
 				Fest.app.models.Profile.bucksTowardsFull(userId, (err, bucksFull) => {
 
 				    if(err) {
-				      //console.log('fulfillBucks save error', err)
+	        console.trace('costFest festAccess bucksTowardsFull error', err)
 				      return cb(err)
 				    }
 				      
@@ -56,13 +61,19 @@ module.exports = function(Fest) {
 	}
 
 	Fest.remoteMethod('cost', {
-	    accepts: [{arg: 'id', type: 'number', required: true}],
+	    accepts: [
+			{arg: 'req', type: 'object', 'http': {source: 'req'}},
+		    {arg: 'id', type: 'number', required: true}
+		],
 	    http: {path: '/cost/:id', verb: 'get'},
 	    returns: {arg: 'data', type: 'object'}
 	})
 
 	Fest.remoteMethod('festAccess', {
-	    accepts: [{arg: 'id', type: 'number', required: true}],
+	    accepts: [
+			{arg: 'req', type: 'object', 'http': {source: 'req'}},
+		    {arg: 'id', type: 'number', required: true}
+	    ],
 	    http: {path: '/access/:id', verb: 'get'},
 	    returns: {arg: 'data', type: 'object'}
 	})

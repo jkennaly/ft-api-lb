@@ -2,6 +2,7 @@
   "name": "Message",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "messages"
@@ -10,7 +11,8 @@
   },
   "mixins": {
     "Fromuserstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

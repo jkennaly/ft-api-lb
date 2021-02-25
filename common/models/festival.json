@@ -2,6 +2,7 @@
   "name": "Festival",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "festivals"
@@ -41,7 +42,8 @@
     "DeleteOverride": true,
     "CostFest": true,
     "Access": true,
-    "Buy": true
+    "Buy": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

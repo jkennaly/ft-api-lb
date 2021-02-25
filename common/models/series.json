@@ -2,6 +2,7 @@
   "name": "Series",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "festival_series"
@@ -17,7 +18,8 @@
   },
   "mixins": {
     "Userstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

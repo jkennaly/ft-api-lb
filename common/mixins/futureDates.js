@@ -12,7 +12,7 @@ module.exports = function byUser(Model, options) {
   Model.observe('access', function event(ctx, next) {
 
     // get current user ID
-    const authorId = Model.app.get('ftUserId');
+    const authorId = ctx.options.req && ctx.options.req.user && ctx.options.req.user.ftUserId;
 
     //console.log('by-user mixin user ' + authorId)
     //console.log('by-user mixin query ')

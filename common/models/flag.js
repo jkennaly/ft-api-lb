@@ -1,16 +1,42 @@
 // flag.js
 
+
+const _ = require('lodash')
 module.exports = function(Flag){
 
 
 
-    Flag.advance = function(flagId, msg, cb) {
+    Flag.advance = function(req, flagId, msg, cb) {
+		const advancerId = req && req.user && req.user.ftUserId
+        if(!advancerId || !_.isInteger(flagId)) {
+            var error = {
+                message: "Cannot modify this resource",
+                status: 403,
+                statusCode: 403
+            }
+            return cb(error)
+        }
     	Flag.findById(flagId)
     		.then(flag => {
-    			const advancerId = Flag.app.get('ftUserId')
+                if(!flag) {
+                    var error = {
+                        message: "Cannot modify this resource",
+                        status: 403,
+                statusCode: 403
+                    }
+                    throw(error)
+                }
     			const advancerIsOriginator = advancerId === flag.fromuser
-    			const advancerIsAdmin = Flag.app.get('scope').includes('admin')
-    			const updatedContent = [3, 5].includes(flag.status) && advancerIsOriginator ? `${flag.content}\n${(new Date()).toUTCString()}: ${msg.msg}` : flag.content
+    			const advancerIsAdmin = req.user.scope.includes('create:festivals')
+    			if(!advancerIsOriginator && !advancerIsAdmin || !flag.fromuser)  {
+                    var error = {
+                        message: "Cannot modify this resource",
+                        status: 403,
+                statusCode: 403
+                    }
+                    throw(error)
+                }
+                const updatedContent = [3, 5].includes(flag.status) && advancerIsOriginator ? `${flag.content}\n${(new Date()).toUTCString()}: ${msg.msg}` : flag.content
     			const updatedResponse = [1, 2, 5].includes(flag.status) && advancerIsAdmin ? `${flag.response}\n${(new Date()).toUTCString()}: ${msg.msg}` : flag.response
 
     			const statusChangeOk = [1, 2, 5].includes(flag.status) && advancerIsAdmin ||
@@ -18,9 +44,10 @@ module.exports = function(Flag){
     			if(!statusChangeOk) {
     				var error = {
     					message: "Cannot modify this resource",
-						status: 403
+						status: 403,
+                statusCode: 403
 					}
-					return cb(error);
+					throw(error)
     			}
     			const nextStatus = flag.status === 1 ? 2 :
     				flag.status === 2 ? 3 :
@@ -32,9 +59,10 @@ module.exports = function(Flag){
     			if(!nextStatus) {
     				var error = {
     					message: "Cannot modify this resource",
-						status: 403
+						status: 403,
+                statusCode: 403
 					}
-					return cb(error);
+					throw(error)
     			}
 
     			flag.updateAttributes({
@@ -49,6 +77,7 @@ module.exports = function(Flag){
 
     Flag.remoteMethod('advance', {
         accepts: [
+            {arg: 'req', type: 'object', 'http': {source: 'req'}},
         	{arg: 'flagId', type: 'number', required: true},
         	{arg: 'msg', type: 'object', http: { source: 'body' } }
         ],

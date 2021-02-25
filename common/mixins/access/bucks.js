@@ -1,4 +1,4 @@
-// common/mixins/bucks.js
+// common/mixins/access/bucks.js
 
 const Stripe = require('stripe');
 const stripe = process.env.STRIPE_SECRET && Stripe(process.env.STRIPE_SECRET)
@@ -7,15 +7,15 @@ module.exports = function(Model) {
   Model.bucks = function(req, cb) {
 
     // get current user ID
-    const userId = Model.app.get('ftUserId')
+    const userId = req && req.user && req.user.ftUserId
     const sql_stmt = 'SELECT * FROM ledger WHERE user=?'
 	const params = [userId]
 	Model.dataSource.connector.execute(sql_stmt, params, cb)
   }
 
-  Model.buyBucks = function(data, cb) {
+  Model.buyBucks = function(req, data, cb) {
     if(!stripe) return cb(undefined, Promise.resolve(true))
-    const userId = Model.app.get('ftUserId')
+    const userId = req && req.user && req.user.ftUserId
     const price = data.quantity < 10 ? process.env.PRICE_SMALL : process.env.PRICE_LARGE
     const sessionObject = {
       payment_method_types: ['card'],
@@ -31,7 +31,7 @@ module.exports = function(Model) {
     }
     const session = stripe.checkout.sessions.create(sessionObject)
       .then(s => {
-        const userId = Model.app.get('ftUserId')
+        const userId = req && req.user && req.user.ftUserId
         //console.log('buck order', userId, s)
         const sql_stmt = 'INSERT INTO orders(user, order_record, quantity, payment_intent) VALUES(?, CAST(? AS JSON), ?, ?);'
       const params = [userId, JSON.stringify(s), data.quantity, s.payment_intent]
@@ -45,9 +45,14 @@ module.exports = function(Model) {
   }
 
   Model.fulfillBucks = function(data, req, cb) {
-    //const userId = Model.app.get('ftUserId')
+    //const userId = req && req.user && req.user.ftUserId
     const endpointSecret = process.env.BUCKS_HOOK_SECRET
     const sig = req.headers['stripe-signature']
+    if(!sig) return cb({
+                        message: "StripeMalformedRequestError: Incorrect Headers",
+                        status: 403,
+                statusCode: 403
+                    })
     let event;
 
     try {
@@ -89,11 +94,7 @@ module.exports = function(Model) {
 
     Model.remoteMethod('bucks', {
         accepts: [
-	        {
-		        arg: 'req', type: 'object', http: function (ctx) {
-		            return ctx.req;
-		        }
-	        }
+      {arg: 'req', type: 'object', 'http': {source: 'req'}}
         ],
         http: {
         	path: '/bucks',
@@ -103,7 +104,11 @@ module.exports = function(Model) {
     })
 
     Model.remoteMethod('buyBucks', {
-        accepts: { arg: 'data', type: 'object', http: { source: 'body' } },
+        accepts: [
+          { arg: 'req', type: 'object', 'http': {source: 'req'}},
+          { arg: 'data', type: 'object', http: { source: 'body' } }
+
+         ],
         http: {
           path: '/bucks',
           verb: 'post'

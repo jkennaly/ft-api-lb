@@ -2,6 +2,7 @@
   "name": "ParentGenre",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "genre_parents"
@@ -9,7 +10,8 @@
     "relations": {}
   },
   "mixins": {
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

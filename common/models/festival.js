@@ -5,9 +5,6 @@ const _ = require('lodash');
 module.exports = function(Festival){
 
 
-  Festival.greet = function(msg, cb) {
-    cb(null, 'Greetings... ' + msg);
-  }
 
   Festival.superEventsPromise = function(id, cb) {
     return Promise.resolve({seriesIds: [Festival.findById(id).series]})
@@ -83,9 +80,5 @@ module.exports = function(Festival){
   }
 
 
-  Festival.remoteMethod('greet', {
-        accepts: {arg: 'msg', type: 'string'},
-        returns: {arg: 'greeting', type: 'string'}
-  });
 };
 

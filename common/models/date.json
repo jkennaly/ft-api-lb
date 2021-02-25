@@ -2,6 +2,7 @@
   "name": "Date",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "dates"
@@ -24,7 +25,9 @@
     "DeleteOverride": true,
     "CostDate": true,
     "Access": true,
-    "Buy": true
+    "Buy": true,
+    "DatesTerminals": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

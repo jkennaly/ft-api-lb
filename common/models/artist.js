@@ -42,7 +42,12 @@ module.exports = function(Artist){
 
 
     Artist.festivalLineup = function(req, festivalId, cb) {
-      if(!req.files[0]) console.log('Artists festivalLineup', req)
+      if(!req.files || !req.files[0]) return cb({
+            message: "MalformedRequestError: Invalid Lineup",
+            status: 403,
+    statusCode: 403
+        })
+      //if(!req.files[0]) console.log('Artists festivalLineup', req)
         /*
       const str = Artist.fileHandler(req)
       const artistNameAr = _.uniq(str.split('\n').map(s => toTitleCase(s).trim())

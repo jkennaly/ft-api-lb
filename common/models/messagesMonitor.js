@@ -1,5 +1,6 @@
 // messagesMonitor.js
 
+const _ = require('lodash')
 module.exports = function(MessagesMonitor){
 
 
@@ -9,10 +10,16 @@ module.exports = function(MessagesMonitor){
       //console.log('MessagesMonitor.batchCreate')
       //console.log(data)
 
+    if (!data || !data.length) return cb({
+        message: 'No data supplied',
+        status: 400,
+        statusCode: 400
+      })
 
-      data.map(elData => MessagesMonitor.upsertWithWhere({
-          message: elData.message, 
-          user: elData.user
+      data
+        .filter(d => d.message)
+        .map(elData => MessagesMonitor.upsertWithWhere({
+          message: elData.message
         }, 
         elData,
         (err, el) => {
@@ -35,7 +42,14 @@ module.exports = function(MessagesMonitor){
       //console.log('MessagesMonitor.batchDelete')
       //console.log(data)
 
-      data.map(elData => MessagesMonitor.deleteById(elData,
+    if (!data || !data.length) return cb({
+        message: 'No data supplied',
+        status: 400,
+        statusCode: 400
+      })
+      data
+        .filter(_.isInteger)
+        .map(elData => MessagesMonitor.deleteById(elData,
         (err, el) => {
           if(err) {
             //console.log('err')

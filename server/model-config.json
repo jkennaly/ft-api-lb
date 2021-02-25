@@ -9,6 +9,8 @@
     "mixins": [
       "loopback/common/mixins",
       "loopback/server/mixins",
+      "../common/mixins/access",
+      "../common/mixins/active",
       "../common/mixins",
       "./mixins"
     ]

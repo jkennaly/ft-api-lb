@@ -2,6 +2,7 @@
   "name": "Genre",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "genres"

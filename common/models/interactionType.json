@@ -2,6 +2,7 @@
   "name": "InteractionType",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "interaction_types"
