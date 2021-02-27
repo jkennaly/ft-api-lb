@@ -25,29 +25,39 @@ module.exports = function(Model) {
             message: 'Invalid buyObject: MalformedRequestError',
             status: 422,
             statusCode: 422
-          })
-        //get the cost for this id
-        Model.cost(req, buyObject[props[1]], (err, costObject) => {
+        })
+        const id = buyObject[props[1]]
+        const selector = props[0] + 'Access'
+        Model.access(req, selector, id, (err, accessAlready) => {
 
             if(err) {
-              //console.log('fulfillBucks save error', err)
-              return cb(err)
-            }
-            const cost = costObject[props[0]]
-            if(!_.isNumber(cost)) return cb('Invalid buyObject/costObject')
-            const userId = req && req.user && req.user.ftUserId
-            const description = Object.assign({
-                userId: userId
-            }, buyObject)
-            const sql_stmt = 'INSERT INTO ledger (user, category, bucks, description) VALUES (?, ?, ?, CAST(? AS JSON)) ;'
-            const params = [userId, `${props[0]} Access`, cost * -1, JSON.stringify(description)]
-            Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
-              if(err) {
-                console.log('buy save error', err, buyObject)
+                console.trace('buy access error', err)
                 return cb(err)
-              }
-              
-              cb(err, results)
+            }
+            if(accessAlready) return cb(undefined, 'Already Accessible')
+            //get the cost for this id
+            Model.cost(req, buyObject[props[1]], (err, costObject) => {
+
+                if(err) {
+                    console.trace('buy access cost error', err)
+                    return cb(err)
+                }
+                const cost = costObject[props[0]]
+                if(!_.isNumber(cost)) return cb('Invalid buyObject/costObject')
+                const userId = req && req.user && req.user.ftUserId
+                const description = Object.assign({
+                    userId: userId
+                }, buyObject)
+                const sql_stmt = 'INSERT INTO ledger (user, category, bucks, description) VALUES (?, ?, ?, CAST(? AS JSON)) ;'
+                const params = [userId, `${props[0]} Access`, cost * -1, JSON.stringify(description)]
+                Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+                  if(err) {
+                    console.log('buy save error', err, buyObject)
+                    return cb(err)
+                  }
+                  
+                  cb(err, results)
+                })
             })
         })
 

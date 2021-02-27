@@ -248,4 +248,15 @@ module.exports = function(Model) {
 
   }
 
+  const method = {
+    day: `dayAccess`,
+    date: `dateAccess`,
+    festival: `festAccess`,
+    profile: `fullAccess`
+  }
+  Model.access = function(req, selector, id, cb) {
+    return Model[selector](req, id, cb)
+
+  }
+
 }
