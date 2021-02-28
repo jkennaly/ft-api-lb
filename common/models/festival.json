@@ -43,6 +43,7 @@
     "CostFest": true,
     "Access": true,
     "Buy": true,
+    "FestsTerminals": true,
     "ContextRequest": true
   },
   "properties": {

@@ -26,6 +26,7 @@
     "CostDay": true,
     "Access": true,
     "Buy": true,
+    "DaysTerminals": true,
     "ContextRequest": true
   },
   "properties": {

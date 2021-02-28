@@ -2,7 +2,7 @@
 
 const _ = require('lodash')
 
-
+const FULL_ACCESS_PRICE = 10
 
 module.exports = function(Profile) {
 
@@ -39,11 +39,46 @@ module.exports = function(Profile) {
               cb(err, results)
             })
         })
-
-
-
     }
 
+    Profile.fullAccessEnd = function(req, cb) {
+        const userId = req && req.user && req.user.ftUserId
+        if(!userId) return cb(undefined, 0)
+        const sql_stmt = `SELECT id, bucks, timestamp 
+            FROM ledger 
+            WHERE 
+                category LIKE ? AND 
+                user=? AND bucks<0 AND 
+                timestamp>DATE_SUB(curdate(), interval 1 year)
+            ORDER BY id DESC;`
+        const params = ['%Access', userId]
+        Profile.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+          if(err) {
+            //console.log('fulfillBucks save error', err)
+            return cb(err)
+          }
+          const startDate = results.reduce((total, row, i, ar) => {
+            if(!_.isNumber(total)) return total
+            const newTotal = total - row.bucks
+            if(newTotal >= FULL_ACCESS_PRICE) return row.timestamp.setFullYear(row.timestamp.getFullYear() + 1)
+            if(i + 1 < ar.length) return newTotal
+            return new Date()
+          }, 0)
+          //console.log('fullAccessEnd', results, startDate)
+          
+          cb(undefined, Math.floor(startDate.valueOf() / 1000))
+        })
+    }
+
+
+    Profile.remoteMethod('fullAccessEnd', {
+        accepts: [
+            {arg: 'req', type: 'object', 'http': {source: 'req'}}
+
+        ],
+        http: {path: '/access/end', verb: 'get'},
+        returns: {arg: 'data', type: 'object'}
+    })
 
     Profile.remoteMethod('buy', {
         accepts: [
