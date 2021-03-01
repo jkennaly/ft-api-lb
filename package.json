@@ -45,8 +45,10 @@
     "xlsx": "^0.16.2"
   },
   "devDependencies": {
+    "clinic": "^8.0.1",
     "eslint": "^3.17.1",
     "eslint-config-loopback": "^8.0.0",
+    "express-status-monitor": "^1.3.3",
     "loopback-cli": "^5.2.0",
     "replace-in-file": "^3.4.4"
   },

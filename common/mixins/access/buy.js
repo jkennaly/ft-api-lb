@@ -20,12 +20,14 @@ module.exports = function(Model) {
                 //console.log('props reduce', base, val, i)
                 return base.test(val)
             }, 0)
+        const userId = req && req.user && req.user.ftUserId
         const valid = propsLengthOk && propsLengthDiffOk && propValuesOk
-        if(!valid) return cb({
+        if(!valid || !userId) return cb({
             message: 'Invalid buyObject: MalformedRequestError',
             status: 422,
             statusCode: 422
         })
+        Model.clearCache(userId)
         const id = buyObject[props[1]]
         const selector = props[0] + 'Access'
         Model.access(req, selector, id, (err, accessAlready) => {
@@ -44,7 +46,6 @@ module.exports = function(Model) {
                 }
                 const cost = costObject[props[0]]
                 if(!_.isNumber(cost)) return cb('Invalid buyObject/costObject')
-                const userId = req && req.user && req.user.ftUserId
                 const description = Object.assign({
                     userId: userId
                 }, buyObject)

@@ -11,6 +11,13 @@ module.exports = function(Profile) {
         const props = Object.keys(buyObject).sort((a, b) => a.length - b.length)
         const propsLengthOk = props.length === 1
         const valid = propsLengthOk
+        const userId = req && req.user && req.user.ftUserId
+        if(!valid || !userId) return cb({
+            message: 'Invalid buyObject: MalformedRequestError',
+            status: 422,
+            statusCode: 422
+        })
+        Profile.clearCache(userId)
         //get the cost for this id
         Profile.cost(req, (err, costObject) => {
 
@@ -24,7 +31,6 @@ module.exports = function(Profile) {
                         status: 403,
                 statusCode: 403
                     })
-            const userId = req && req.user && req.user.ftUserId
             const description = Object.assign({
                 userId: userId
             }, buyObject)

@@ -4,6 +4,7 @@ const DATE_CAP = process.env.DATE_CAP || 3
 const FEST_CAP = process.env.FEST_CAP || 5
 
 const _ = require('lodash')
+var bucksCache = {}
 
 module.exports = function(Model) {
 
@@ -36,13 +37,19 @@ module.exports = function(Model) {
         return cb(err)
       }
       
-      cb(undefined, Boolean(results.length))
+      
+      if(true) {
+
+          _.set(bucksCache, key, Boolean(results.length))
+        return cb(undefined, Boolean(results.length))
+      }
     })
 
   }
   Model.festAccess = function(req, festId, cb) {
     //true if the user has access to to festival with this id
     //also true if the user has full access
+    const t0 = Date.now()
     if(!_.isNumber(festId)) {
       console.trace('Invalid festAccess festId', festId)
       return cb(`Invalid Fest Id ${festId}`)
@@ -50,36 +57,55 @@ module.exports = function(Model) {
 
     const userId = req && req.user && req.user.ftUserId
     if(!userId) return cb(undefined, false)
+    const key = `[${userId}][${festId}].festAccess`
+    const cached = _.get(bucksCache, key)
+    if(_.isBoolean(cached)) return cb(undefined, cached)
     //console.log('festAccess', festId, userId)
     Model.fullAccess(req, (err, results) => {
+      const t1 = Date.now()
+      //console.log('t1 festAccess', t1 - t0)
       if(err) {
           console.trace('access festAccess fullAccess error', err)
         return cb(err)
       }
       //user has full access
     //console.log('festAccess fullAccess results', results)
-      if(results) return cb(undefined, true)
+      if(results) {
+
+          _.set(bucksCache, key, true)
+          return cb(undefined, true)
+        }
 
 
       const sql_stmt = 'SELECT id FROM ledger WHERE category LIKE ? AND user=? AND (`description` -> \'$.festivalId\')=?;'
       const params = ['%Access', userId, festId]
       Model.dataSource.connector.execute(sql_stmt, params, (err, ledgerIds) => {
+      const t2 = Date.now()
+      //console.log('t2 festAccess', t2 - t1)
         if(err) {
           console.trace('access festAccess sql_stmt error', err)
           return cb(err)
         }
         //user has access to festival
     //console.log('festAccess fullAccess ledgerIds', ledgerIds)
-        if(ledgerIds.length) return cb(undefined, Boolean(ledgerIds.length))
+        if(ledgerIds.length) {
+
+          _.set(bucksCache, key, Boolean(ledgerIds.length))
+          return cb(undefined, Boolean(ledgerIds.length))
+        }
         //console.log('festAccess id', festId)
     //console.log('festAccess bucksTowardsFest')
         Model.bucksTowardsFest(userId, festId, (err, result) => {
+      const t3 = Date.now()
+      //console.log('t3 festAccess', t3 - t2)
           if(err) {
             console.trace('access festAccess  bucksTowardsFest error', err)
             return cb(err)
           }
     //console.log('festAccess bucksTowardsFest result', result)
           //user has paid enough to be at the cap
+
+          _.set(bucksCache, key, result >= FEST_CAP)
           cb(undefined, result >= FEST_CAP)
         })
       })
@@ -90,13 +116,19 @@ module.exports = function(Model) {
     //true if the user has access to date with this id
     //true if the user has access to to festival with this id is part of
     //also true if the user has full access
+    const t0 = Date.now()
 
     const userId = req && req.user && req.user.ftUserId
     if(!userId) return cb(undefined, false)
+    const key = `[${userId}][${dateId}].dateAccess`
+    const cached = _.get(bucksCache, key)
+    if(_.isBoolean(cached)) return cb(undefined, cached)
     const sql_stmt = 'SELECT id FROM ledger WHERE category LIKE ? AND user=? AND (`description` -> \'$.dateId\')=?;'
     const params = ['%Access', userId, dateId]
     //console.log('access dateAccess dateId', dateId)
     Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+      const t1 = Date.now()
+      //console.log('t1 dateAccess', t1 - t0)
       if(err) {
         console.trace('dateAccess sql_stmt error', err)
         return cb(err)
@@ -105,15 +137,23 @@ module.exports = function(Model) {
       //console.log('access dateAccess results', results)
       if(results.length) return cb(undefined, Boolean(results.length))
       Model.bucksTowardsDate(userId, dateId, (err, result) => {
+      const t2 = Date.now()
+      //console.log('t2 dateAccess', t2 - t1)
         if(err) {
           console.trace('dateAccess bucksTowardsDate  error', err)
           return cb(err)
         }
         //console.log('access dateAccess bucksTowardsDate result', result)
         //user has paid enoguh to be at the date cap
-        if(result >= DATE_CAP) return cb(undefined, true)
+        if(result >= DATE_CAP) {
+
+          _.set(bucksCache, key, true)
+          return cb(undefined, true)
+        }
 
         Model.app.models.Date.find({where: {id: dateId}}, (err, dates) => {
+      const t3 = Date.now()
+      //console.log('t3 dateAccess', t3 - t2)
           if(err) {
             console.trace('dateAccess bucksTowardsDate Date.find error', err)
             return cb(err)
@@ -125,7 +165,10 @@ module.exports = function(Model) {
             const festId = _.get(date2, 'festival')
 
             //user has festival access
-            Model.app.models.Festival.festAccess(req, festId, cb)
+            Model.app.models.Festival.festAccess(req, festId, (err, result) => {
+              if(!err) _.set(bucksCache, key, result)
+              cb(err, result)
+            })
           }
           catch (err) {
             console.trace(dateId, dates, err)
@@ -139,30 +182,45 @@ module.exports = function(Model) {
     //true if the user has access to date with this id
     //true if the user has access to to festival with this id is part of
     //also true if the user has full access
+    const t0 = Date.now()
 
     const userId = req && req.user && req.user.ftUserId
     if(!userId) return cb(undefined, false)
+    const key = `[${userId}][${dayId}].dayAccess`
+    const cached = _.get(bucksCache, key)
+    if(_.isBoolean(cached)) return cb(undefined, cached)
     const sql_stmt = 'SELECT id FROM ledger WHERE category LIKE ? AND user=? AND (`description` -> \'$.dayId\')=?;'
     const params = ['%Access', userId, dayId]
     Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+    //const t1 = Date.now()
+    //console.log('t1 dayAccess', t1 - t0)
       if(err) {
         //console.log('fulfillBucks save error', err)
         return cb(err)
       }
       //console.log('Model.dayAccess', dayId, results)
       //user has day access
-      if(results.length) return cb(undefined, Boolean(results.length))
+      if(results.length) {
+
+          _.set(bucksCache, key, Boolean(results.length))
+        return cb(undefined, Boolean(results.length))
+      }
       Model.app.models.Day.find({where: {id: dayId}}, (err, results) => {
+    //const t2 = Date.now()
+    //console.log('t2 dayAccess', t2 - t1)
         if(err) {
           //console.log('fulfillBucks save error', err)
           return cb(err)
         }
         const dateId = results.date
         Model.dateAccess(req, dateId, (err, hasDateAccess) => {
+    //const t3 = Date.now()
+    //console.log('t3 dayAccess', t3 - t2)
           if(err) {
             //console.log('fulfillBucks save error', err)
             return cb(err)
           }
+          _.set(bucksCache, key, hasDateAccess)
           cb(undefined, hasDateAccess)
         })
       })
@@ -171,6 +229,9 @@ module.exports = function(Model) {
   Model.bucksTowardsDate = function(userId, dateId, cb) {
     //bucks this user has towards the event, including all sub events
     if(!userId) return cb(undefined, 0)
+    const key = `[${userId}][${dateId}].dateBucks`
+    const cached = _.get(bucksCache, key)
+    if(_.isNumber(cached)) return cb(undefined, cached)
     Model.app.models.Day.find({where: {date: dateId}}, (err, results) => {
       if(err) {
         //console.log('bucksTowardsDate day find error', err)
@@ -186,6 +247,7 @@ module.exports = function(Model) {
         }
         const total = results.reduce((total, b) => total - b.bucks, 0)
         //console.log('bucksTowardsDate', dateId, results, total)
+          _.set(bucksCache, key, total)
         cb(undefined, total)
       })
     })
@@ -196,6 +258,9 @@ module.exports = function(Model) {
     //bucks this user has towards the event, including all sub events
     //console.log('bucksTowardsFest', Object.keys(Model.app.models))
     if(!userId) return cb(undefined, 0)
+    const key = `[${userId}][${festId}].festBucks`
+    const cached = _.get(bucksCache, key)
+    if(_.isNumber(cached)) return cb(undefined, cached)
     Model.app.models.Date.find({where: {festival: festId}}, (err, results) => {
       if(err) {
         //console.log('fulfillBucks save error', err)
@@ -221,10 +286,14 @@ module.exports = function(Model) {
             }
             dateBucksAcc += dateBucks
             dateCounter++
-            if(dateCounter >= dateIds.length) cb(undefined, dateBucksAcc - festBucksSpent)
+            if(dateCounter >= dateIds.length) {
+              _.set(bucksCache, key, dateBucksAcc - festBucksSpent)
+              cb(undefined, dateBucksAcc - festBucksSpent)
+            }
             
           }))
         } else {
+          _.set(bucksCache, key, festBucksSpent)
           cb(undefined, festBucksSpent)
         }
       })
@@ -234,6 +303,9 @@ module.exports = function(Model) {
     //true if the user has spent 10 or more bucks on access in the last 365 days, false otherwise
 
     if(!userId) return cb(undefined, 0)
+    const key = `[${userId}].full`
+    const cached = _.get(bucksCache, key)
+    if(_.isNumber(cached)) return cb(undefined, cached)
     const sql_stmt = 'SELECT id, bucks FROM ledger WHERE category LIKE ? AND user=? AND bucks<0 AND timestamp>DATE_SUB(curdate(), interval 1 year);'
     const params = ['%Access', userId]
     Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
@@ -243,9 +315,13 @@ module.exports = function(Model) {
       }
       const totalSpent = results.reduce((total, row) => row.bucks && row.bucks < 0 ? total - row.bucks : total, 0)
       
+          _.set(bucksCache, key, totalSpent)
       cb(undefined, totalSpent)
     })
 
+  }
+  Model.clearCache = function(userId) {
+    delete bucksCache[userId]
   }
 
   const method = {

@@ -47,7 +47,7 @@ module.exports = function(Model) {
 		startDate.setDate(startDate.getDate() - START_OFFSET)
 		var endDate = new Date()
 		endDate.setDate(endDate.getDate() + END_OFFSET)
-		return Date.allActiveIds()
+		return Model.allActiveIds()
 			.then(res => cb(undefined, res.includes(id)))
 			.catch(cb)
 		
