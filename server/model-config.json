@@ -11,6 +11,7 @@
       "loopback/server/mixins",
       "../common/mixins/access",
       "../common/mixins/active",
+      "../common/mixins/hooks",
       "../common/mixins",
       "./mixins"
     ]

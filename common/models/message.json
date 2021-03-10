@@ -12,7 +12,9 @@
   "mixins": {
     "Fromuserstamp": true,
     "DeleteOverride": true,
-    "ContextRequest": true
+    "RestrictViewing": true,
+    "ContextRequest": true,
+    "BaseUpdate": true
   },
   "properties": {
     "id": {
@@ -114,6 +116,51 @@
       "scale": 0,
       "mysql": {
         "columnName": "base_message",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
+    "baseSubject": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "base_message_subject",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
+    "baseSubjectType": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "base_message_subject_type",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
+    "baseMessageType": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "base_message_type",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,

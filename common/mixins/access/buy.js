@@ -27,7 +27,7 @@ module.exports = function(Model) {
             status: 422,
             statusCode: 422
         })
-        Model.clearCache(userId)
+        Model.clearBucksCache(userId)
         const id = buyObject[props[1]]
         const selector = props[0] + 'Access'
         Model.access(req, selector, id, (err, accessAlready) => {

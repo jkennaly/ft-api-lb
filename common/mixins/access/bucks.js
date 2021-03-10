@@ -81,7 +81,7 @@ module.exports = function(Model) {
             console.log('fulfillBucks save error', err)
             return cb(err)
           }
-          
+          Model.clearBucksCache(results[0].user)
           cb()
         })
       })

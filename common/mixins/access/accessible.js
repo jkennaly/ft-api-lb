@@ -17,6 +17,8 @@ module.exports = function(Profile) {
   Profile.accessibleEvents = function(req, cb) {
     //true if the user has access to to festival with this id
     //also true if the user has full access
+    const t1 = Date.now()
+      
     const userId = req && req.user && req.user.ftUserId
     if(!userId) return cb(undefined, emptyAccess)
 
@@ -29,14 +31,14 @@ module.exports = function(Profile) {
           timestamp>DATE_SUB(curdate(), interval 1 year);`
       const params = ['%Access', userId]
       Profile.dataSource.connector.execute(sql_stmt, params, (err, ledgerDescriptions) => {
-      //const t2 = Date.now()
-      //console.log('t2 festAccess', t2 - t1)
+      const t2 = Date.now()
+      //console.log('t2 accessibleEvents', t2 - t1)
         if(err) {
           console.trace('accessible ledgerDescriptions sql_stmt error', err)
           return cb(err)
         }
         //user has access to festival
-        //console.log('festAccess fullAccess ledgerIds', ledgerIds)
+        //console.log('accessibleEvents fullAccess ledgerIds', ledgerIds)
         const bought = ledgerDescriptions.reduce((desObject, item) => {
           const keys = _.keys(JSON.parse(item.description)).filter(_.isString).filter(k => k !== 'userId')
           const idKey = keys.find(k => /Id$/.test(k))
@@ -58,6 +60,8 @@ module.exports = function(Profile) {
             console.trace('accessible ledgerDescriptions sql_stmt error', err)
             return cb(err)
           }
+          const t3 = Date.now()
+          //console.log('t3 accessibleEvents', t3 - t2)
           const dateIds = _.uniq([...bought.date, ...(dates.map(d => d.id)) ])
           Profile.app.models.Day.find({where: { and: [
             {date: {inq: dateIds}},
@@ -67,6 +71,8 @@ module.exports = function(Profile) {
               console.trace('accessible ledgerDescriptions sql_stmt error', err)
               return cb(err)
             }
+            const t4 = Date.now()
+            //console.log('t4 accessibleEvents', t4 - t3)
             const dayIds = _.uniq([...bought.day, ...(days.map(d => d.id)) ])
             Profile.app.models.Set.find({where: { and: [
               {day: {inq: dayIds}},
@@ -76,7 +82,9 @@ module.exports = function(Profile) {
                 console.trace('accessible ledgerDescriptions sql_stmt error', err)
                 return cb(err)
               }
+              const t5 = Date.now()
               const setIds = sets.map(d => d.id)
+              //console.log('t5 accessibleEvents', t5 - t4, t5 - t1)
               cb(undefined, {
                 festivals: bought.festival,
                 dates: dateIds,

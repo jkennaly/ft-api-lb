@@ -17,6 +17,7 @@
     "Bucks": true,
     "CostFull": true,
     "Access": true,
+    "Ledger": true,
     "Accessible": true,
     "GtAccessToken": true,
     "BuyFull": true,

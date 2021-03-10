@@ -7,8 +7,6 @@ var boot = require('loopback-boot');
 const mysql = require('mysql2');
 const _ = require('lodash');
 
-var jwt = require('express-jwt');
-var jwks = require('jwks-rsa');
 
 var bodyParser = require('body-parser');
 var multer = require('multer');
@@ -38,31 +36,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-const auth0Provider = () => jwt({
-  secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: "https://festivaltime.auth0.com/.well-known/jwks.json"
-    }),
-    //audience: 'https://immense-ridge-26505.herokuapp.com/api/',
-    issuer: 'https://festivaltime.auth0.com/',
-    algorithms: ['RS256'],
-    credentialsRequired: false
-})
-
-const localProvider = () => jwt({
-  secret: process.env.LOCAL_SECRET,
-    audience: 'http://festigram/api/',
-    issuer: 'http://festigram',
-    algorithms: ['HS256'],
-    credentialsRequired: false
-})
-
-
-var authCheck = process.env.LOCAL_SECRET ? localProvider() : auth0Provider()
-
-app.use(authCheck)
 
 var guard = require('express-jwt-permissions')({
   permissionsProperty: 'scope'
@@ -162,113 +135,8 @@ app.delete(guard.check('create:messages'))
 app.patch(guard.check('create:messages'))
 
 //user request has passed security, now get ftUserId
-app.use('/api/Profiles/getUserId*', function (req, res, next) {
-  const authId = req.user.sub
-  const aliasTable = app.get('aliasTable')
-  var foundAlias = aliasTable[authId]
-  //console.log('foundAlias ' + foundAlias)
-  if(!foundAlias) {
-    //get highest id in alias Table
-    const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
-    //load all aliases with ids higher
-    
-    const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
-    connection.connect(function(err) {
-    if (err) {
-      console.error('error connecting: ' + err.stack);
-      return;
-    }
 
-    //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
-    })
-    connection.execute(
-      'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
-      [highId],
-      (err, results, fields) => {
-        if(err) return next(err)
-          const resultPairs = results.map(r => [r.alias, r.user])
-          _.assign(aliasTable, _.fromPairs(resultPairs))
-          if(aliasTable[authId]) {
-            req.user.ftUserId = aliasTable[authId]
-            
-            //console.log('userId Set A ' + req.user.ftUserId)
 
-          }
-            /*
-            else {
-              //user not found
-            }
-            */
-          //console.log('using loaded alias')
-          //console.log(req.user)
-          next()
-      }
-    )
-    connection.end()
-    //console.log('connected ended ' + req.originalUrl)
-  } else {
-    req.user.ftUserId = foundAlias
-    
-    //console.log('userId Set B ' + req.user.ftUserId)
-    //console.log('using cached alias')  
-    //console.log(req.user)
-    next()
-  }
-
-});
-
-app.use('/api/*', function(req, res, next) {
-  const aliasTable = app.get('aliasTable')
-  //console.log('server.js 114 aliasTable', aliasTable, req.user)
-
-  if(req.user && !req.user.ftUserId) {
-    const authId = req.user.sub
-    const aliasTable = app.get('aliasTable')
-    var foundAlias = aliasTable[authId]
-    req.user.ftUserId = foundAlias
-    if(foundAlias) {
-      
-    } else {
-        //get highest id in alias Table
-      const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
-      //load all aliases with ids higher
-      
-      const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
-      connection.connect(function(err) {
-      if (err) {
-        console.error('error connecting: ' + err.stack);
-        return;
-      }
-
-      //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
-      })
-      connection.execute(
-        'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
-        [highId],
-        (err, results, fields) => {
-          if(err) return next(err)
-            const resultPairs = results.map(r => [r.alias, r.user])
-            _.assign(aliasTable, _.fromPairs(resultPairs))
-            if(aliasTable[authId]) {
-              req.user.ftUserId = aliasTable[authId]
-              
-              //console.log('userId Set A ' + req.user.ftUserId)
-
-            }
-              
-              else {
-                //user not found
-              }
-              
-            //console.log('using loaded alias')
-            //console.log(req.user)
-        }
-      )
-      connection.end()
-    }
-  }
-  next()
-})
 
 /*
 // apply to a path

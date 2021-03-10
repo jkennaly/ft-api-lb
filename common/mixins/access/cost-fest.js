@@ -30,8 +30,8 @@ module.exports = function(Fest) {
 				festivalId: id,
 				festival: 0
 			}
+		//console.log('bucksTowardsFest festAccess, ', hasAccess, costObject)
 			if(hasAccess) return cb(undefined, costObject)
-		//console.log('bucksTowardsFest')
 			Fest.bucksTowardsFest(userId, id, (err, bucks) => {
 
 		    	if(err) {
@@ -39,7 +39,7 @@ module.exports = function(Fest) {
 		    	  return cb(err)
 		    	}
 		      
-		//console.log('bucksTowardsFull')
+		//console.log('costFest bucksTowardsFest', bucks)
 				Fest.app.models.Profile.bucksTowardsFull(userId, (err, bucksFull) => {
 
 				    if(err) {
@@ -53,6 +53,7 @@ module.exports = function(Fest) {
 						full: FULL_CAP - (_.isNumber(bucksFull) ? bucksFull : 0),
 
 					}
+		//console.log('costFest bucksTowardsFull', bucksFull, costObject)
 				    cb(undefined, costObject)
 					})
 			})

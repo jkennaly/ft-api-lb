@@ -42,8 +42,11 @@
     "DeleteOverride": true,
     "CostFest": true,
     "Access": true,
+    "Ledger": true,
     "Buy": true,
     "FestsTerminals": true,
+    "RestrictedEvent": true,
+    "UpdateEvent": true,
     "ContextRequest": true
   },
   "properties": {

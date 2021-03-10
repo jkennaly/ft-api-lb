@@ -6,6 +6,8 @@ const START_OFFSET = 2
 const END_OFFSET = 3
 
 module.exports = function(Model) {
+	var starts = {}
+	var ends = {}
 	Model.epochStart = function(id, cb) {
 		//a date is active if its basedate is between:
 			//now - START_OFFSET
@@ -24,7 +26,15 @@ module.exports = function(Model) {
 					.then(dates => dates.sort((a, b) => a.basedate.valueOf() - b.basedate.valueOf())[0])
 					.then(date => {
 						if(!date || !date.basedate || !date.basedate.getDate) throw new Error(`date id ${id}: Bad date ${JSON.stringify(date)}`)
-						return Model.app.models.Date.epochStart(date.id, cb)
+						return Model.app.models.Date.epochStart(date.id, (err, res) => {
+							if(err) return cb({
+			                    message: `Unknown Date.epochStart Id ${date.id}`,
+			                    status: 404,
+			                	statusCode: 404
+			                })
+							_.set(starts, `[${id}]`, res)
+							cb(undefined, res)
+						})
 					})
 
 			
@@ -55,7 +65,15 @@ module.exports = function(Model) {
 					.then(dates => dates.sort((a, b) => b.basedate.valueOf() - a.basedate.valueOf())[0])
 					.then(date => {
 						if(!date || !date.basedate || !date.basedate.getDate) throw new Error(`date id ${id}: Bad date ${JSON.stringify(date)}`)
-						return Model.app.models.Date.epochEnd(date.id, cb)
+						return Model.app.models.Date.epochEnd(date.id, (err, res) => {
+							if(err) return cb({
+			                    message: `Unknown Date.epochEnd Id ${date.id}`,
+			                    status: 404,
+			                	statusCode: 404
+			                })
+							_.set(ends, `[${id}]`, res)
+							cb(undefined, res)
+						})
 					})
 
 			

@@ -19,6 +19,9 @@
     "Userstamp": true,
     "DeleteOverride" : true,
     "Timestamp": true,
+    "RestrictedEvent": true,
+    "SetsTerminals": true,
+    "UpdateEvent": true,
     "ContextRequest": true
   },
   "properties": {

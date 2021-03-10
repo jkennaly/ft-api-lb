@@ -40,7 +40,7 @@ function disableAllMethodsBut(model, methodsToExpose)
             if(methodsToExpose.indexOf(methodName) < 0)
             {
                 hiddenMethods.push(methodName);
-                model.disableRemoteMethod(methodName, method.isStatic);
+                model.disableRemoteMethodByName(methodName);
             }
         });
 

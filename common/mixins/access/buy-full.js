@@ -17,7 +17,6 @@ module.exports = function(Profile) {
             status: 422,
             statusCode: 422
         })
-        Profile.clearCache(userId)
         //get the cost for this id
         Profile.cost(req, (err, costObject) => {
 
@@ -42,6 +41,7 @@ module.exports = function(Profile) {
                 return cb(err)
               }
               
+          //Profile.clearBucksCache(userId)
               cb(err, results)
             })
         })

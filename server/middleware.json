@@ -33,9 +33,24 @@
     }
   },
   "session": {},
-  "auth": {},
+  "auth:before": {
+    "./middleware/auth-check": {}
+
+  },
+  "auth": {
+    "./middleware/get-user-id": {
+      "paths": "/api/Profiles/getUserId*"
+    },
+    "./middleware/verify-user-id": {
+      "paths": "/api/*"
+    }
+
+  },
   "parse": {},
-  "routes": {
+  "routes:before": {
+    "./middleware/gt-access-token": {}
+  },
+  "routes:after": {
     "loopback#rest": {
       "paths": [
         "${restApiRoot}"

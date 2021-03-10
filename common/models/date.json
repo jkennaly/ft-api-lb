@@ -25,8 +25,11 @@
     "DeleteOverride": true,
     "CostDate": true,
     "Access": true,
+    "Ledger": true,
     "Buy": true,
     "DatesTerminals": true,
+    "RestrictedEvent": true,
+    "UpdateEvent": true,
     "ContextRequest": true
   },
   "properties": {

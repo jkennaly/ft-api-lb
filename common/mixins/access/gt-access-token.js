@@ -11,6 +11,7 @@ module.exports = function(Profile) {
 		//if the user has full access, the cost is 0
 		//get full access cost
 		//console.log('Profile.cost', cb, arguments)
+    	const t0 = Date.now()
     	const userId = req && req.user && req.user.ftUserId
     	if(!userId) return cb({
             message: "MalformedRequestError: Invalid User Id",
@@ -20,6 +21,8 @@ module.exports = function(Profile) {
 
         //check for full access
         Profile.fullAccess(req, (err, fullAccess) => {
+      const t1 = Date.now()
+      //console.log('t1 gtToken', t1 - t0)
         	if(err) {
         		console.trace('gtToken fullAccess', err)
         		return cb(err)
@@ -27,6 +30,8 @@ module.exports = function(Profile) {
         	//if full access, get full access end
         	if(fullAccess) {
         		Profile.fullAccessEnd(req, (err, result) => {
+      const t2 = Date.now()
+      //console.log('t2 gtToken', t2 - t1)
 		        	if(err) {
 		        		console.trace('gtToken fullAccessEnd', err)
 		        		return cb(err)
@@ -54,6 +59,8 @@ module.exports = function(Profile) {
         	}
         	else {
     			Profile.accessibleEvents(req, (err, result) => {
+      const t3 = Date.now()
+      //console.log('t3 gtToken', t3 - t1)
 		        	if(err) {
 		        		console.trace('gtToken accessibleEvents', err)
 		        		return cb(err)
@@ -79,6 +86,8 @@ module.exports = function(Profile) {
 					    })))
 					    .then(endTimes => endTimes.sort((a, b) => b - a))
 					    .then(([exp, ...rest]) => {
+      const t4 = Date.now()
+      //console.log('t4 gtToken', t4 - t3)
 					    	if(!exp) return cb({
 					            message: "No Purchased Events",
 					            status: 402,
