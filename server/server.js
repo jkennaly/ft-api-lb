@@ -21,7 +21,6 @@ var app = module.exports = loopback();
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load()
-  app.use(require('express-status-monitor')())
   
 } else {
   app.use(sslRedirect())

@@ -18,7 +18,6 @@
     "cors": "^2.8.5",
     "dayjs": "^1.10.4",
     "dotenv": "^6.2.0",
-    "execsql": "0.0.3",
     "express-formidable": "^1.2.0",
     "express-jwt": "^5.3.3",
     "express-jwt-permissions": "^1.3.3",
@@ -49,7 +48,6 @@
   "devDependencies": {
     "eslint": "^3.17.1",
     "eslint-config-loopback": "^8.0.0",
-    "express-status-monitor": "^1.3.3",
     "loopback-cli": "^5.2.0",
     "replace-in-file": "^3.4.4"
   },
