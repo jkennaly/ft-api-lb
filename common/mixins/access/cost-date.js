@@ -12,7 +12,7 @@ module.exports = function(Date) {
 		//count bucks towards this date
 		//get festival cost
 		//get full access cost
-		
+		if(!id) return cb(undefined, {full: 10})
 		const userId = req && req.user && req.user.ftUserId
 		//console.log("cost-date", id)
 		if(!userId) return cb(undefined, {

@@ -18,8 +18,7 @@ module.exports = function(options) {
       issuer: 'http://festigram',
       algorithms: ['HS256']
     }, (err, decoded) => {
-      if(err) return next(err)
-      req.user.gtt = decoded
+      if(err) return next()
       //console.log('gt-access-token mw', req.user, req.headers)
       req.accessToken.user = req.user
       next()

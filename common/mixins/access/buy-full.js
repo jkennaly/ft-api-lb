@@ -2,7 +2,10 @@
 
 const _ = require('lodash')
 
+var dayjs = require('dayjs')
 const FULL_ACCESS_PRICE = 10
+
+var buyCache = {}
 
 module.exports = function(Profile) {
 
@@ -75,7 +78,78 @@ module.exports = function(Profile) {
           cb(undefined, Math.floor(startDate.valueOf() / 1000))
         })
     }
+  Profile.fullBoughtEnd = function(req, cb) {
+    //if the user does not have full access, it is the epoch end time if the user immediately bought full access
 
+        const userId = req && req.user && req.user.ftUserId
+    //console.log('fullBoughtEnd', userId)
+    if(!userId) return cb(undefined, 0)
+    const key = `[${userId}].fullBoughtEnd`
+    const cached = _.get(buyCache, key)
+    if(_.isNumber(cached)) return cb(undefined, cached)
+    Profile.bucksTowardsFull(userId, (err, bucks) => {
+        if(err) {
+          console.trace('fullBoughtEnd bucksTowardsFull error', err)
+          return cb(err)
+        }
+        //console.log('fullBoughtEnd bucksTowardsFull', userId, bucks)
+        //if user has 0 bucksTowardsFull, this epoch time of 1 year from now
+        if(bucks <= 0) {
+            const endTime = dayjs().add(1, 'year').unix()
+            _.set(buyCache, key, endTime)
+            return cb(undefined, endTime)  
+        } 
+        //if the user currently has full access, this is the epoch end time
+        if(bucks >= 10) {
+            Profile.fullAccessEnd(req, (err, endTime) => {
+                if(err) {
+                  console.trace('fullBoughtEnd bucksTowardsFull fullAccessEnd error', err)
+                  return cb(err)
+                }
+                //console.log('fullBoughtEnd bucksTowardsFull fullAccessEnd', userId, endTime)
+                _.set(buyCache, key, endTime)
+                return cb(undefined, endTime)  
+
+            })
+        } else {
+
+
+            Profile.ledger(userId, (err, raw) => {
+                if(err) {
+                  console.trace('fullBoughtEnd bucksTowardsFull Profile.ledger error', err)
+                  return cb(err)
+                }
+                const results = raw
+                  .filter(e => /Access$/.test(e.category))
+                  .filter(e => dayjs(e.timestamp).isSameOrAfter(dayjs().subtract(1, 'year'), 'day'))
+                //console.log('fullBoughtEnd bucksTowardsFull Profile.ledger', userId, results)
+                const oldestByDate = results
+                    .sort((a, b) => dayjs(a.timestamp).valueOf() - dayjs(b.timestamp).valueOf())
+                const oldestDate = dayjs(_.get(oldestByDate, '[0].timestamp')).add(1, 'year').unix()
+                _.set(buyCache, key, oldestDate)
+                cb(undefined, oldestDate)
+            })
+        }
+
+
+
+
+    })
+
+  }
+  Profile.clearBuyCache = function(userId) {
+    delete buyCache[userId]
+  }
+
+
+    Profile.remoteMethod('fullBoughtEnd', {
+        accepts: [
+            {arg: 'req', type: 'object', 'http': {source: 'req'}}
+
+        ],
+        http: {path: '/access/wouldend', verb: 'get'},
+        returns: {arg: 'data', type: 'object'}
+    })
 
     Profile.remoteMethod('fullAccessEnd', {
         accepts: [

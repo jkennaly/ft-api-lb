@@ -112,7 +112,7 @@ module.exports = function(Model) {
     const t0 = Date.now()
 
     const userId = req && req.user && req.user.ftUserId
-    if(!userId) return cb(undefined, false)
+    if(!userId || !dateId) return cb(undefined, false)
     const key = `[${userId}][${dateId}].dateAccess`
     const cached = _.get(bucksCache, key)
     if(_.isBoolean(cached)) return cb(undefined, cached)
@@ -350,6 +350,7 @@ module.exports = function(Model) {
   }
   Model.clearBucksCache = function(userId) {
     if(Model.clearLedgerCache) Model.clearLedgerCache(userId)
+    if(Model.clearBuyCache) Model.clearBuyCache(userId)
     delete bucksCache[userId]
   }
 
