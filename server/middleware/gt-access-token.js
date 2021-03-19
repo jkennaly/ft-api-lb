@@ -20,6 +20,8 @@ module.exports = function(options) {
     }, (err, decoded) => {
       if(err) return next()
       //console.log('gt-access-token mw', req.user, req.headers)
+      //console.log('gt-access-token', decoded)
+      req.user.gtt = decoded
       req.accessToken.user = req.user
       next()
 

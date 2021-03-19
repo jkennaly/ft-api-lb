@@ -46,9 +46,11 @@
     }
 
   },
+  "auth:after": {
+    "./middleware/gt-access-token": {}
+  },
   "parse": {},
   "routes:before": {
-    "./middleware/gt-access-token": {}
   },
   "routes:after": {
     "loopback#rest": {
