@@ -4,7 +4,6 @@ var loopback = require('loopback');
 var boot = require('loopback-boot');
 //var unless = require('express-unless')
 
-const mysql = require('mysql2');
 const _ = require('lodash');
 
 
@@ -128,7 +127,7 @@ app.post(createMessages, guard.check('create:messages').unless({ path: '/api/Pro
 app.put(createMessages, guard.check('create:messages'))
 app.delete(createMessages, guard.check('create:messages'))
 
-app.post(admin, guard.check('create:messages'))
+//app.post(admin, guard.check('create:messages'))
 app.put(guard.check('create:messages'))
 app.delete(guard.check('create:messages'))
 app.patch(guard.check('create:messages'))

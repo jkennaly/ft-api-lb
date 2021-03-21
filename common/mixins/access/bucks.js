@@ -16,6 +16,12 @@ module.exports = function(Model) {
   Model.buyBucks = function(req, data, cb) {
     if(!stripe) return cb(undefined, Promise.resolve(true))
     const userId = req && req.user && req.user.ftUserId
+    //console.log('buyBucks', req.user)
+    if(!userId) return cb({
+      message: "StripeMalformedRequestError: Incorrect User",
+      status: 403,
+      statusCode: 403
+    })
     const price = data.quantity < 10 ? process.env.PRICE_SMALL : process.env.PRICE_LARGE
     const sessionObject = {
       payment_method_types: ['card'],
@@ -31,8 +37,7 @@ module.exports = function(Model) {
     }
     const session = stripe.checkout.sessions.create(sessionObject)
       .then(s => {
-        const userId = req && req.user && req.user.ftUserId
-        //console.log('buck order', userId, s)
+        //console.log('buck order', req.user, userId, s)
         const sql_stmt = 'INSERT INTO orders(user, order_record, quantity, payment_intent) VALUES(?, CAST(? AS JSON), ?, ?);'
       const params = [userId, JSON.stringify(s), data.quantity, s.payment_intent]
       Model.dataSource.connector.execute(sql_stmt, params, err => err && console.log(err))
@@ -48,6 +53,7 @@ module.exports = function(Model) {
     //const userId = req && req.user && req.user.ftUserId
     const endpointSecret = process.env.BUCKS_HOOK_SECRET
     const sig = req.headers['stripe-signature']
+    //console.log('fulfillBucks', sig, endpointSecret, req.body)
     if(!sig) return cb({
                         message: "StripeMalformedRequestError: Incorrect Headers",
                         status: 403,
@@ -60,7 +66,7 @@ module.exports = function(Model) {
 
       //const data = JSON.parse(req.body.toString())
     } catch (err) {
-      //console.log('fulfillBucks event error', JSON.stringify(err))
+      console.trace('fulfillBucks event error', JSON.stringify(err))
       return cb(err);
     }
     // Handle the checkout.session.completed event
@@ -70,15 +76,15 @@ module.exports = function(Model) {
       const params = [session.payment_intent]
       Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
         if(err) {
-          console.log('fulfillBucks load error', err)
+          console.trace('fulfillBucks load error', err)
           return cb(err)
         }
 
         const sql_stmt = 'INSERT INTO ledger (user, category, bucks, description) VALUES (?, ?, ?, CAST(? AS JSON)) ;'
         const params = [results[0].user, 'Purchased', results[0].quantity, JSON.stringify(session)]
-        Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+        Model.dataSource.connector.execute(sql_stmt, params, (err, inserted) => {
           if(err) {
-            console.log('fulfillBucks save error', err)
+            console.trace('fulfillBucks save error', err)
             return cb(err)
           }
           Model.clearBucksCache(results[0].user)

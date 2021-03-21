@@ -11,6 +11,7 @@ module.exports = function(options) {
   	//check if error is handleable
   	const se = stripeError.reduce((garbage, test) => garbage || test(err), false)
     if(se) {
+      console.trace(err)  
     	res.status(err.statusCode).send(err.code)
     	if(!/MalformedRequest/.test(err.message)) {
     		console.trace(err)	

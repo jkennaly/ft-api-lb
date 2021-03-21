@@ -34,6 +34,7 @@
   },
   "session": {},
   "auth:before": {
+    "./middleware/get-db-conn": {},
     "./middleware/auth-check": {}
 
   },

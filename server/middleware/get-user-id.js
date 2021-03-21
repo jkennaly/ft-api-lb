@@ -1,19 +1,21 @@
+// server/middleware/get-user-id.js
 
-
-const mysql = require('mysql2')
-
+const _ = require('lodash')
+//const mysql = require('mysql2')
+//const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
+    
 module.exports = function(options) {
 return function (req, res, next) {
+  const connection = req.conn
   const authId = req.user.sub
   const aliasTable = req.app.get('aliasTable')
   var foundAlias = aliasTable[authId]
-  //console.log('foundAlias ' + foundAlias)
+  console.log('foundAlias ' + foundAlias)
   if(!foundAlias) {
     //get highest id in alias Table
     const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
     //load all aliases with ids higher
     
-    const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
     connection.connect(function(err) {
     if (err) {
       console.error('error connecting: ' + err.stack);
@@ -45,7 +47,7 @@ return function (req, res, next) {
           next()
       }
     )
-    connection.end()
+    //connection.end()
     //console.log('connected ended ' + req.originalUrl)
   } else {
     req.user.ftUserId = foundAlias

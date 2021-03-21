@@ -1,4 +1,4 @@
-
+// server/middleware/auth-check.js
 
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');

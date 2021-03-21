@@ -1,9 +1,16 @@
+// server/middleware/verify-user-id.js
+const _ = require('lodash')
+//const mysql = require('mysql2')
 
-const mysql = require('mysql2')
+//const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
 
+var inProgress = false
+
+const aliased = []
 
 module.exports = function(options) {
-return function(req, res, next) {
+return function updateTable(req, res, next) {
+  const connection = req.conn
   	//console.log('verify-user-id', req.user)
   const aliasTable = req.app.get('aliasTable')
 
@@ -12,19 +19,23 @@ return function(req, res, next) {
     const aliasTable = req.app.get('aliasTable')
     var foundAlias = aliasTable[authId]
     req.user.ftUserId = foundAlias
-  	//console.log('verify-user-id foundAlias', foundAlias)
-    if(foundAlias) {
-      
-    } else {
+    if(!foundAlias && inProgress) {
+      //console.log('waiting for alias table update', aliasTable, authId)
+      return setTimeout(() => updateTable(req, res, next), 1000)
+    }
+    else if(!foundAlias && !inProgress && !aliased.includes(authId)) {
+      inProgress = true
         //get highest id in alias Table
       const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
       //load all aliases with ids higher
       
-      const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
+  	  //console.log('verify-user-id authId', authId, req.app.get('aliasTable')[authId])
       connection.connect(function(err) {
       if (err) {
         console.error('error connecting: ' + err.stack);
-        return;
+      inProgress = false
+            
+            return next(err)
       }
 
       //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
@@ -33,7 +44,11 @@ return function(req, res, next) {
         'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
         [highId],
         (err, results, fields) => {
-          if(err) return next(err)
+          if(err) {
+      inProgress = false
+            
+            return next(err)
+          }
             const resultPairs = results.map(r => [r.alias, r.user])
             _.assign(aliasTable, _.fromPairs(resultPairs))
             if(aliasTable[authId]) {
@@ -41,19 +56,31 @@ return function(req, res, next) {
               
               //console.log('userId Set A ' + req.user.ftUserId)
 
+              //console.log('verify complete', authId)
+                  inProgress = false
+              next()
             }
               
               else {
                 //user not found
+                  inProgress = false
+                  aliased.push(authId)
+              next()
               }
               
             //console.log('using loaded alias')
             //console.log(req.user)
         }
       )
-      connection.end()
+      //connection.end()
     }
+    else {
+      next()
+    }
+
   }
-  next()
+  else {
+    next()
+  }
 }
 }
