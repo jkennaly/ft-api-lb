@@ -2,6 +2,7 @@
   "name": "SubjectType",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "subject_types"

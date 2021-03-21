@@ -49,6 +49,10 @@ module.exports = function(Profile){
     			Profile.dataSource.connector.execute(sql_stmt, params, function (err, result) {
 			    	const sql_stmt = 'INSERT INTO `user_aliases`(user, alias) VALUES (?, ?)'
 			    	const params = [result[0].id, user.sub]
+
+            const aliasTable = req.app.get('aliasTable')
+            aliasTable[user.sub] = result[0].id
+            req.app.set('aliasTable')
 	    			Profile.dataSource.connector.execute(sql_stmt, params, err => err ? console.log(err) : undefined);
 		    		cb(err, result[0].id)
     				

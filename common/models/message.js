@@ -5,22 +5,22 @@ const _ = require('lodash');
 module.exports = function(Message){
 
 
-
-    Message.greet = function(msg, cb) {
-      cb(null, 'Greetings... ' + msg);
-    }
+/*
     Message.forFestival = function(festivalId, cb) {
       //console.log('Message.festivalConnected  ')
       //get all messages with the festival as a subject
-      //get all messages with the series/dates/days/sets/ /*places/venues*/ as a subject
+      //get all messages with the series/dates/days/sets/ places/venues as a subject
       //get the srtists in the lineup => get all messages with the artists as a subject
       //get all messages with the above messages as a subject => repeat until zero results
+      console.log('Message.forFestival', festivalId)
       const directSubjectPromise = Message.find({
         where: {
           subjectType: 7,
           subject: festivalId
         }
       })
+      .then(x => console.log('message forFestival directSubjectPromise') || x)
+        .catch(cb)
 
 
       const relatedEventsPromise = Message.app.models.Festival.relatedEvents(festivalId, cb)
@@ -51,6 +51,7 @@ module.exports = function(Message){
           })
           return eventMessagePromise
         })
+      .then(x => console.log('message forFestival relatedEventsPromise') || x)
         .catch(cb)
 
       const artistsPromise = Message.app.models.Lineup.find({
@@ -67,9 +68,11 @@ module.exports = function(Message){
             }
           })
         })
+      .then(x => console.log('message forFestival artistsPromise') || x)
         .catch(cb)
 
       Promise.all([directSubjectPromise, relatedEventsPromise, artistsPromise])
+      .then(x => console.log('message forFestival Promises') || x)
         .then((messageArrayArray) => _.flatten(messageArrayArray))
         //Now all the messages with the festival as a subject have been collected
         //Grab their descendants
@@ -85,9 +88,12 @@ module.exports = function(Message){
               .concat(baseMessages))
         })
         .then(allMessages => cb(null, allMessages))
-        .catch(cb)
+        .catch((err) => {
+          console.log('Message.forFestival error', festivalId, err)
+        })
 
     }
+    */
     Message.forArtist = function(artistId, cb) {
       //get all messages with the artist as a subject
       //get all messages with the above messages as a baseMessage
@@ -120,16 +126,12 @@ module.exports = function(Message){
       http: {path: '/forArtist/:artistId', verb: 'get'}
     });
 
-    Message.remoteMethod('greet', {
-          accepts: {arg: 'msg', type: 'string'},
-          returns: {arg: 'greeting', type: 'string'}
-    });
-
+/*
     Message.remoteMethod('forFestival', {
       accepts: {arg: 'festivalId', type: 'number', required: true},
       returns: { arg: 'data', type: 'array'},
       http: {path: '/forFestival/:festivalId', verb: 'get'}
     });
-
+*/
 };
 

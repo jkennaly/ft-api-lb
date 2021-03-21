@@ -2,6 +2,7 @@
   "name": "MessageType",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "message_types"

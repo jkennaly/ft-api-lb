@@ -2,6 +2,7 @@
   "name": "Festival",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "festivals"
@@ -38,7 +39,15 @@
   },
   "mixins": {
     "Creatorstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "CostFest": true,
+    "Access": true,
+    "Ledger": true,
+    "Buy": true,
+    "FestsTerminals": true,
+    "RestrictedEvent": true,
+    "UpdateEvent": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

@@ -4,6 +4,53 @@ var cache
 const moment = require('moment-timezone/builds/moment-timezone-with-data-2012-2022.min')
 const _ = require('lodash')
 
+function disableAllMethodsBut(model, methodsToExpose)
+{
+    if(model && model.sharedClass)
+    {
+        methodsToExpose = methodsToExpose || [];
+
+        var modelName = model.sharedClass.name;
+        var methods = model.sharedClass.methods();
+        var relationMethods = [];
+        var hiddenMethods = [];
+
+        try
+        {
+            Object.keys(model.definition.settings.relations).forEach(function(relation)
+            {
+                relationMethods.push({ name: '__findById__' + relation, isStatic: false });
+                relationMethods.push({ name: '__destroyById__' + relation, isStatic: false });
+                relationMethods.push({ name: '__updateById__' + relation, isStatic: false });
+                relationMethods.push({ name: '__exists__' + relation, isStatic: false });
+                relationMethods.push({ name: '__link__' + relation, isStatic: false });
+                relationMethods.push({ name: '__get__' + relation, isStatic: false });
+                relationMethods.push({ name: '__create__' + relation, isStatic: false });
+                relationMethods.push({ name: '__update__' + relation, isStatic: false });
+                relationMethods.push({ name: '__destroy__' + relation, isStatic: false });
+                relationMethods.push({ name: '__unlink__' + relation, isStatic: false });
+                relationMethods.push({ name: '__count__' + relation, isStatic: false });
+                relationMethods.push({ name: '__delete__' + relation, isStatic: false });
+            });
+        } catch(err) {}
+
+        methods.concat(relationMethods).forEach(function(method)
+        {
+            var methodName = method.name;
+            if(methodsToExpose.indexOf(methodName) < 0)
+            {
+                hiddenMethods.push(methodName);
+                model.disableRemoteMethodByName(methodName);
+            }
+        });
+
+        if(hiddenMethods.length > 0)
+        {
+            console.log('\nRemote mehtods hidden for', modelName, ':', hiddenMethods.join(', '), '\n');
+        }
+    }
+};
+
 module.exports = function(Core){
 
     Core.allData = function(cb) {
@@ -102,7 +149,7 @@ module.exports = function(Core){
               Places: places,
               ArtistPriorities: artistPriorities,
               StagePriorities: stagePriorities,
-              StageLayouts: stageLayouts,
+              //StageLayouts: stageLayouts,
               PlaceTypes: placeTypes,
               ParentGenres: parentGenres,
               Genres: genres,
@@ -117,16 +164,7 @@ module.exports = function(Core){
         
     }
 
-
-    Core.greet = function(msg, cb) {
-      cb(null, 'Greetings... ' + msg);
-    }
-
-    Core.remoteMethod('greet', {
-          accepts: {arg: 'msg', type: 'string'},
-          returns: {arg: 'greeting', type: 'string'},
-        http: {path: '/greet/:msg'}
-    });
+    disableAllMethodsBut(Core, ['allData'])
     Core.remoteMethod('allData', {
           returns: {arg: 'data', type: 'Object'},
         http: {path: '/all/data'}

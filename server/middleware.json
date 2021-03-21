@@ -33,9 +33,27 @@
     }
   },
   "session": {},
-  "auth": {},
+  "auth:before": {
+    "./middleware/get-db-conn": {},
+    "./middleware/auth-check": {}
+
+  },
+  "auth": {
+    "./middleware/get-user-id": {
+      "paths": "/api/Profiles/getUserId*"
+    },
+    "./middleware/verify-user-id": {
+      "paths": "/api/*"
+    }
+
+  },
+  "auth:after": {
+    "./middleware/gt-access-token": {}
+  },
   "parse": {},
-  "routes": {
+  "routes:before": {
+  },
+  "routes:after": {
     "loopback#rest": {
       "paths": [
         "${restApiRoot}"
@@ -53,6 +71,8 @@
     "loopback#urlNotFound": {}
   },
   "final:after": {
+    "./middleware/stripe-errors": {},
+    "./middleware/handle-errors": {},
     "strong-error-handler": {}
   }
 }

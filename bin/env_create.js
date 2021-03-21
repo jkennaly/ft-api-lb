@@ -13,13 +13,19 @@ function envCreate (dbconfig) {
 	const connLimit = 2
 	const nodeEnv = `test`
 	const secret = crypto.randomBytes(64).toString('base64')
+	const gt = crypto.randomBytes(64).toString('base64')
 	const env = 
 `# .env
 JAWSDB_URL=${connString}
 # DEBUG=loopback:connector:mysql
 CONN_LIMIT=${connLimit}
 NODE_ENV=${nodeEnv}
-LOCAL_SECRET=${secret}`
+LOCAL_SECRET=${secret}
+GT_ACCESS_SECRET=${gt}
+DATE_CAP=3
+FEST_CAP=5
+FULL_CAP=10
+`
 	//if there is already an env file, rename it to .envlocal
 	if(fs.existsSync('../.env')) fs.renameSync('../.envlocal')
 	fs.writeFile('../.env', env)

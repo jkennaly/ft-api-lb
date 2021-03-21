@@ -2,6 +2,7 @@
   "name": "Lineup",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "band_list"
@@ -16,7 +17,8 @@
 
   },
   "mixins": {
-    "DeleteOverride" : true
+    "DeleteOverride" : true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

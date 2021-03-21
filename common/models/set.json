@@ -2,6 +2,7 @@
   "name": "Set",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "sets"
@@ -17,7 +18,11 @@
   "mixins": {
     "Userstamp": true,
     "DeleteOverride" : true,
-    "Timestamp": true
+    "Timestamp": true,
+    "RestrictedEvent": true,
+    "SetsTerminals": true,
+    "UpdateEvent": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

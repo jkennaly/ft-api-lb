@@ -11,8 +11,8 @@ module.exports = function byUser(Model, options) {
   Model.observe('loaded', function event(ctx, next) {
 
     // get current user ID
-    const viewerId = Model.app.get('ftUserId')
-    const admin = Model.app.get('scope') && Model.app.get('scope').includes('admin')
+    const viewerId = ctx.options.req && ctx.options.req.user && ctx.options.req.user.ftUserId
+    const admin = viewerId && ctx.options.req.user.scope.includes('create:festivals')
 
 
 

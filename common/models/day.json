@@ -2,6 +2,7 @@
   "name": "Day",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "days"
@@ -21,7 +22,15 @@
   },
   "mixins": {
     "Userstamp": true,
-    "DeleteOverride": true
+    "DeleteOverride": true,
+    "CostDay": true,
+    "Access": true,
+    "Ledger": true,
+    "Buy": true,
+    "DaysTerminals": true,
+    "RestrictedEvent": true,
+    "UpdateEvent": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

@@ -11,7 +11,7 @@ module.exports = function creatorstamp(Model, options) {
   Model.observe('before save', function event(ctx, next) {
 
     // get current user ID
-    const authorId = Model.app.get('ftUserId');
+    const authorId = ctx.options.req && ctx.options.req.user && ctx.options.req.user.ftUserId;
 
     //console.log('userstamp mixin user ' + authorId)
     if (ctx.instance) {

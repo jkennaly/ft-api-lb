@@ -29,15 +29,14 @@ module.exports = function(Set){
 
   
 
-  Set.forDay = function(data, dayId, cb) {
+  Set.forDay = function(data, req, dayId, cb) {
 
-    //console.log('Set.forDay')
-    //console.log(dayId)
-    //console.log(data)
+    //console.log('Set.forDay', data, dayId)
+    const userId = req && req.user && req.user.ftUserId
 
     Promise.all(
         data.artistIds
-          .map(artistId => Set.create({band: artistId, user: data.user, day: dayId}))
+          .map(artistId => Set.create({band: artistId, day: dayId, user: userId}))
       )
       .then(() => Set.find({where: {id: {inq: data.artistIds}}}, cb))
       .catch(cb)
@@ -124,7 +123,10 @@ module.exports = function(Set){
   });
   Set.remoteMethod('forDay', {
         accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } },
-      {arg: 'dayId', type: 'number', required: true}],
+      
+      {arg: 'req', type: 'object', 'http': {source: 'req'}},
+      {arg: 'dayId', type: 'number', required: true}
+    ],
       http: {path: '/forDay/:dayId'},
         returns: {arg: 'data', type: 'object'}
   });

@@ -4,6 +4,7 @@
 "excludeBaseProperties": ["realm", "emailVerified"],
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "Users"
@@ -12,7 +13,15 @@
   },
   "mixins": {
     "DeleteOverride": true,
-    "RestrictFromOthers": true
+    "RestrictFromOthers": true,
+    "Bucks": true,
+    "CostFull": true,
+    "Access": true,
+    "Ledger": true,
+    "Accessible": true,
+    "GtAccessToken": true,
+    "BuyFull": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {

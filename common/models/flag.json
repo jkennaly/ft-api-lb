@@ -2,6 +2,7 @@
   "name": "Flag",
   "options": {
     "idInjection": false,
+    "validateUpsert": true,
     "mysql": {
       "schema": "festival_master",
       "table": "flags"
@@ -11,7 +12,8 @@
   "mixins": {
     "Fromuserstamp": true,
     "DeleteOverride": true,
-    "RestrictToFromuser": true
+    "RestrictToFromuser": true,
+    "ContextRequest": true
   },
   "properties": {
     "id": {
