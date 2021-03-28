@@ -33,30 +33,30 @@ module.exports = function(Model) {
     })
 
   }
-  Model.festAccess = function(req, festId, cb) {
+  Model.festivalAccess = function(req, festId, cb) {
     //true if the user has access to to festival with this id
     //also true if the user has full access
     const t0 = Date.now()
     if(!_.isNumber(festId)) {
-      console.trace('Invalid festAccess festId', festId)
+      console.trace('Invalid festivalAccess festId', festId)
       return cb(`Invalid Fest Id ${festId}`)
     }
 
     const userId = req && req.user && req.user.ftUserId
     if(!userId) return cb(undefined, false)
-    const key = `[${userId}][${festId}].festAccess`
+    const key = `[${userId}][${festId}].festivalAccess`
     const cached = _.get(bucksCache, key)
     if(_.isBoolean(cached)) return cb(undefined, cached)
-    //console.log('festAccess', festId, userId)
+    //console.log('festivalAccess', festId, userId)
     Model.fullAccess(req, (err, results) => {
       const t1 = Date.now()
-      //console.log('t1 festAccess', t1 - t0)
+      //console.log('t1 festivalAccess', t1 - t0)
       if(err) {
-          console.trace('access festAccess fullAccess error', err)
+          console.trace('access festivalAccess fullAccess error', err)
         return cb(err)
       }
       //user has full access
-    //console.log('festAccess fullAccess results', results)
+    //console.log('festivalAccess fullAccess results', results)
 
       if(results) {
 
@@ -69,13 +69,13 @@ module.exports = function(Model) {
       const params = ['%Access', userId, festId]
       Model.ledger(userId, (err, raw) => {
       const t2 = Date.now()
-      //console.log('t2 festAccess', t2 - t1)
+      //console.log('t2 festivalAccess', t2 - t1)
         if(err) {
-          console.trace('access festAccess sql_stmt error', err)
+          console.trace('access festivalAccess sql_stmt error', err)
           return cb(err)
         }
         //user has access to festival
-    //console.log('festAccess fullAccess ledgerIds', ledgerIds)
+    //console.log('festivalAccess fullAccess ledgerIds', ledgerIds)
 
       const ledgerIds = raw
         .filter(e => /Access$/.test(e.category))
@@ -86,16 +86,16 @@ module.exports = function(Model) {
           _.set(bucksCache, key, Boolean(ledgerIds.length))
           return cb(undefined, Boolean(ledgerIds.length))
         }
-        //console.log('festAccess id', festId)
-    //console.log('festAccess bucksTowardsFest')
+        //console.log('festivalAccess id', festId)
+    //console.log('festivalAccess bucksTowardsFest')
         Model.bucksTowardsFest(userId, festId, (err, result) => {
       const t3 = Date.now()
-      //console.log('t3 festAccess', t3 - t2)
+      //console.log('t3 festivalAccess', t3 - t2)
           if(err) {
-            console.trace('access festAccess  bucksTowardsFest error', err)
+            console.trace('access festivalAccess  bucksTowardsFest error', err)
             return cb(err)
           }
-    //console.log('festAccess bucksTowardsFest result', result)
+    //console.log('festivalAccess bucksTowardsFest result', result)
           //user has paid enough to be at the cap
 
           _.set(bucksCache, key, result >= FEST_CAP)
@@ -165,7 +165,7 @@ module.exports = function(Model) {
             const festId = _.get(date2, 'festival')
 
             //user has festival access
-            Model.app.models.Festival.festAccess(req, festId, (err, result) => {
+            Model.app.models.Festival.festivalAccess(req, festId, (err, result) => {
       const t4 = Date.now()
       //console.log('t4 dateAccess', t4 - t3)
               if(!err) _.set(bucksCache, key, result)
@@ -349,20 +349,21 @@ module.exports = function(Model) {
 
   }
   Model.clearBucksCache = function(userId) {
-    if(Model.clearLedgerCache) Model.clearLedgerCache(userId)
-    if(Model.clearBuyCache) Model.clearBuyCache(userId)
+    if(Model.clearLedgerCache) {Model.clearLedgerCache(userId)}
+    	else {Model.app.models.Profile.clearLedgerCache(userId)}
+    if(Model.clearBuyCache) {Model.clearBuyCache(userId)}
+    	else {Model.app.models.Profile.clearBuyCache(userId)}
+    if(Model.clearTokenCache) {Model.clearTokenCache(userId)}
+    	else {Model.app.models.Profile.clearTokenCache(userId)}
+    	
     delete bucksCache[userId]
   }
 
   const method = {
     day: `dayAccess`,
     date: `dateAccess`,
-    festival: `festAccess`,
+    festival: `festivalAccess`,
     profile: `fullAccess`
-  }
-  Model.access = function(req, selector, id, cb) {
-    return Model[selector](req, id, cb)
-
   }
 
 }

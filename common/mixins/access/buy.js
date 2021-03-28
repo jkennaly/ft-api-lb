@@ -27,10 +27,12 @@ module.exports = function(Model) {
             status: 422,
             statusCode: 422
         })
-        Model.clearBucksCache(userId)
         const id = buyObject[props[1]]
         const selector = props[0] + 'Access'
-        Model.access(req, selector, id, (err, accessAlready) => {
+        if(!Model[selector]) {
+        	return cb(new Error(`No field found ${Model.modelName}  ${selector}`))
+        }
+        Model[selector](req, id, (err, accessAlready) => {
 
             if(err) {
                 console.trace('buy access error', err)
@@ -52,8 +54,10 @@ module.exports = function(Model) {
                 const sql_stmt = 'INSERT INTO ledger (user, category, bucks, description) VALUES (?, ?, ?, CAST(? AS JSON)) ;'
                 const params = [userId, `${props[0]} Access`, cost * -1, JSON.stringify(description)]
                 Model.dataSource.connector.execute(sql_stmt, params, (err, results) => {
+                	//console.log('Model bought', userId, err)
+        			Model.clearBucksCache(userId)
                   if(err) {
-                    console.log('buy save error', err, buyObject)
+                    console.trace('buy save error', err, buyObject)
                     return cb(err)
                   }
                   

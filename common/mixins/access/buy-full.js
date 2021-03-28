@@ -44,7 +44,7 @@ module.exports = function(Profile) {
                 return cb(err)
               }
               
-          //Profile.clearBucksCache(userId)
+          Profile.clearBucksCache(userId)
               cb(err, results)
             })
         })

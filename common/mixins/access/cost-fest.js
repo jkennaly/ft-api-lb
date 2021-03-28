@@ -18,11 +18,11 @@ module.exports = function(Fest) {
 			festival: 5,
 			full: 10
 		})
-		//console.log('costFest festAccess')
-		Fest.festAccess(req, id, (err, hasAccess) => {
+		//console.log('costFest festivalAccess')
+		Fest.festivalAccess(req, id, (err, hasAccess) => {
 
 	      if(err) {
-	        console.trace('costFest festAccess error', err)
+	        console.trace('costFest festivalAccess error', err)
 	        return cb(err)
 	      }
 	      //user has access
@@ -30,12 +30,12 @@ module.exports = function(Fest) {
 				festivalId: id,
 				festival: 0
 			}
-		//console.log('bucksTowardsFest festAccess, ', hasAccess, costObject)
+		//console.log('bucksTowardsFest festivalAccess, ', hasAccess, costObject)
 			if(hasAccess) return cb(undefined, costObject)
 			Fest.bucksTowardsFest(userId, id, (err, bucks) => {
 
 		    	if(err) {
-	        console.trace('costFest festAccess bucksTowardsFest error', err)
+	        console.trace('costFest festivalAccess bucksTowardsFest error', err)
 		    	  return cb(err)
 		    	}
 		      
@@ -43,7 +43,7 @@ module.exports = function(Fest) {
 				Fest.app.models.Profile.bucksTowardsFull(userId, (err, bucksFull) => {
 
 				    if(err) {
-	        console.trace('costFest festAccess bucksTowardsFull error', err)
+	        console.trace('costFest festivalAccess bucksTowardsFull error', err)
 				      return cb(err)
 				    }
 				      
@@ -70,7 +70,7 @@ module.exports = function(Fest) {
 	    returns: {arg: 'data', type: 'object'}
 	})
 
-	Fest.remoteMethod('festAccess', {
+	Fest.remoteMethod('festivalAccess', {
 	    accepts: [
 			{arg: 'req', type: 'object', 'http': {source: 'req'}},
 		    {arg: 'id', type: 'number', required: true}

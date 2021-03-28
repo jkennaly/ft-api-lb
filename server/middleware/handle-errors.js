@@ -16,6 +16,7 @@ const garbageInput = [
   err => /ER_DUP_ENTRY/.test(err.message),
   err => /No\sdata\ssupplied/.test(err.message),
   err => /No\sPurchased\sEvents/.test(err.message),
+  err => /Open\sRequest\sPending/.test(err.message),
   err => /No\sbase\sMessage/.test(err.message),
   err => /id\scannot\sbe updated\sfrom\s0\sto/.test(err.message)
 ]
