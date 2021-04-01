@@ -23,9 +23,10 @@ module.exports = function(Profile) {
 			})
 		const key = `[${userId}]`
 		const cached = _.get(tokenCache, key)
-		//console.log("Profile.gtToken", userId, cached, _.get(inProgress, key))
+		console.log("Profile.gtToken", userId, cached, _.get(inProgress, key))
 		if (!_.isUndefined(cached)) return cb(undefined, cached)
-		if (_.get(inProgress, key)) return cb({
+		if (_.get(inProgress, key))
+			return cb({
 				message: "Open Request Pending",
 				status: 429,
 				statusCode: 429,
@@ -38,7 +39,7 @@ module.exports = function(Profile) {
 				_.set(inProgress, key, false)
 				return cb(err)
 			}
-		//console.log("Profile.ledger", userLedger)
+			//console.log("Profile.ledger", userLedger)
 			if (!userLedger.length) {
 				const claimObject = Object.assign(
 					{
@@ -70,18 +71,18 @@ module.exports = function(Profile) {
 				const t1 = Date.now()
 				//console.log('t1 gtToken', t1 - t0)
 				if (err) {
-				_.set(inProgress, key, false)
+					_.set(inProgress, key, false)
 					console.trace("gtToken fullAccess", err)
 					return cb(err)
 				}
-		//console.log("Profile.fullAccess", fullAccess)
+				//console.log("Profile.fullAccess", fullAccess)
 				//if full access, get full access end
 				if (fullAccess) {
 					Profile.fullAccessEnd(req, (err, result) => {
 						const t2 = Date.now()
 						//console.log('t2 gtToken', t2 - t1)
 						if (err) {
-				_.set(inProgress, key, false)
+							_.set(inProgress, key, false)
 							console.trace("gtToken fullAccessEnd", err)
 							return cb(err)
 						}
@@ -115,11 +116,11 @@ module.exports = function(Profile) {
 						const t3 = Date.now()
 						//console.log('t3 gtToken', t3 - t1)
 						if (err) {
-				_.set(inProgress, key, false)
+							_.set(inProgress, key, false)
 							console.trace("gtToken accessibleEvents", err)
 							return cb(err)
 						}
-		//console.log("Profile.accessibleEvents", result)
+						//console.log("Profile.accessibleEvents", result)
 						const accessibleDays = result.days
 						Profile.app.models.Day.find(
 							{
@@ -136,8 +137,8 @@ module.exports = function(Profile) {
 										"gtToken accessibleEvents find",
 										err
 									)
-		//console.log("Profile.Day.find", days)
-				_.set(inProgress, key, false)
+									//console.log("Profile.Day.find", days)
+									_.set(inProgress, key, false)
 									return cb(err)
 								}
 								Promise.all(
@@ -165,8 +166,10 @@ module.exports = function(Profile) {
 									.then(([dateEnd, ...rest]) => {
 										const t4 = Date.now()
 										//console.log('t4 gtToken', t4 - t3)
-										const exp = dateEnd ? dateEnd : Date.now() + 24 * 3600 * 1000
-		//console.log("Profile.gtt exp", exp)
+										const exp = dateEnd
+											? dateEnd
+											: Date.now() + 24 * 3600 * 1000
+										//console.log("Profile.gtt exp", exp)
 										if (!exp)
 											return cb({
 												message: "No Purchased Events",
@@ -196,7 +199,7 @@ module.exports = function(Profile) {
 											"gtToken accessibleEvents endTimes",
 											err
 										)
-				_.set(inProgress, key, false)
+										_.set(inProgress, key, false)
 										return cb(err)
 									})
 							}
@@ -207,7 +210,7 @@ module.exports = function(Profile) {
 		})
 	}
 	Profile.clearTokenCache = function(userId) {
-		//console.log("clearTokenCache", userId)
+		console.log("clearTokenCache", userId)
 		delete inProgress[userId]
 		delete tokenCache[userId]
 	}
