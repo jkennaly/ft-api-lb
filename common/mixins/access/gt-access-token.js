@@ -23,7 +23,7 @@ module.exports = function(Profile) {
 			})
 		const key = `[${userId}]`
 		const cached = _.get(tokenCache, key)
-		console.log("Profile.gtToken", userId, cached, _.get(inProgress, key))
+		//console.log("Profile.gtToken", userId, cached, _.get(inProgress, key))
 		if (!_.isUndefined(cached)) return cb(undefined, cached)
 		if (_.get(inProgress, key))
 			return cb({
