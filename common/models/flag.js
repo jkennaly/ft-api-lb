@@ -79,7 +79,7 @@ module.exports = function(Flag) {
 					response: updatedResponse,
 					status: nextStatus
 				})
-				console.log("Flag.advance", flagId, newFlag)
+				//console.log("Flag.advance", flagId, newFlag)
 
 				flag.updateAttributes(newFlag)
 					.then(i => cb(undefined, i))
