@@ -18,7 +18,7 @@ if (process.env.NODE_ENV !== "production") {
 } else {
 	app.use(sslRedirect())
 	app.use(function(req, res, next) {
-		if (!/0441\.design$/.test(req.headers.host)) {
+		if (!/festigram\.app$/.test(req.headers.host)) {
 			const newURL = ["https://festigram.app", req.url].join("")
 			return res.redirect(newURL)
 		}
