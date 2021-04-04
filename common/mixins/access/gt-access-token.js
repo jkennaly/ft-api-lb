@@ -19,7 +19,7 @@ module.exports = function(Profile) {
 			return cb({
 				message: "MalformedRequestError: Invalid User Id",
 				status: 403,
-				statusCode: 403,
+				statusCode: 403
 			})
 		const key = `[${userId}]`
 		const cached = _.get(tokenCache, key)
@@ -29,7 +29,7 @@ module.exports = function(Profile) {
 			return cb({
 				message: "Open Request Pending",
 				status: 429,
-				statusCode: 429,
+				statusCode: 429
 			})
 		//console.log("Profile.gtToken", userId, cached, _.get(inProgress, key))
 		_.set(inProgress, key, true)
@@ -46,20 +46,17 @@ module.exports = function(Profile) {
 						iss: "http://festigram",
 						sub: userId,
 						aud: ["http://festigram/api/"],
-						exp: Math.floor(Date.now() / 1000) + 24 * 3600,
+						exp: Math.floor(Date.now() / 1000) + 24 * 3600
 					},
 					{
 						full: false,
 						sets: [],
 						days: [],
 						dates: [],
-						festivals: [],
+						festivals: []
 					}
 				)
-				const signed = jwt.sign(
-					claimObject,
-					process.env.GT_ACCESS_SECRET
-				)
+				const signed = jwt.sign(claimObject, process.env.GT_ACCESS_SECRET)
 				_.set(inProgress, key, false)
 				_.set(tokenCache, key, signed)
 				//console.log("Profile.gtToken ledger", userId, userLedger, signed)
@@ -92,20 +89,17 @@ module.exports = function(Profile) {
 								iss: "http://festigram",
 								sub: userId,
 								aud: ["http://festigram/api/"],
-								exp: result,
+								exp: result
 							},
 							{
 								full: true,
 								sets: [],
 								days: [],
 								dates: [],
-								festivals: [],
+								festivals: []
 							}
 						)
-						const signed = jwt.sign(
-							claimObject,
-							process.env.GT_ACCESS_SECRET
-						)
+						const signed = jwt.sign(claimObject, process.env.GT_ACCESS_SECRET)
 						_.set(inProgress, key, false)
 						_.set(tokenCache, key, signed)
 						//console.log("Profile.gtToken full", userId, signed)
@@ -127,16 +121,13 @@ module.exports = function(Profile) {
 								where: {
 									and: [
 										{ id: { inq: accessibleDays } },
-										{ deleted: false },
-									],
-								},
+										{ deleted: false }
+									]
+								}
 							},
 							(err, days) => {
 								if (err) {
-									console.trace(
-										"gtToken accessibleEvents find",
-										err
-									)
+									console.trace("gtToken accessibleEvents find", err)
 									//console.log("Profile.Day.find", days)
 									_.set(inProgress, key, false)
 									return cb(err)
@@ -144,10 +135,7 @@ module.exports = function(Profile) {
 								Promise.all(
 									days.map(
 										d =>
-											new Promise(function(
-												resolve,
-												reject
-											) {
+											new Promise(function(resolve, reject) {
 												Profile.app.models.Day.epochEnd(
 													d.id,
 													function(err, units) {
@@ -160,9 +148,7 @@ module.exports = function(Profile) {
 											})
 									)
 								)
-									.then(endTimes =>
-										endTimes.sort((a, b) => b - a)
-									)
+									.then(endTimes => endTimes.sort((a, b) => b - a))
 									.then(([dateEnd, ...rest]) => {
 										const t4 = Date.now()
 										//console.log('t4 gtToken', t4 - t3)
@@ -174,14 +160,14 @@ module.exports = function(Profile) {
 											return cb({
 												message: "No Purchased Events",
 												status: 402,
-												statusCode: 402,
+												statusCode: 402
 											})
 										const claimObject = Object.assign(
 											{
 												iss: "http://festigram",
 												sub: userId,
 												aud: ["http://festigram/api/"],
-												exp: exp,
+												exp: exp
 											},
 											result
 										)
@@ -218,6 +204,6 @@ module.exports = function(Profile) {
 	Profile.remoteMethod("gtToken", {
 		accepts: [{ arg: "req", type: "object", http: { source: "req" } }],
 		http: { path: "/gtt", verb: "get" },
-		returns: { arg: "token", type: "object" },
+		returns: { arg: "token", type: "object" }
 	})
 }
