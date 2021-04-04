@@ -10,6 +10,7 @@ module.exports = function byUser(Model, options) {
 		const authorId =
 			ctx.options.req && ctx.options.req.user && ctx.options.req.user.ftUserId
 
+		if (!authorId) return next()
 		//console.log("by-user mixin user " + authorId)
 		//console.log("by-user mixin query", ctx.query)
 

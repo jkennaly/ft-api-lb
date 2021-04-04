@@ -15,7 +15,8 @@
 		},
 		"Userstamp": true,
 		"ContextRequest": true,
-		"DeleteOverride": true
+		"DeleteOverride": true,
+		"UpdateBlockCache": true
 	},
 	"properties": {
 		"id": {
