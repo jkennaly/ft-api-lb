@@ -12,6 +12,7 @@
       "../common/mixins/access",
       "../common/mixins/active",
       "../common/mixins/hooks",
+      "../common/mixins/stats",
       "../common/mixins",
       "./mixins"
     ]

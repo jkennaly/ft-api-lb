@@ -1,0 +1,81 @@
+// server/views/site/List.js
+
+// Make Mithril happy
+if (!global.window) {
+	global.window = global.document = global.requestAnimationFrame = undefined
+}
+
+var m = require('mithril')
+var render = require('mithril-node-render')
+
+const _ = require('lodash')
+
+const vm = require('../../vm/vm_artist')
+const Rating = require('./components/rating')
+const Stats = require('./components/stats')
+const Name = require('./components/name')
+const Description = require('./components/description')
+const ReviewBlock = require('./components/reviewBlock')
+const NameBunch = require('./components/nameBunch')
+const SubjectLink = require('./components/subjectLink')
+
+var fs = require('fs')
+const shell = fs.readFileSync('./server/views/site/shell.html', 'utf8')
+const detail = fs.readFileSync('./server/views/site/detail.frag.html', 'utf8')
+
+const List = options =>
+	function(req, res, next) {
+		const baseUrl = req.app.get('url').replace(/\/$/, '')
+		//console.log('req host', baseUrl)
+		const url = `/api/${options.apiModel}`
+		const opt = Object.assign({}, options, { baseUrl: baseUrl, url: url }, req.params)
+
+		return vm(opt)
+			.then(({stats, model, image, lineups, reviews, description}) => {
+				//console.log('Artist reviews', reviews)
+				const wikiText = _.get(description, '[0]', '')
+				return Promise.all([
+					render(Rating, {rating: _.get(stats, 'averageRating', 0), count: _.get(stats, 'artistRatingCount', 0),}),
+					render(Rating, {rating: _.get(stats, 'setRating', 0), count: _.get(stats, 'setRatingCount', 0),}),
+					!wikiText ? undefined : render(Description, {heading: 'From Wikipedia', text: wikiText, link: _.get(description, '[1]', '')}),
+					_.get(stats, 'checkinCount', 0),
+					render(Stats, {}),
+					render(Name, {name: _.get(model, 'name', ''), subtitle: 'Artist'}),
+					_.get(model, 'name', ''),
+					`<img class="h-16 w-16 rounded-full" src='${_.get(image, 'url', '')}' />`,
+					render(ReviewBlock, {reviews, subjectType: 2, subject: model.id, plainName: _.get(model, 'name', '')}),
+					render(NameBunch, {lineups}),
+					render(SubjectLink, {subjectType: 2, subject: model.id, plainName: _.get(model, 'name', '')})
+				].map(x => x ? x : ''))
+			})
+			.then(([subjectRating, setRating, description, setCheckin, stats, name, namePlain, img, reviews, lineups, appLink]) => {
+				//console.log('Artist subjectRating', subjectRating)
+				const rendered = detail
+					.replace('<div id="subject-stats"></div>', stats)
+					.replace('<div id="subject-name"></div>', name)
+					.replace('<span id="plain-name"></span>', namePlain)
+					.replace('<div id="subject-rating"></div>', subjectRating)
+					.replace('<span id="plain-name"></span>', namePlain)
+					.replace('<div id="set-rating"></div>', setRating)
+					.replace('<div id="set-checkins"></div>', setCheckin)
+					.replace('<div id="subject-description"></div>', description)
+					.replace('<div id="subject-img"></div>', img)
+					.replace('<div id="subject-reviews"></div>', reviews)
+					.replace('<div id="subject-links"></div>', lineups)
+					.replace('<div id="app-link"></div>', appLink)
+					.replace('<title>FestiGram</title>', `${namePlain} | FestiGram`)
+				return rendered
+			})
+			.then(rendered =>
+				res.send(
+					shell.replace(
+						'<div id="component"></div>',
+						rendered
+					)
+				)
+			)
+
+			.catch(next)
+	}
+
+module.exports = List

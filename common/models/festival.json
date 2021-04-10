@@ -24,7 +24,7 @@
         "foreignKey": "festival"
 
       },
-      "series": {
+      "seriesLink": {
         "type": "belongsTo",
         "model": "Series",
         "foreignKey": "series"
@@ -47,7 +47,8 @@
     "FestsTerminals": true,
     "RestrictedEvent": true,
     "UpdateEvent": true,
-    "ContextRequest": true
+    "ContextRequest": true,
+    "EventNames": true
   },
   "properties": {
     "id": {

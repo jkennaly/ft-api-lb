@@ -15,7 +15,8 @@
 		"RestrictViewing": true,
 		"RemoveBlocked": true,
 		"ContextRequest": true,
-		"BaseUpdate": true
+		"BaseUpdate": true,
+		"SubjectReviews": true
 	},
 	"properties": {
 		"id": {

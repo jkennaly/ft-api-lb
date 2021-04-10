@@ -19,7 +19,8 @@
   "mixins": {
     "Userstamp": true,
     "DeleteOverride": true,
-    "ContextRequest": true
+    "ContextRequest": true,
+    "EventNames": true
   },
   "properties": {
     "id": {

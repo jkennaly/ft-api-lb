@@ -34,7 +34,8 @@
 		"DeleteOverride": true,
 		"FileSpreadsheetArtist": true,
 		"ContextRequest": true,
-		"Search": true
+		"Search": true,
+		"ArtistStats": true
 	},
 	"properties": {
 		"id": {

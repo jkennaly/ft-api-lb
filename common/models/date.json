@@ -8,7 +8,7 @@
       "table": "dates"
     },
     "relations": {
-      "festival": {
+      "festivalLink": {
         "type": "belongsTo",
         "model": "Festival",
         "foreignKey": "festival"
@@ -30,7 +30,8 @@
     "DatesTerminals": true,
     "RestrictedEvent": true,
     "UpdateEvent": true,
-    "ContextRequest": true
+    "ContextRequest": true,
+    "EventNames": true
   },
   "properties": {
     "id": {

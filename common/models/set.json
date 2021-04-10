@@ -22,7 +22,8 @@
     "RestrictedEvent": true,
     "SetsTerminals": true,
     "UpdateEvent": true,
-    "ContextRequest": true
+    "ContextRequest": true,
+    "EventNames": true
   },
   "properties": {
     "id": {
