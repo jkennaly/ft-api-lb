@@ -38,7 +38,13 @@ const List = options =>
 				)
 			)
 
-			.catch(console.error)
+			.catch(err => {
+				console.error(err,
+					'List gen error baseUrl, url',
+					baseUrl, 
+					url
+				)
+			})
 	}
 
 module.exports = List

@@ -21,7 +21,6 @@ const template = fs.readFileSync('./server/views/login/login.html', 'utf8')
 
 const allowLocalLogins = Boolean(process.env.LOCAL_SECRET)
 
-const con = allowLocalLogins && mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false')
 
 
 const loginMiddle = options => function(req, res, next) {
@@ -39,6 +38,7 @@ app.get(/authorize\/login/, loginMiddle({
 }))
 app.post(/authorize\/login/, function(req, res, next) {
 	if(!allowLocalLogins) return res.status(403).render()
+const con = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false')
 	//extract the email and password
 	//verify against the database and get info needed for jwt
 	//return error if login invalid
@@ -56,6 +56,7 @@ app.post(/authorize\/login/, function(req, res, next) {
 			res.status(500)
 			next(err)
 		})
+		.finally(() => con.end())
 
 })
 app.get(/authorize\/register/, loginMiddle({

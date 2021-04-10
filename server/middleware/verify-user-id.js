@@ -10,7 +10,6 @@ const aliased = []
 
 module.exports = function(options) {
 return function updateTable(req, res, next) {
-  const connection = req.conn
   	//console.log('verify-user-id', req.user)
   const aliasTable = req.app.get('aliasTable')
 
@@ -28,27 +27,14 @@ return function updateTable(req, res, next) {
         //get highest id in alias Table
       const highId = _.reduce(aliasTable, (hi, el) => el && el > hi ? el : hi, 0)
       //load all aliases with ids higher
-      
+      req.conn
+      	.then(connection => {
   	  //console.log('verify-user-id authId', authId, req.app.get('aliasTable')[authId])
-      connection.connect(function(err) {
-      if (err) {
-        console.error('error connecting: ' + err.stack);
-      inProgress = false
-            
-            return next(err)
-      }
-
-      //console.log('connected as id ' + connection.threadId + ' at ' + req.originalUrl);
-      })
+ 
       connection.execute(
         'SELECT * FROM `user_aliases` WHERE `id` > \'?\'',
-        [highId],
-        (err, results, fields) => {
-          if(err) {
-      inProgress = false
-            
-            return next(err)
-          }
+        [highId])
+      .then(([results, fields]) => {
             const resultPairs = results.map(r => [r.alias, r.user])
             _.assign(aliasTable, _.fromPairs(resultPairs))
             if(aliasTable[authId]) {
@@ -72,6 +58,11 @@ return function updateTable(req, res, next) {
             //console.log(req.user)
         }
       )
+      .catch(err => {
+      	inProgress = false
+      	next(err)
+      })
+      })
       //connection.end()
     }
     else {
