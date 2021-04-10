@@ -12,6 +12,7 @@ var render = require('mithril-node-render')
 const ListByName = require('../views/site/ListByName')
 const List = require('../views/site/List')
 const Artist = require('../views/site/Artist')
+const Landing = require('../views/site/Landing')
 
 var fs = require('fs')
 const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
@@ -51,6 +52,12 @@ const lineupDetail = options =>
 	}
 
 module.exports = function(app) {
+	app.get(
+		'/site/',
+		cachedMon,
+		Landing(),
+		cachedMon
+	)
 	app.get(
 		/site\/festivals/,
 		cachedMon,

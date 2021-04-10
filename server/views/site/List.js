@@ -47,6 +47,7 @@ const List = options =>
 					baseUrl, 
 					url
 				)
+				next(err)
 			})
 	}
 
