@@ -17,10 +17,12 @@ var fs = require('fs')
 const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
 
 const cachedGet = require('../../bin/common/cachedGet')
+const cachedMon = require('../../bin/common/cachedMon')
 
 const festivalDetail = options =>
 	function(req, res, next) {
-		const baseUrl = req.app.get('url').replace(/\/$/, '')
+		//const baseUrl = req.app.get('url').replace(/\/$/, '')
+		const baseUrl = `${req.protocol}://${req.get('host')}`
 		//console.log('req host', baseUrl)
 		const opt = Object.assign({}, options, { baseUrl: baseUrl })
 
@@ -30,7 +32,7 @@ const festivalDetail = options =>
 
 const lineupDetail = options =>
 	function(req, res, next) {
-		const baseUrl = req.app.get('url').replace(/\/$/, '')
+		const baseUrl = `${req.protocol}://${req.get('host')}`
 		//console.log('req host', baseUrl)
 		const opt = Object.assign({}, options, { baseUrl: baseUrl })
 
@@ -51,10 +53,12 @@ const lineupDetail = options =>
 module.exports = function(app) {
 	app.get(
 		/site\/festivals/,
+		cachedMon,
 		List({
 			apiModel: 'Series',
 			baseRoute: '/site/festivals/'
-		})
+		}),
+		cachedMon
 	)
 
 	//show the most recent festival for that series
@@ -76,18 +80,22 @@ module.exports = function(app) {
 
 	app.get(
 		/site\/artists\/?$/,
+		cachedMon,
 		List({
 			apiModel: 'Artists',
 			baseRoute: '/site/artists/'
-		})
+		}),
+		cachedMon
 	)
 
 	app.get(
 		'/site/artists/:artistName',
+		cachedMon,
 		Artist({
 			list: ListByName,
 			apiModel: 'Artists'
-		})
+		}),
+		cachedMon
 	)
 
 	//show the most recent festival for that series that the artist played

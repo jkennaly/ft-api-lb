@@ -26,7 +26,7 @@ const _ = require('lodash')
 
 				//console.log('getWikiId', possibles, bands, musicians)
 
-				return choice.id
+				return _.get(choice, 'id')
 			})
 			.catch(err => {
 				console.error("getWikiPromise error", model, err)

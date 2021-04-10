@@ -25,7 +25,7 @@ const detail = fs.readFileSync('./server/views/site/detail.frag.html', 'utf8')
 
 const List = options =>
 	function(req, res, next) {
-		const baseUrl = req.app.get('url').replace(/\/$/, '')
+		const baseUrl = `${req.protocol}://${req.get('host')}`
 		//console.log('req host', baseUrl)
 		const url = `/api/${options.apiModel}`
 		const opt = Object.assign({}, options, { baseUrl: baseUrl, url: url }, req.params)
@@ -67,13 +67,15 @@ const List = options =>
 				return rendered
 			})
 			.then(rendered =>
-				res.send(
 					shell.replace(
 						'<div id="component"></div>',
 						rendered
 					)
 				)
-			)
+			.then(html => {
+				res.locals.html = html
+				next()
+			})
 
 			.catch(next)
 	}

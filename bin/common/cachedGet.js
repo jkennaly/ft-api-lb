@@ -23,7 +23,7 @@ const cachedGet = (url, opt) => {
 	const time = _.get(siteCacheTime, key, 0)
 	const cacheValid = time && !mondayBetween(time)
 	if (cacheValid) return Promise.resolve(_.get(siteCache, key))
-	return axios.get(url, _.omit(opt, 'baseUrl')).then(res => {
+	return axios.get(url, opt).then(res => {
 		_.set(siteCache, key, res)
 		_.set(siteCacheTime, key, Date.now())
 		return res

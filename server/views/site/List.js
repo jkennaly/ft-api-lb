@@ -16,10 +16,10 @@ const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
 
 const List = options =>
 	function(req, res, next) {
-		const baseUrl = req.app.get('url').replace(/\/$/, '')
-		//console.log('req host', baseUrl)
+		const baseUrl = `${req.protocol}://${req.get('host')}`
 		const url = `/api/${options.apiModel}`
 		const opt = Object.assign({}, options, { baseUrl: baseUrl, url: url }, req.params)
+		//console.log('req host', baseUrl, url)
 
 		vm(opt)
 			.then(data => render(
@@ -29,14 +29,17 @@ const List = options =>
 					baseRoute: opt.baseRoute
 				})
 			))
-			.then(rendered =>
-				res.send(
-					template.replace(
+		//.then(x => console.log('vm list rendered', x) || x)
+			.then(rendered => template.replace(
 						'<div id="component"></div>',
 						rendered
 					)
-				)
+				
 			)
+			.then(html => {
+				res.locals.html = html
+				next()
+			})
 
 			.catch(err => {
 				console.error(err,

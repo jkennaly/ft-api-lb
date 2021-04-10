@@ -95,7 +95,7 @@ const appendPageLinks = (pageCount, startPage = currentPage) => {
   div.className = "pagination";
   //create ul
   const ul = document.createElement("div");
-    ul.className="w-full"
+    ul.className="w-full flex flex-wrap justify-center"
   //create pageCount lis and append to pagination list
   for (var i = 1; i <= pageCount; i++) {
     const link = document.createElement("a");
