@@ -26,9 +26,11 @@ module.exports = function(Fest) {
 		return Fest.allActiveIds((err, res) => {
 	    	if(err) {
 	    	  console.log('Fest.isActive error Fest', id, err)
-	    	  return cb(err)
+	    	  if(cb) return cb(err)
+	    	  return Promise.reject(err)
 	    	}
-	    	cb(undefined, res.includes(id))
+	    	if(cb) return cb(undefined, res.includes(id))
+	    	return res.includes(id)
 		})	
 	}
 

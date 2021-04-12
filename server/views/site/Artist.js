@@ -53,7 +53,6 @@ const List = options =>
 				const rendered = detail
 					.replace('<div id="subject-stats"></div>', stats)
 					.replace('<div id="subject-name"></div>', name)
-					.replace('<span id="plain-name"></span>', namePlain)
 					.replace('<div id="subject-rating"></div>', subjectRating)
 					.replace('<span id="plain-name"></span>', namePlain)
 					.replace('<div id="set-rating"></div>', setRating)

@@ -12,6 +12,7 @@ var render = require('mithril-node-render')
 const ListByName = require('../views/site/ListByName')
 const List = require('../views/site/List')
 const Artist = require('../views/site/Artist')
+const Festival = require('../views/site/Festival')
 const Landing = require('../views/site/Landing')
 
 var fs = require('fs')
@@ -59,7 +60,7 @@ module.exports = function(app) {
 		cachedMon
 	)
 	app.get(
-		/site\/festivals/,
+		/site\/festivals\/?$/,
 		cachedMon,
 		List({
 			apiModel: 'Series',
@@ -71,18 +72,18 @@ module.exports = function(app) {
 	//show the most recent festival for that series
 	app.get(
 		'/site/festivals/:seriesName',
-		festivalDetail({
-			list: ListByName,
-			apiModel: 'Series'
-		})
+		cachedMon,
+		Festival({
+		}),
+		cachedMon
 	)
 
 	app.get(
-		'/site/festivals/:seriesName/:year',
-		festivalDetail({
-			list: ListByName,
-			apiModel: 'Series'
-		})
+		'/site/festivals/:seriesName/:festivalYear',
+		cachedMon,
+		Festival({
+		}),
+		cachedMon
 	)
 
 	app.get(
@@ -99,8 +100,6 @@ module.exports = function(app) {
 		'/site/artists/:artistName',
 		cachedMon,
 		Artist({
-			list: ListByName,
-			apiModel: 'Artists'
 		}),
 		cachedMon
 	)
@@ -115,7 +114,7 @@ module.exports = function(app) {
 	)
 
 	app.get(
-		'/site/artists/:artistName/:seriesName/:year',
+		'/site/artists/:artistName/:seriesName/:festivalYear',
 		lineupDetail({
 			list: ListByName,
 			apiModel: 'Lineups'

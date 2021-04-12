@@ -10,22 +10,22 @@ module.exports = function(Festival){
     return Promise.resolve({seriesIds: [Festival.findById(id).series]})
   }
 
-  Festival.subEventsPromise = function(id, cb) {
+  Festival.subEventsPromise = function(id) {
           
-    const datesPromise = Festival.app.models.Date.find({festival: id})
+    const datesPromise = Festival.app.models.Date.find({where: {festival: id}})
     const daysPromise = datesPromise
-      .then(dates => Promise.all(dates.map(date => Festival.app.models.Day.find({}))))
-    const setsPromise = datesPromise
-      .then(days => Promise.all(days.map(day => Festival.app.models.Set.find({}))))
+      .then(dates => Festival.app.models.Day.find({where: {date: {inq: dates.map(x => x.id)}}}))
+    const setsPromise = daysPromise
+      .then(days => Festival.app.models.Set.find({where: {day: {inq: days.map(x => x.id)}}}))
     const allSubEvents = Promise.all([datesPromise, daysPromise, setsPromise])
       .then(([dates, days, sets]) => {
+      	//console.log('allSubEvents', dates, days, sets)
         return {
-          dateIds: dates.map(x => x.id),
-          dayIds: days.map(x => x.id),
-          setIds: sets.map(x => x.id)
+          dates,
+          days,
+          sets
         }
       })
-      .catch(cb)
     return allSubEvents
   }
 

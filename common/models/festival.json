@@ -48,7 +48,8 @@
     "RestrictedEvent": true,
     "UpdateEvent": true,
     "ContextRequest": true,
-    "EventNames": true
+    "EventNames": true,
+	"FestivalStats": true
   },
   "properties": {
     "id": {
