@@ -124,3 +124,4 @@ module.exports = opt => {
 	)
 	//.then(x => console.log('artistDetail get', x) || x)
 }
+

@@ -34,7 +34,9 @@ const cachedMon = (key, val) => {
 }
 
 const cachedMid = (req, res, next) => {
-	const key = req.path
+	const path = req.path
+	const query = JSON.stringify(req.query)
+	const key = `${path}.${query}`
 	const html = res.locals.html
 	const cached = cachedMon(key, html)
 	if(cached) return res.send(cached)

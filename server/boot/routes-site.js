@@ -64,7 +64,8 @@ module.exports = function(app) {
 		cachedMon,
 		List({
 			apiModel: 'Series',
-			baseRoute: '/site/festivals/'
+			baseRoute: '/site/festivals/',
+			path: '/site/festivals?page='
 		}),
 		cachedMon
 	)
@@ -91,7 +92,8 @@ module.exports = function(app) {
 		cachedMon,
 		List({
 			apiModel: 'Artists',
-			baseRoute: '/site/artists/'
+			baseRoute: '/site/artists/',
+			path: '/site/artists?page='
 		}),
 		cachedMon
 	)
