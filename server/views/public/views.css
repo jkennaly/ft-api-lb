@@ -4229,6 +4229,10 @@ video {
   background-image: linear-gradient(to top left, var(--tw-gradient-stops));
 }
 
+.bg-crowd-stage {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
+}
+
 .from-transparent {
   --tw-gradient-from: transparent;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -35666,6 +35670,10 @@ video {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .sm\:bg-crowd-stage {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
+  }
+
   .sm\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -66775,6 +66783,10 @@ video {
 
   .md\:bg-gradient-to-tl {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  }
+
+  .md\:bg-crowd-stage {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
   }
 
   .md\:from-transparent {
@@ -97888,6 +97900,10 @@ video {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .lg\:bg-crowd-stage {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
+  }
+
   .lg\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -128999,6 +129015,10 @@ video {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
   }
 
+  .xl\:bg-crowd-stage {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
+  }
+
   .xl\:from-transparent {
     --tw-gradient-from: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0));
@@ -160108,6 +160128,10 @@ video {
 
   .\32xl\:bg-gradient-to-tl {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  }
+
+  .\32xl\:bg-crowd-stage {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg/1280px-Crowd_watching_The_Proclaimers%2C_Towersey_2018.jpg');
   }
 
   .\32xl\:from-transparent {
