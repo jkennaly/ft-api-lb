@@ -14,6 +14,7 @@ const List = require('../views/site/List')
 const Artist = require('../views/site/Artist')
 const Festival = require('../views/site/Festival')
 const Landing = require('../views/site/Landing')
+const Support = require('../views/site/support/Support')
 
 var fs = require('fs')
 const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
@@ -57,6 +58,12 @@ module.exports = function(app) {
 		'/site/',
 		cachedMon,
 		Landing(),
+		cachedMon
+	)
+	app.get(
+		'/site/support',
+		cachedMon,
+		Support(),
 		cachedMon
 	)
 	app.get(

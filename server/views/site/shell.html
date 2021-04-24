@@ -38,13 +38,14 @@
 			defer
 		></script>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-HERSZF6YBR"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-194281339-1">
+		</script>
 		<script>
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
 
-		  gtag('config', 'G-HERSZF6YBR');
+		  gtag('config', 'UA-194281339-1');
 		</script>
 	</head>
 	<body>
@@ -53,6 +54,7 @@
 			isFestivals: /site\/festivals\/?($|\?)/.test(window.location.href),
 			isArtists: /site\/artists\/?($|\?)/.test(window.location.href),
 			isLanding: /site\/?$/.test(window.location.href),
+			isSupport: /site\/support\/?($|\?)/.test(window.location.href),
 			isOpen: false
 		}"
 	>
@@ -72,6 +74,13 @@
 							>
 								<div class="ml-10 flex items-baseline space-x-4">
 									<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+
+									<a
+										:class="{'bg-gray-900 text-white' : isLanding, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isLanding}"
+										href="/site"
+										class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+										>Home</a
+									>
 									<a
 										href="/"
 										class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -93,10 +102,10 @@
 									>
 
 									<a
-										:class="{'bg-gray-900 text-white' : isLanding, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isLanding}"
-										href="/site"
+										:class="{'bg-gray-900 text-white' : isSupport, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isSupport}"
+										href="/site/support"
 										class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-										>FestiGram</a
+										>Support</a
 									>
 								</div>
 							</div>
@@ -165,6 +174,13 @@
 						class="px-2 pt-2 pb-3 space-y-1 sm:px-3"
 					>
 						<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+
+						<a
+							:class="{'bg-gray-900 text-white' : isLanding, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isLanding}"
+							href="/site"
+							class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+							>Home</a
+						>
 						<a
 							href="/"
 							class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
@@ -186,10 +202,10 @@
 						>
 
 						<a
-							:class="{'bg-gray-900 text-white' : isLanding, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isLanding}"
-							href="/site"
+							:class="{'bg-gray-900 text-white' : isSupport, 'text-gray-300 hover:bg-gray-700 hover:text-white': !isSupport}"
+							href="/site/support"
 							class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-							>FestiGram</a
+							>Support</a
 						>
 					</div>
 

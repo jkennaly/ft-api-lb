@@ -11,19 +11,19 @@ var render = require('mithril-node-render')
 
 var fs = require('fs')
 const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
-const landing = fs.readFileSync('./server/views/site/landing.frag.html', 'utf8')
+const support = fs.readFileSync('./server/views/site/support/support.frag.html', 'utf8')
 
-const Landing = options =>
+const page = options =>
 	function(req, res, next) {
-		//console.log('landing')
+		//console.log('support')
 		
 		const html = template.replace(
 						'<div id="component"></div>',
-						landing
+						support
 					)
 		res.locals.html = html
 		next()
 		
 	}
 
-module.exports = Landing
+module.exports = page

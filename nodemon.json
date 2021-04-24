@@ -3,5 +3,5 @@
     "start": "clear"
   },
     "ignore": ["client/**"],
-    "ext":"html"
+    "ext":"html,js,css"
 }
