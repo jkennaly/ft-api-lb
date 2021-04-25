@@ -11,9 +11,71 @@
 	    </button>
 	</a>
   </div>
-  <div class="relative">
-  <div class="absolute inset-0 flex items-center" aria-hidden="true">
-    <div class="w-full border-t border-gray-300"></div>
+	  </div>
+  <div
+		x-data="{
+			tabShown: 'request'
+		}"
+	>
+	  <div class="sm:hidden">
+	    <label for="tabs">What do you need help with?</label>
+	    <select 
+	    	id="tabs" 
+	    	name="tabs" 
+	    	class="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+	    >
+	      <option
+	      	:selected="tabShown==='request'"
+	      	@click="tabShown='request"
+	      	value="request"
+	      >Festival Request</option>
+
+	      <option
+	      	:selected="tabShown==='problem'"
+	      	@click="tabShown='problem"
+	      	value="problem"
+	      >Problem With App</option>
+
+	      <option 
+	      	:selected="tabShown==='other'"
+	      	@click="tabShown='other"
+	      	value="other"
+	      >Something Else</option>
+	    </select>
+	  </div>
+	  <div class="hidden sm:block">
+	    <nav class="flex space-x-4" aria-label="Tabs">
+	      <!-- Current: "bg-indigo-100 text-indigo-700", Default: "text-gray-500 hover:text-gray-700" -->
+	      <span 
+	      	@click="tabShown='request'"
+	      :class="{'bg-indigo-100 text-indigo-700' : tabShown==='request', 'text-gray-500 hover:text-gray-700': tabShown!=='request'}"
+	      	class="px-3 py-2 font-medium text-sm rounded-md cursor-pointer"
+	      >
+	        Festival Request
+	      </span>
+
+	      <span 
+	      	@click="tabShown='problem'"
+	      :class="{'bg-indigo-100 text-indigo-700' : tabShown==='problem', 'text-gray-500 hover:text-gray-700': tabShown!=='problem'}"
+	      	class="px-3 py-2 font-medium text-sm rounded-md cursor-pointer"
+	      >
+	        Problem With App
+	      </span>
+
+	      <span 
+	      	@click="tabShown='other'"
+	      :class="{'bg-indigo-100 text-indigo-700' : tabShown==='other', 'text-gray-500 hover:text-gray-700': tabShown!=='other'}"
+	      	class="px-3 py-2 font-medium text-sm rounded-md cursor-pointer"
+	      >
+	        Something Else
+	      </span>
+	    </nav>
+			<main>
+				<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+					<div x-show="tabShown==='request'"><div id="request"></div></div>
+					<div x-show="tabShown==='problem'"><div id="problem"></div></div>
+					<div x-show="tabShown==='other'"><div id="other"></div></div>
+				</div>
+			</main>
   </div>
-</div>
 </div>

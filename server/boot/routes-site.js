@@ -15,6 +15,9 @@ const Artist = require('../views/site/Artist')
 const Festival = require('../views/site/Festival')
 const Landing = require('../views/site/Landing')
 const Support = require('../views/site/support/Support')
+const Request = require('../views/site/support/post/Request')
+const Problem = require('../views/site/support/post/Problem')
+const Other = require('../views/site/support/post/Other')
 
 var fs = require('fs')
 const template = fs.readFileSync('./server/views/site/shell.html', 'utf8')
@@ -54,6 +57,24 @@ const lineupDetail = options =>
 	}
 
 module.exports = function(app) {
+	app.post(
+		'/site/support/request',
+		Request(),
+		Support(),
+		cachedMon
+	)
+	app.post(
+		'/site/support/problem',
+		Problem(),
+		Support(),
+		cachedMon
+	)
+	app.post(
+		'/site/support/other',
+		Other(),
+		Support(),
+		cachedMon
+	)
 	app.get(
 		'/site/',
 		cachedMon,
