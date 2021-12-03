@@ -60,6 +60,7 @@ return function updateTable(req, res, next) {
       )
       .catch(err => {
       	inProgress = false
+      	console.error('user login error', req.user)
       	next(err)
       })
       })
