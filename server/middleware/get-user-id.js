@@ -38,7 +38,11 @@ module.exports = function(options) {
 							next()
 						})
 				)
-				.catch(err => next(err))
+				.catch(err => {
+			      	
+			      	console.error('get-user-id login error', req.user && req.user.ftUserId)
+			      	next(err)
+			    })
 			//connection.end()
 			//console.log('connected ended ' + req.originalUrl)
 		} else {

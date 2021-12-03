@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = function(options) {
   return function (req, res, next) {
-  	console.log('gt-access-token', req.user)
+  	console.log('gt-access-token user', req.user && req.user.ftUserId)
   	req.accessToken = {}
     const gtt = req.headers['x-gt-access-token']
     if(!gtt) return next()
@@ -19,6 +19,8 @@ module.exports = function(options) {
       issuer: 'http://festigram',
       algorithms: ['HS256']
     }, (err, decoded) => {
+  	console.log('gt-access-token', req.user && req.user.ftUserId)
+  	console.log('gt-access-token err', err)
       if(err) return next()
       //console.log('gt-access-token mw', req.user, req.headers)
       //console.log('gt-access-token', decoded)
