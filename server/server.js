@@ -168,12 +168,12 @@ app.use((req, res, next) => {
 app.use(function(err, req, res, next) {
 	if (err && err.name === "UnauthorizedError") {
 		//authCheck
+			console.log('Invalid token, or no token supplied!')
+			console.log(req.route)
+			console.log(req.get('Authorization'))
+			console.log(req.user)
+			console.log(err)
 		if (!/jwt expired/.test(err.message)) {
-			//console.log('Invalid token, or no token supplied!')
-			//console.log(req.route)
-			//console.log(req.get('Authorization'))
-			//console.log(req.user)
-			//console.log(err)
 		}
 		res.status(401).send("Invalid token, or no token supplied!")
 	} else if (err.code === "permission_denied") {

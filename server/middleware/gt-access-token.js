@@ -13,7 +13,10 @@ module.exports = function(options) {
   	console.log('gt-access-token user', req.user && req.user.ftUserId)
   	req.accessToken = {}
     const gtt = req.headers['x-gt-access-token']
-    if(!gtt) return next()
+    if(!gtt) {
+    	console.log('gt-access-token no gtt', req.user && req.user.ftUserId)
+    	return next()	
+    } 
     jwt.verify(gtt, process.env.GT_ACCESS_SECRET, {
       audience: 'http://festigram/api/',
       issuer: 'http://festigram',
