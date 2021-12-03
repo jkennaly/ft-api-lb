@@ -10,6 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = function(options) {
   return function (req, res, next) {
+  	console.log('gt-access-token', req.user)
   	req.accessToken = {}
     const gtt = req.headers['x-gt-access-token']
     if(!gtt) return next()

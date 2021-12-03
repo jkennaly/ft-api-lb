@@ -10,7 +10,7 @@ const aliased = []
 
 module.exports = function(options) {
 return function updateTable(req, res, next) {
-  	//console.log('verify-user-id', req.user)
+  	console.log('verify-user-id', req.user)
   const aliasTable = req.app.get('aliasTable')
 
   if(req.user && !req.user.ftUserId) {
