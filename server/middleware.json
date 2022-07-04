@@ -13,6 +13,52 @@
 				"maxAge": 86400
 			}
 		},
+		"helmet-csp": {
+			"params": {
+				"directives": {
+					"connectSrc": [
+						"'self'",
+						"https://api.stripe.com",
+						"https://checkout.stripe.com"
+					],
+					"frameSrc": [
+						"'self'",
+						"https://js.stripe.com",
+						"https://hooks.stripe.com",
+						"https://checkout.stripe.com"
+					],
+					"defaultSrc": [
+						"'self'"
+					],
+					"styleSrc": [
+						"'self'",
+						"fonts.googleapis.com",
+						"use.fontawesome.com",
+						"'unsafe-inline'"
+					],
+					"scriptSrc": [
+						"'self'",
+						"js.stripe.com",
+						"https://checkout.stripe.com",
+						"https://www.googletagmanager.com",
+						"https://widget.cloudinary.com/",
+						"https://upload-widget.cloudinary.com/",
+						"https://use.fontawesome.com/",
+						"'unsafe-inline'"
+					],
+					"fontSrc": [
+						"'self'",
+						"fonts.googleapis.com",
+						"fonts.gstatic.com",
+						"use.fontawesome.com"
+					],
+					"imgSrc": [
+						"'self'",
+						"https://*.stripe.com"
+					]
+				}
+			}
+		},
 		"helmet#xssFilter": {},
 		"helmet#frameguard": {
 			"params": {
@@ -52,7 +98,9 @@
 	"routes:before": {},
 	"routes:after": {
 		"loopback#rest": {
-			"paths": ["${restApiRoot}"]
+			"paths": [
+				"${restApiRoot}"
+			]
 		}
 	},
 	"files": {
@@ -60,8 +108,12 @@
 			{
 				"params": "$!../client"
 			},
-			{ "params": "$!./views/public" },
-			{ "params": "$!../static" }
+			{
+				"params": "$!./views/public"
+			},
+			{
+				"params": "$!../static"
+			}
 		]
 	},
 	"final": {

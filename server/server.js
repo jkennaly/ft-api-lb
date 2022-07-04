@@ -8,6 +8,8 @@ const _ = require("lodash")
 
 var bodyParser = require("body-parser")
 var multer = require("multer")
+var cookies = require("cookie-parser");
+
 
 var sslRedirect = require("heroku-ssl-redirect")
 
@@ -17,7 +19,7 @@ if (process.env.NODE_ENV !== "production") {
 	require("dotenv").load()
 } else {
 	app.use(sslRedirect())
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		if (!/festigram\.app$/.test(req.headers.host)) {
 			const newURL = ["https://festigram.app", req.url].join("")
 			return res.redirect(newURL)
@@ -26,6 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 	})
 }
 
+app.use(cookies());
 var guard = require("express-jwt-permissions")({
 	permissionsProperty: "scope"
 })
@@ -92,7 +95,7 @@ app.post(createFestivals, guard.check("create:festivals"))
 app.put(createFestivals, guard.check("create:festivals"))
 app.delete(createFestivals, guard.check("create:festivals"))
 //app.use(/verify/g, guard.check('verify:festivals'))
-app.get(loggedOnly, function(err, req, res, next) {
+app.get(loggedOnly, function (err, req, res, next) {
 	if (err) return next(err)
 	if (req.user) return next()
 	res.status(401).send("Logged only for this endpoint")
@@ -122,7 +125,7 @@ app.use('/*', function(req, res, next) {
   next()
 })
 app.use('/api/Festivals', function(req, res, next) {
-    res.json("It has valid token", req.user);
+	res.json("It has valid token", req.user);
 });
 app.use('/api/*', function (req, res, next) {
   console.log(req.user)
@@ -165,8 +168,12 @@ app.use((req, res, next) => {
 }) // for parsing multipart/form-data
 
 // catch error
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
 	if (err && err.name === "UnauthorizedError") {
+		if (req.cookie && req.cookie.jwt) {
+			return res.status(406).send("Refresh required")
+		}
+		/*
 		//authCheck
 			console.log('Invalid token, or no token supplied!')
 			console.log(req.route)
@@ -175,6 +182,7 @@ app.use(function(err, req, res, next) {
 			console.log(err)
 		if (!/jwt expired/.test(err.message)) {
 		}
+		*/
 		res.status(401).send("Invalid token, or no token supplied!")
 	} else if (err.code === "permission_denied") {
 		//guard
@@ -187,26 +195,26 @@ app.use(function(err, req, res, next) {
 
 //var MYSQL_CONNECTION_STRING = process.env.NODE_ENV === 'production' ? process.env.JAWSDB_URL : ''
 //console.log(process.env.JAWSDB_URL)
-app.start = function() {
+app.start = function () {
 	// start the web server
 	var port = process.env.PORT || 8080
-	return app.listen(port, function() {
+	return app.listen(port, function () {
 		app.emit("started")
 		var baseUrl = app.get("url").replace(/\/$/, "")
 		console.log("Web server listening at: %s", baseUrl)
 
 		/*
-    if (process.env.NODE_ENV === 'test' && app.get('loopback-component-explorer')) {
-      var explorerPath = app.get('loopback-component-explorer').mountPath;
-      console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
-    }
-    */
+	if (process.env.NODE_ENV === 'test' && app.get('loopback-component-explorer')) {
+	  var explorerPath = app.get('loopback-component-explorer').mountPath;
+	  console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
+	}
+	*/
 	})
 }
 
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
-boot(app, __dirname, function(err) {
+boot(app, __dirname, function (err) {
 	if (err) throw err
 
 	// start the server if `$ node server.js`
