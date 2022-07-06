@@ -1,7 +1,7 @@
 {
 	"initial:before": {
 		"loopback#favicon": {
-			"params": "$!../client/fav/favicon.ico"
+			"params": "$!../static/favicon.ico"
 		}
 	},
 	"initial": {
@@ -105,9 +105,6 @@
 	},
 	"files": {
 		"loopback#static": [
-			{
-				"params": "$!../client"
-			},
 			{
 				"params": "$!./views/public"
 			},

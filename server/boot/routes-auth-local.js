@@ -31,9 +31,19 @@ module.exports = function (app) {
 
 	const loginMiddle = options => function (req, res, next) {
 
+		const reqCb = decodeURIComponent(req.query.cb)
+		const reqDomainArray = typeof reqCb === 'string' && /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/.exec(reqCb)
+		const reqDomain = reqDomainArray && reqDomainArray[0]
+		const cbDomainOk = reqDomain && ((reqDomain.indexOf('festigram.app') === (reqDomain.length - 13) || reqDomain.includes(req.hostname)))
+		console.log('req cb', reqCb, cbDomainOk, reqDomain, reqDomainArray)
+		if (cbDomainOk) res.cookie('cbd', reqCb, {
+			httpOnly: true,
+			sameSite: 'None', secure: true,
+			maxAge: 24 * 60 * 60 * 1000
+		});
+
 		res.send(template.replace('<div id="component"></div>', render.sync(m(options.form, options))))
 	}
-
 
 	app.get(/authorize\/login/, loginMiddle({
 		formHeader: 'FestiGram Login',
@@ -55,7 +65,9 @@ module.exports = function (app) {
 				sameSite: 'None', secure: true,
 				maxAge: 90 * 24 * 60 * 60 * 1000
 			});
-			res.redirect(`${req.get('origin')}/#!/callback?token=${access}`)
+			const storedCb = req.cookies && req.cookies.cbd
+			const cbUrl = storedCb ?? `${req.get('origin')}/site`
+			res.redirect(`${cbUrl}?token=${access}`)
 		} catch (err) {
 			console.log('Create JWT Error', err)
 			res.status(500)

@@ -28,6 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 	})
 }
 
+
 app.use(cookies());
 var guard = require("express-jwt-permissions")({
 	permissionsProperty: "scope"
