@@ -51,7 +51,7 @@
     "stripe": "^8.133.0",
     "strong-error-handler": "^3.0.0",
     "uuid": "^8.3.0",
-    "xlsx": "^0.16.2"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.5",
