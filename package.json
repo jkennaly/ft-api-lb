@@ -58,7 +58,7 @@
     "eslint": "^3.17.1",
     "eslint-config-loopback": "^8.0.0",
     "loopback-cli": "^5.2.0",
-    "postcss": "^8.2.9",
+    "postcss": "^8.2.13",
     "replace-in-file": "^3.4.4",
     "tailwindcss": "^2.1.1"
   },
