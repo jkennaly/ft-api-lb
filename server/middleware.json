@@ -8,7 +8,10 @@
 		"compression": {},
 		"cors": {
 			"params": {
-				"origin": "*",
+				"origin": [
+					"http://localhost:8181",
+					"https://festigram.app"
+				],
 				"credentials": true,
 				"maxAge": 86400
 			}
