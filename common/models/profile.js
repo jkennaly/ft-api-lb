@@ -14,8 +14,9 @@ module.exports = function (Profile) {
     const user = req.user
     const ftUser = user.ftUserId
 
-    //const authHeader = req.header('Authorization')
-    //console.log('getUserId user', user)
+    const authHeader = req.header('Authorization')
+    console.log('getUserId user', user)
+    console.log('getUserId userData', userData)
     if (ftUser) return cb(null, ftUser)
 
 
