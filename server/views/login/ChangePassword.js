@@ -1,4 +1,4 @@
-// Login.js
+// ChangePassword.js
 // components: login/components
 
 /*
@@ -17,47 +17,43 @@ const m = require('mithril')
 const FormCore = require('./FormCore.js')
 
 
-
-const Login = {
+const ChangePassword = {
     //oncreate: console.log('Launched'),
-    //onupdate: () => console.log('Login update'),
+    //onupdate: () => console.log('ChangePassword update'),
     view: ({ attrs }) => m('div.c44-login-container',
         m('section.c44-login-content',
             attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
             m(FormCore, {
-                submit: e => {
+                submit: attrs.submit ? attrs.submit : e => {
                     e.preventDefault()
                     console.log('Login.jsx Form submitted!')
                 },
-                formHeader: attrs.formHeader ? attrs.formHeader : 'Login Form',
                 action: attrs.action,
-                submitName: 'Log in',
+                method: attrs.method,
+                formHeader: attrs.formHeader ? attrs.formHeader : 'Change Password',
+                submitName: 'ChangePassword',
                 formInputs: attrs.formInputs ? attrs.formInputs : [{
-                    type: "text",
-                    placeholder: "Email Address",
+                    type: "password",
+                    placeholder: "OldPassword",
                     required: true,
-                    classes: "c44-login-username",
-                    name: 'Email'
+                    classes: "c44-login-password"
                 }, {
                     type: "password",
-                    placeholder: "Password",
+                    placeholder: "NewPassword",
                     required: true,
-                    classes: "c44-login-password",
-                    name: 'Password'
-
+                    classes: "c44-login-password"
+                }, {
+                    type: "password",
+                    placeholder: "NewPasswordAgain",
+                    required: true,
+                    classes: "c44-login-password"
                 }],
-                peerLinks: attrs.peerLinks ? attrs.peerLinks : [
-                    {
-                        route: '/authorize/forgot',
-                        text: 'Lost Your Password?'
-                    }, {
-                        route: '/authorize/register',
-                        text: 'Register'
-                    }
-                ]
+                peerLinks: attrs.peerLinks ? attrs.peerLinks : []
 
             })
         )
     )
+
+
 }
-module.exports = Login;
+module.exports = ChangePassword;

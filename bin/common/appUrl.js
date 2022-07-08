@@ -5,8 +5,10 @@ const subjectTypeRoute = {
 	'7': 'fests'
 }
 
+const baseUrl = process.env.APP_BASE || 'https://festigram.app/'
+
 const appUrl = so => {
-	const url = `/#!/${subjectTypeRoute[so.subjectType]}/pregame/${so.subject}`
+	const url = `${baseUrl}#!/${subjectTypeRoute[so.subjectType]}/pregame/${so.subject}`
 	return url
 }
 

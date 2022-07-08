@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid')
 //optional: access = ['user']
 
 async function addUser(con, username, email, password, access = ['user']) {
-	if (!con || !username || !email || !password) return new Error('required parameter missing')
+	if (!con || !username || !email || !password) throw new Error('required parameter missing')
 	//get salt
 	const conn = con.promise()
 	const salt = crypto.randomBytes(8)
@@ -25,7 +25,7 @@ async function addUser(con, username, email, password, access = ['user']) {
 	const stmt2 = `INSERT INTO user_aliases (user, alias) SELECT id, ? FROM Users;`
 	const values2 = [`fest|${id}`]
 	await conn.execute(stmt2, values2)
-	return { username, email, access, id: mobile_auth_key, access }
+	return { username, email, access, id: mobile_auth_key }
 }
 
 module.exports = addUser

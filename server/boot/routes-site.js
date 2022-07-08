@@ -26,7 +26,7 @@ const cachedGet = require('../../bin/common/cachedGet')
 const cachedMon = require('../../bin/common/cachedMon')
 
 const festivalDetail = options =>
-	function(req, res, next) {
+	function (req, res, next) {
 		//const baseUrl = req.app.get('url').replace(/\/$/, '')
 		const baseUrl = `${req.protocol}://${req.get('host')}`
 		//console.log('req host', baseUrl)
@@ -37,7 +37,7 @@ const festivalDetail = options =>
 
 
 const lineupDetail = options =>
-	function(req, res, next) {
+	function (req, res, next) {
 		const baseUrl = `${req.protocol}://${req.get('host')}`
 		//console.log('req host', baseUrl)
 		const opt = Object.assign({}, options, { baseUrl: baseUrl })
@@ -56,7 +56,8 @@ const lineupDetail = options =>
 			.catch(console.error)
 	}
 
-module.exports = function(app) {
+module.exports = function (app) {
+	app.get('/', Landing(), cachedMon)
 	app.post(
 		'/site/support/request',
 		Request(),

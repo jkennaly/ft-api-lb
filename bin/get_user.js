@@ -8,8 +8,8 @@ dotenv.config()
 
 async function create(con, email, password, suppliedId) {
     try {
-
-        if (!con || ((!email || !password) && !suppliedId)) throw new Error('required parameter missing')
+        console.log()
+        if (!con || (!email && !suppliedId)) throw new Error('required parameter missing')
         //pull db entry for email
         const conn = con.promise()
         const stmt = `SELECT email, hashedpw, salt, access, username, DATE_FORMAT(timestamp, '%Y-%m-%dT%TZ') AS updated_at, emailVerified, mobile_auth_key, picture
@@ -24,7 +24,7 @@ async function create(con, email, password, suppliedId) {
 
         //hash given pw with salt
         const { email: emailDb, hashedpw, salt, access, username, updated_at, emailVerified, mobile_auth_key, picture } = results[0]
-        if (suppliedId) return { emailDb, access, username, updated_at, emailVerified, mobile_auth_key, picture }
+        if (!password) return { email: emailDb, access, username, updated_at, emailVerified, mobile_auth_key, picture }
         const hash = crypto.createHmac('sha512', salt)
         hash.update(password)
         const givenpw = hash.digest('base64')

@@ -21,36 +21,37 @@ const FormCore = require('./FormCore.js')
 
 
 const ForgotPassword = {
-		//oncreate: console.log('Launched'),
-		//onupdate: () => console.log('ForgotPassword update'),
-		view: ({attrs}) => m('div.c44-login-container',
-            m('section.c44-login-content',
-                attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
-                m(FormCore, {
-                    submit: attrs.submit ? attrs.submit : e => {
-                        e.preventDefault()
-                        console.log('Forgot PW Form submitted!')
-                    },
-                    formHeader: attrs.formHeader ? attrs.formHeader : 'Forgot Password',
-                    submitName: 'Reset',
-                    formInputs: attrs.formInputs ? attrs.formInputs : [{
-                type: "email",
-                placeholder: "Email",
-                required: true,
-                classes: "c44-login-email"
-            }],
-                    peerLinks: attrs.peerLinks ? attrs.peerLinks : [
-                        {
-                    route:'/authorize/login',
-                    text: 'Log In'
-                }, {
-                            route:'/authorize/register',
-                            text: 'Register'
-                        }
-                    ]
+    //oncreate: console.log('Launched'),
+    //onupdate: () => console.log('ForgotPassword update'),
+    view: ({ attrs }) => m('div.c44-login-container',
+        m('section.c44-login-content',
+            attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
+            m(FormCore, {
+                submit: attrs.submit ? attrs.submit : e => {
+                    e.preventDefault()
+                    console.log('Forgot PW Form submitted!')
+                },
+                action: attrs.action,
+                formHeader: attrs.formHeader ? attrs.formHeader : 'Forgot Password',
+                submitName: 'Reset',
+                formInputs: attrs.formInputs ? attrs.formInputs : [{
+                    type: "email",
+                    placeholder: "Email",
+                    required: true,
+                    classes: "c44-login-email"
+                }],
+                peerLinks: attrs.peerLinks ? attrs.peerLinks : [
+                    {
+                        route: '/authorize/login',
+                        text: 'Log In'
+                    }, {
+                        route: '/authorize/register',
+                        text: 'Register'
+                    }
+                ]
 
-                })
-            )
+            })
         )
+    )
 }
 module.exports = ForgotPassword;

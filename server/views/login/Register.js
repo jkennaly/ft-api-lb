@@ -18,18 +18,19 @@ const FormCore = require('./FormCore.js')
 
 
 const Register = {
-		//oncreate: console.log('Launched'),
-		//onupdate: () => console.log('Register update'),
-		view: ({attrs}) => m('div.c44-login-container',
-            m('section.c44-login-content',
-                attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
-                m(FormCore, {
-                    submit: attrs.submit ? attrs.submit : e => {
-                        e.preventDefault()
-                        console.log('Login.jsx Form submitted!')
-                    },
+    //oncreate: console.log('Launched'),
+    //onupdate: () => console.log('Register update'),
+    view: ({ attrs }) => m('div.c44-login-container',
+        m('section.c44-login-content',
+            attrs.imgSrc ? m(`img.c44-login-img[src=${attrs.imgSrc}]`) : '',
+            m(FormCore, {
+                submit: attrs.submit ? attrs.submit : e => {
+                    e.preventDefault()
+                    console.log('Login.jsx Form submitted!')
+                },
                 formHeader: attrs.formHeader ? attrs.formHeader : 'Registration',
                 submitName: 'Register',
+                action: attrs.action,
                 formInputs: attrs.formInputs ? attrs.formInputs : [{
                     type: "text",
                     placeholder: "Username",
@@ -49,18 +50,18 @@ const Register = {
                 }],
                 peerLinks: attrs.peerLinks ? attrs.peerLinks : [
                     {
-                        route:'/authorize/forgot',
+                        route: '/authorize/forgot',
                         text: 'Lost Your Password?'
                     }, {
-                        route:'/authorize/login',
+                        route: '/authorize/login',
                         text: 'Log In'
                     }
                 ]
 
-                })
-            )
+            })
         )
-            
-			
+    )
+
+
 }
 module.exports = Register;
