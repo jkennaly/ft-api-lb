@@ -276,7 +276,8 @@ module.exports = function (app) {
 			res.cookie('jwt', refresh, {
 				httpOnly: true,
 				sameSite: 'None', secure: true,
-				maxAge: 90 * 24 * 60 * 60 * 1000
+				maxAge: 90 * 24 * 60 * 60 * 1000,
+				domain: process.env.COOKIE_DOMAIN
 			});
 			res.redirect(`${recovery}?token=${access}`)
 		} catch (err) {

@@ -4,9 +4,6 @@ const _ = require('lodash')
 //const mysql = require('mysql2')
 //const connection = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false');
 
-const createRefresh = require('../../bin/create_refresh')
-var cookies = require("cookie-parser");
-
 module.exports = function (options) {
 	return function (req, res, next) {
 		const authId = req.user.sub
@@ -31,12 +28,13 @@ module.exports = function (options) {
 
 								//console.log('userId Set A ' + req.user.ftUserId)
 							}
-							const refresh = createRefresh(req.user)
-							res.cookie('jwt', refresh, {
-								httpOnly: true,
-								sameSite: 'None', secure: true,
-								maxAge: 90 * 24 * 60 * 60 * 1000
-							});
+							/*
+			else {
+			  //user not found
+			}
+			*/
+							//console.log('using loaded alias')
+							//console.log(req.user)
 							next()
 						})
 				)
@@ -53,12 +51,6 @@ module.exports = function (options) {
 			//console.log('userId Set B ' + req.user.ftUserId)
 			//console.log('using cached alias')
 			//console.log(req.user)
-			const refresh = createRefresh(req.user)
-			res.cookie('jwt', refresh, {
-				httpOnly: true,
-				sameSite: 'None', secure: true,
-				maxAge: 90 * 24 * 60 * 60 * 1000
-			});
 			next()
 		}
 	}

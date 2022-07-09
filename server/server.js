@@ -28,7 +28,6 @@ if (process.env.NODE_ENV !== "production") {
 	})
 }
 
-app.enable('trust proxy')
 app.use(cookies());
 var guard = require("express-jwt-permissions")({
 	permissionsProperty: "scope"
