@@ -35,7 +35,7 @@ module.exports = function (Profile) {
     const sql_stmt = 'SELECT user FROM `user_aliases` WHERE alias=?'
     const params = [user.sub]
     Profile.dataSource.connector.execute(sql_stmt, params, callback);
-    const callback = function (err, result) {
+    function callback(err, result) {
       //console.log('callback called err result', err, result)
       if (err) console.log(err);
       //console.log(result)
@@ -51,7 +51,7 @@ module.exports = function (Profile) {
       Profile.dataSource.connector.execute(sql_stmt, params, emailCheckCallback);
 
     }
-    const emailCheckCallback = function (err, result) {
+    function emailCheckCallback(err, result) {
       //console.log('ecc called', err, result)
       if (err) {
         console.log(err)
@@ -69,7 +69,7 @@ module.exports = function (Profile) {
         return
       } else createUser(err)
     }
-    const createUser = function (err, result) {
+    function createUser(err, result) {
       //console.log('createUser called', err, result)
       const email = userData.email || user.email
       Profile.create({
