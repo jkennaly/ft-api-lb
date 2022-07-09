@@ -44,10 +44,10 @@ module.exports = function (Profile) {
         cb(err, result && result.length ? result[0].user : 0)
         return
       }
-      const emailVerified = userData.email_verified
+      const email = userData.email || user.email
       //if(emailVerified) {
       const sql_stmt = 'SELECT id FROM `Users` WHERE email=?'
-      const params = [userData.email]
+      const params = [email]
       Profile.dataSource.connector.execute(sql_stmt, params, emailCheckCallback);
 
     }
