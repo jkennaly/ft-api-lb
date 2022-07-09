@@ -1,8 +1,5 @@
 'use strict';
 
-
-
-
 module.exports = function (app) {
 	// Make Mithril happy
 	if (!global.window) {

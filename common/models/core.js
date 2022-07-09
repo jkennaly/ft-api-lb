@@ -14,7 +14,7 @@ function disableAllMethodsBut(model, methodsToExpose) {
 		var hiddenMethods = []
 
 		try {
-			Object.keys(model.definition.settings.relations).forEach(function(
+			Object.keys(model.definition.settings.relations).forEach(function (
 				relation
 			) {
 				relationMethods.push({
@@ -66,9 +66,9 @@ function disableAllMethodsBut(model, methodsToExpose) {
 					isStatic: false,
 				})
 			})
-		} catch (err) {}
+		} catch (err) { }
 
-		methods.concat(relationMethods).forEach(function(method) {
+		methods.concat(relationMethods).forEach(function (method) {
 			var methodName = method.name
 			if (methodsToExpose.indexOf(methodName) < 0) {
 				hiddenMethods.push(methodName)
@@ -88,9 +88,9 @@ function disableAllMethodsBut(model, methodsToExpose) {
 	}
 }
 
-module.exports = function(Core) {
-	Core.allData = function(cb) {
-		if (cache) console.log("returning cache")
+module.exports = function (Core) {
+	Core.allData = function (cb) {
+		//if (cache) console.log("returning cache")
 		if (
 			cache &&
 			cache.timestamp &&
