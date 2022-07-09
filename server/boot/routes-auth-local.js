@@ -309,7 +309,6 @@ module.exports = function (app) {
 		res.send(template.replace('<div id="component"></div>', render.sync(m(options.form, options))))
 	})
 	app.get(/authorize\/refresh/, async function (req, res, next) {
-		console.log('refresh', req.cookies, allowLocalLogins)
 		if (!allowLocalLogins || !req.cookies || !req.cookies.jwt) {
 			return res.status(403).send("refresh unavailable")
 		} else {
