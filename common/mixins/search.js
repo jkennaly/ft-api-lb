@@ -1,11 +1,11 @@
-// common/mixins/access/buy.js
+// common/mixins/search.js
 
 const _ = require("lodash")
 
 var ledgerCache = {}
 
 module.exports = function nameSearch(Model, options) {
-	Model.searchName = function(pattern, cb) {
+	Model.searchName = function (pattern, cb) {
 		const nameField = options && options.altName ? options.altName : "name"
 		const nameObject = { like: `%${pattern}%` }
 		let whereObject = {}

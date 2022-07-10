@@ -84,7 +84,9 @@
 	"session": {},
 	"auth:before": {
 		"./middleware/get-db-conn": {},
-		"./middleware/auth-check": {}
+		"./middleware/auth-check": {
+			"paths": "/api/*"
+		}
 	},
 	"auth": {
 		"./middleware/get-user-id": {

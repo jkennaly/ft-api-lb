@@ -9,19 +9,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-const auth0Provider = () => jwt({
-  secret: jwks.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: "https://festivaltime.auth0.com/.well-known/jwks.json"
-  }),
-  //audience: 'https://immense-ridge-26505.herokuapp.com/api/',
-  issuer: 'https://festivaltime.auth0.com/',
-  algorithms: ['RS256'],
-  credentialsRequired: false
-})
-
 const localProvider = () => jwt({
   secret: process.env.LOCAL_SECRET,
   audience: 'https://festigram.app/api/',
@@ -31,7 +18,7 @@ const localProvider = () => jwt({
 })
 
 
-var authCheck = process.env.LOCAL_SECRET ? localProvider() : auth0Provider()
+var authCheck = localProvider()
 module.exports = function (options) {
   return authCheck
 }
