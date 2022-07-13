@@ -9,16 +9,20 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-const localProvider = () => jwt({
-  secret: process.env.LOCAL_SECRET,
+const authCheck = (req, res, next) => jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `${req.protocol}://${req.hostname}:${process.env.PORT || 8080}/keys`
+  }),
   audience: 'https://festigram.app/api/',
   issuer: 'https://festigram.app',
-  algorithms: ['HS256'],
+  algorithms: ['RS256'],
   credentialsRequired: false
-})
+})(req, res, next)
 
 
-var authCheck = localProvider()
 module.exports = function (options) {
   return authCheck
 }

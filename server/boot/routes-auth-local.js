@@ -49,6 +49,11 @@ module.exports = function (app) {
 		res.send(template.replace('<div id="component"></div>', render.sync(m(options.form, options))))
 	}
 
+	app.get('/keys', function (req, res) {
+		//console.log('keys', req.app.get('jwks'))
+		res.send(req.app.get('jwks'))
+	})
+
 	app.get(/authorize\/login/, loginMiddle({
 		formHeader: 'FestiGram Login',
 		//submit: evt => {console.log(evt)},
@@ -63,7 +68,7 @@ module.exports = function (app) {
 			con = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false')
 			//console.log('routes-auth-local user', user)
 			const user = await getUser(con, req.body.Email, req.body.Password)
-			const access = createAccess(req.body.scopes, user)
+			const access = createAccess(req.app.get('jwks'), req.body.scopes, user)
 			const refresh = createRefresh(user)
 			res.cookie('jwt', refresh, {
 				httpOnly: true,
@@ -99,7 +104,7 @@ module.exports = function (app) {
 			con = mysql.createConnection(process.env.JAWSDB_URL + '?connectionLimit=1&debug=false')
 			const user = await addUser(con, req.body.Username, req.body.Email, req.body.Password)
 			if (!user.access) console.log('user', user)
-			const token = await createAccess(undefined, user)
+			const token = await createAccess(req.app.get('jwks'), undefined, user)
 			const storedCb = req.cookies && req.cookies.cbd
 			const cbUrl = storedCb ?? `${req.get('origin')}/site`
 			res.redirect(`${cbUrl}?token=${token}`)
@@ -269,7 +274,7 @@ module.exports = function (app) {
 			await updateUser(con, email, { password })
 			res.clearCookie('recov');
 			await clearRecovery(email)
-			const access = createAccess(undefined, user)
+			const access = createAccess(req.app.get('jwks'), undefined, user)
 			const refresh = createRefresh(user)
 			res.cookie('jwt', refresh, {
 				httpOnly: true,
@@ -319,7 +324,7 @@ module.exports = function (app) {
 				const refreshId = await verifyRefresh(con, refreshToken)
 				if (!refreshId) throw 'unrefreshable'
 				const user = await getUser(con, undefined, undefined, refreshId)
-				const token = createAccess(undefined, user)
+				const token = createAccess(req.app.get('jwks'), undefined, user)
 				//console.log('valid token')
 				return res.status(200).json({ token })
 			} catch (err) {

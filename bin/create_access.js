@@ -53,7 +53,7 @@ raw decoded:
 */
 const defaultScopes = "openid profile email create:messages"
 const adminScopes = "admin verify:festivals create:festivals"
-function create(scopes = defaultScopes, { email, access, username, updated_at, emailVerified, mobile_auth_key: id, picture }) {
+function create(jwks, scopes = defaultScopes, { email, access, username, updated_at, emailVerified, mobile_auth_key: id, picture }) {
   if (!scopes) throw new Error('required parameter missing')
 
   const claimObject = Object.assign(
@@ -73,7 +73,12 @@ function create(scopes = defaultScopes, { email, access, username, updated_at, e
     claimBool(emailVerified, 'email_verified'),
     claimScope(scopes, access)
   )
-  return jwt.sign(claimObject, process.env.LOCAL_SECRET, { expiresIn: 60 })
+  return jwt.sign(claimObject, process.env.LOCAL_SECRET, {
+    expiresIn: '10m',
+    algorithm: 'RS256',
+    keyid: jwks.keys[0].kid
+
+  })
 
 }
 
