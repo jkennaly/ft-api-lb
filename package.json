@@ -46,7 +46,7 @@
     "node-jose": "^2.1.1",
     "node-schedule": "^2.0.0",
     "nodemailer": "^4.7.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.20",
     "postcss-cli": "^8.3.1",
     "puppeteer": "^7.1.0",
     "serve-favicon": "^2.0.1",
